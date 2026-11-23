@@ -1,7 +1,7 @@
 # Style sheet and script of the HTML report. Both are inlined into the page and
 # listed by hash in its Content-Security-Policy, so nothing is loaded from outside.
 
-CSS = """
+CSS = r"""
 :root{color-scheme:light dark;--bg:#ffffff;--fg:#1a1f2b;--muted:#4b5563;--line:#d1d5db;--card:#f3f4f6;--link:#1d4ed8;
 --unsafe-bg:#fde8e8;--unsafe-fg:#9b1c1c;--warn-bg:#fef3c7;--warn-fg:#7c2d12;--ok-bg:#dcfce7;--ok-fg:#14532d}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1420;--fg:#e6e9f0;--muted:#aab2c0;--line:#2b3446;--card:#18202f;--link:#8ab4ff;
@@ -49,7 +49,7 @@ th{background:var(--card)}
 @media (max-width:600px){table{min-width:560px}h1{font-size:1.3rem}.verdict .word{font-size:1.25rem}input[type=search]{min-width:0;width:100%}}
 """
 
-JS = """
+JS = r"""
 (function () {
   var list = document.getElementById('list');
   if (!list) { return; }

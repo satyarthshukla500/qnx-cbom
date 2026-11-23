@@ -19,6 +19,7 @@ test_corrupt_crypto_file_fails_closed (test_product.HostileTests.test_corrupt_cr
 test_hostile_elf_in_image_does_not_stop_scan (test_product.HostileTests.test_hostile_elf_in_image_does_not_stop_scan) ... ok
 test_injection_and_secrets_and_paths (test_product.HostileTests.test_injection_and_secrets_and_paths) ... ok
 test_no_quadratic_hangs (test_product.HostileTests.test_no_quadratic_hangs) ... ok
+test_report_css_has_real_marker_characters (test_product.HostileTests.test_report_css_has_real_marker_characters) ... ok
 test_report_with_many_findings_and_empty (test_product.HostileTests.test_report_with_many_findings_and_empty) ... ok
 test_swapped_in_link_is_refused (test_product.HostileTests.test_swapped_in_link_is_refused) ... ok
 test_unreadable_file_does_not_stop_scan (test_product.HostileTests.test_unreadable_file_does_not_stop_scan) ... ok
@@ -33,6 +34,6 @@ test_sshd_modes (test_product.RuleTests.test_sshd_modes) ... ok
 test_unknown_series_gives_note_not_finding (test_product.RuleTests.test_unknown_series_gives_note_not_finding) ... ok
 
 ----------------------------------------------------------------------
-Ran 33 tests
+Ran 34 tests
 
 OK

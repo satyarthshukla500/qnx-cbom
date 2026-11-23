@@ -2448,21 +2448,6 @@
   },
   {
    "evidence": [
-    "mapped by /system/bin/openssl (pid 397333)",
-    "/data/lab/o35/libcrypto.so.3: OpenSSL 3.5.9",
-    "OpenSSL 3.5 upstream support: until 2030-04-08; scan date 2026-11-23"
-   ],
-   "fix": "Same as QCB-001: load OpenSSL 3.5 in this process.",
-   "rule": "QCB-007",
-   "severity": "OK",
-   "source_date": "2026-11-23",
-   "source_url": "https://openssl-library.org/policies/releasestrat/",
-   "subject": "/data/lab/o35/libcrypto.so.3",
-   "title": "A running process loads an OpenSSL library within upstream support",
-   "unverified": []
-  },
-  {
-   "evidence": [
     "mapped by /system/bin/openssl (pid 376852), /system/bin/random (pid 131081), /system/bin/sshd (pid 241679)",
     "/proc/boot/libcrypto.so.3: OpenSSL 3.5.9",
     "OpenSSL 3.5 upstream support: until 2030-04-08; scan date 2026-11-23"
@@ -2647,33 +2632,9 @@
     ],
     "name": "/system/bin/openssl",
     "pid": 376852
-   },
-   {
-    "libs": [
-     {
-      "disk_version": null,
-      "matches_disk": null,
-      "path": "/data/lab/o35/libssl.so.3",
-      "pq_capable": true,
-      "released": null,
-      "soname": "libssl.so.3",
-      "version": null
-     },
-     {
-      "disk_version": "3.5.9",
-      "matches_disk": true,
-      "path": "/data/lab/o35/libcrypto.so.3",
-      "pq_capable": true,
-      "released": "29 Sep 2026",
-      "soname": "libcrypto.so.3",
-      "version": "3.5.9"
-     }
-    ],
-    "name": "/system/bin/openssl",
-    "pid": 397333
    }
   ],
-  "scanned": 22,
+  "scanned": 21,
   "schema": "qnx-cbom-probe/1",
   "target": {
    "machine": "x86pc",
@@ -2684,7 +2645,7 @@
  "scan_date": "2026-11-23",
  "schema": "qnx-cbom-scan/1",
  "summary": {
-  "ok": 5,
+  "ok": 4,
   "unsafe": 0,
   "verdict": "WARN",
   "warn": 4

@@ -1,10 +1,20 @@
 # qnx-cbom
 
-A crypto bill of materials (CBOM) and readiness checker for QNX 8.0 images and live targets.
+**What it does.** It lists every cryptographic component of a QNX 8.0 image (the programs and libraries that use OpenSSL or qcrypto, the keys, certificates and SSH settings), asks the *running* system which of those libraries are really loaded, and tells you for each finding what is wrong and how to fix it. One command; the exit code makes it usable in CI.
 
-It answers, with one command: which programs use crypto, which libcrypto version each one really loads, which keys, certificates, qcrypto and SSH settings exist, and whether any of it is out of upstream support or quantum-vulnerable, with a fix text for every finding. The exit code is 0 only when there is no UNSAFE finding, so it works in CI.
+**Why this is useful.** A QNX image is built once and then runs in the field for years, so what is inside it has to be known and checked: the OpenSSL 3.0 series left upstream support on 2026-09-07, OpenSSH 10 made a hybrid post-quantum key exchange its default, and RSA and elliptic-curve keys are the ones a quantum computer breaks. The stock QNX 8.0 image that this was tested on ships OpenSSL 3.0.22 and an `sshd_config` that allows only classical key exchange, although its `sshd` binary supports `mlkem768x25519-sha256`. A file-level scan cannot tell you whether a process really uses the library the image holds (a `LD_LIBRARY_PATH` setting can replace it), and an inventory that is wrong about that is worse than none.
+
+**Why it needs QNX knowledge.** It reads the QNX boot image and the `mkqnximage` build lists, and its probe runs on the target and uses QNX's own process interface (`/proc/<pid>/as` with `devctl`, the calls `pidin` uses) and a QNX resource manager.
 
 Category: Developer Tooling & Host Tools. Licence: MIT.
+
+## Try it in one minute (no SDK needed)
+
+The real results of the lab runs are in `evidence/`. With only Python 3.12:
+```
+PYTHONPATH=src python3 -m qnxcbom diff evidence/before.json evidence/after.json
+```
+Then open `evidence/before.html`, `evidence/after.html` and `evidence/diff.html` in a browser (they are single files, nothing is loaded from the network).
 
 ## What is in the repository
 
@@ -58,6 +68,10 @@ WARN   QCB-004 /proc/boot/qtd_public_key.pem - Key or certificate uses a quantum
 WARN   QCB-005 /proc/boot/qcrypto.conf - qcrypto sends all algorithms to a plug-in without post-quantum algorithms
 exit code: 1
 ```
+The levels: **UNSAFE** means the item fails the stated baseline (an OpenSSL series that upstream still supports; hybrid post-quantum key exchange where the build has it); it is a finding to act on, not proof of an attack. **WARN** is weaker than ideal or cannot be confirmed. **OK** meets the baseline.
+
+This first scan is static (image files only), so it has UNSAFE 2. With the probe's output merged in (`--runtime`, next section) the same image has UNSAFE 3, because the running `random` daemon is seen loading the end-of-life libcrypto (QCB-007); that run is `evidence/before.txt`.
+
 Exit codes: `0` no UNSAFE finding, `1` at least one UNSAFE finding, `2` bad input (one line `qnx-cbom: error: ...`, never a traceback).
 
 Outputs: `--json` scan file, `--cbom` CycloneDX 1.6 (checked against the official 1.6 JSON schema, `evidence/cbom-validation.txt`), `--html` a single self-contained report (no external files, works offline), `--text` short summary. `--date YYYY-MM-DD` fixes the date used for end-of-life checks.
@@ -76,15 +90,20 @@ bin/qnx-cbom diff before.json after.json --html diff.html
 Real output for the stock image against the upgraded lab image (`evidence/diff.txt`):
 ```
 verdict: UNSAFE -> WARN
-new 1, gone 0, changed 3, library versions changed 1
-NEW      OK     QCB-007 /data/lab/o35/libcrypto.so.3
+new 0, gone 0, changed 3, library versions changed 1
 CHANGED  QCB-001 /proc/boot/libcrypto.so.3: UNSAFE -> OK
 CHANGED  QCB-002 /system/bin/sshd: UNSAFE -> OK
 CHANGED  QCB-007 /proc/boot/libcrypto.so.3: UNSAFE -> OK
 LIBRARY  /proc/boot/libcrypto.so.3: 3.0.22 -> 3.5.9
 result: no new problems
 ```
-Exit code 1 means the second scan has a new problem or a worse severity.
+Exit code 1 means the second scan has a new problem or a worse severity. A "NEW ... OK" line is a finding that is new but fine.
+
+In CI:
+```
+bin/qnx-cbom scan --ifs ifs.bin --build-dir build --json new.json --runtime probe-output.txt   # exit 1 = UNSAFE found, 2 = bad input
+bin/qnx-cbom diff baseline.json new.json                                                       # exit 1 = something got worse
+```
 
 ## Findings (rules)
 

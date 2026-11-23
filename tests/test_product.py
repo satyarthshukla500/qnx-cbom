@@ -331,6 +331,11 @@ class HostileTests(unittest.TestCase):
             self.assertEqual(err, "")
             self.assertGreaterEqual(json.load(open(os.path.join(tmp, "o.json")))["image"]["counts"]["bad_elf"], 1)
 
+    def test_report_css_has_real_marker_characters(self):
+        from qnxcbom.report_assets import CSS
+        self.assertIn('content:"\\25B8"', CSS)  # a backslash-escape, not a control character
+        self.assertNotIn("\x15", CSS)
+
     def test_report_with_many_findings_and_empty(self):
         with tmpdir() as tmp:
             ifs, build, proj = make_image(tmp)

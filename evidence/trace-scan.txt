@@ -1,0 +1,3 @@
+## scan of everything that would be committed for forbidden words (counts and file names only)
+files scanned: 89
+total hits: 0

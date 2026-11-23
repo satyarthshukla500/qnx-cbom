@@ -28,9 +28,10 @@ grep -q "local/openssl35/libcrypto" output/build/ifs.build && grep -q "local/ope
 mkifs -o output output/build/ifs.build output/ifs.bin > /dev/null
 mkqnx6fsimg output/build/system.build output/system.part > /dev/null
 mkqnx6fsimg output/build/data.build output/data.part > /dev/null
-# the new system partition is a little bigger than the stock slot (libssl 3.5 is bigger)
-size=$(stat -c %s output/system.part)
-sed -i "s/^SYS_SECTORS=.*/SYS_SECTORS=$((size / 512))/" output/di.params
-IMAGE_TYPE=qemu bash "$disk_tool" > output/rundiskimage.log 2>&1 || true   # its last step (a .vmdk descriptor) may fail; the raw disk is what QEMU uses
+# same three-partition layout as the stock disk (boot, system, data); the new partitions are a little
+# bigger than the stock slots (libssl 3.5 is bigger, the boot partition is rebuilt), so the sizes are updated
+mkqnx6fsimg output/build/boot_part.build output/boot.part > /dev/null
+sed -i "s/^SYS_SECTORS=.*/SYS_SECTORS=$(( $(stat -c %s output/system.part) / 512 ))/; s/^BOOT_SECTORS=.*/BOOT_SECTORS=$(( $(stat -c %s output/boot.part) / 512 ))/" output/di.params
+IMAGE_TYPE=bios bash "$disk_tool" > output/rundiskimage.log 2>&1 || true   # its last step (a .vmdk descriptor) may fail; the raw disk is what QEMU uses
 [ -f output/disk-qemu ] && [ output/disk-qemu -nt output/system.part ] || { echo "disk image was not created:" >&2; cat output/rundiskimage.log >&2; exit 1; }
 ls -l output/ifs.bin output/disk-qemu

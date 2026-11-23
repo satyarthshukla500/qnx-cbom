@@ -33,7 +33,7 @@ def diff_text(result):
              f"new {len(result['new'])}, gone {len(result['gone'])}, changed {len(result['changed'])}, "
              f"library versions changed {len(result['libs'])}"]
     for f in result["new"]:
-        lines.append(f"NEW      {f['severity']:<6} {f['rule']} {_a(f['subject'])}")
+        lines.append(f"NEW      {f['severity']:<6} {f['rule']} {_a(f['subject'])}" + ("  (not a problem)" if f["severity"] == "OK" else ""))
     for f in result["gone"]:
         lines.append(f"GONE     {f['severity']:<6} {f['rule']} {_a(f['subject'])}")
     for c in result["changed"]:

@@ -14,8 +14,6 @@ Path=0 - Intel 82371SB
 Path=1 - Intel 82371SB
  target=0 lun=0            CD-ROM(5) - QEMU     QEMU DVD-ROM     Rev: 2.5+
 ---> Mounting file systems
-mount: Can't mount /boot (type qnx6) 
-mount: Possible reason: Invalid argument 
 ---> Starting Networking
 if_up: tries exhausted
 ifconfig: interface vtnet0 does not exist
@@ -70,8 +68,8 @@ exit 0
 KexAlgorithms mlkem768x25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256
 === host keys present
 total 6
--r--------  1 root root  387 2026-11-23 17:29 ssh_host_ed25519_key
--r--------  1 root root 2578 2026-11-23 17:29 ssh_host_rsa_key
+-r--------  1 root root  387 2026-11-23 17:37 ssh_host_ed25519_key
+-r--------  1 root root 2578 2026-11-23 17:37 ssh_host_rsa_key
 === start sshd in debug mode on 127.0.0.1:2222
 === sshd log so far
 debug1: sshd version OpenSSH_10.4, OpenSSL 3.5.9 29 Sep 2026
@@ -108,10 +106,10 @@ debug1: session_exit_message: session 0 channel 0 pid 626714 exit 0
 debug1: session_exit_message: release channel 0
 debug1: session_by_channel: session 0 channel 0
 debug1: session_close_by_channel: channel 0 child 0
-Close session: user root from 127.0.0.1 port 25667 id 0
+Close session: user root from 127.0.0.1 port 20559 id 0
 debug1: channel 0: free: server-session, nchannels 1
-Received disconnect from 127.0.0.1 port 25667:11: disconnected by user
-Disconnected from user root 127.0.0.1 port 25667
+Received disconnect from 127.0.0.1 port 20559:11: disconnected by user
+Disconnected from user root 127.0.0.1 port 20559
 debug1: do_cleanup
 debug1: mm_reap: child exited with status 255
 debug1: do_cleanup

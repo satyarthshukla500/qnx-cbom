@@ -40,7 +40,7 @@ python3 lab/split_captures.py "$out/after.log" "$out/after-cap" > /dev/null
 pick() { local n; n=$(grep -F "$2" "$out/$1-cap-labels.txt" | head -1 | cut -f1); [ -n "$n" ] || { echo "no capture '$2' in $1 log" >&2; exit 1; }; echo "$out/$1-cap-$n.txt"; }
 cap_before=$(pick stock "probe 1: image library in use")
 cap_override=$(pick stock "probe 2: both servers running")
-cap_after=$(pick after "probe 2: both servers running")
+cap_after=$(pick after "probe 1: image library in use")
 
 echo "== 6/6 scans"
 tool=bin/qnx-cbom

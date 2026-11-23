@@ -62,8 +62,8 @@ exit 2
 === long program name (200 characters) with a library from a directory that is removed afterwards
 === state before deleting the library files
 total 17474
--rwxr-xr-x  1 root root 7176768 2026-11-23 17:30 libcrypto.so.3
--rwxr-xr-x  1 root root 1769776 2026-11-23 17:30 libssl.so.3
+-rwxr-xr-x  1 root root 7176768 2026-11-23 17:38 libcrypto.so.3
+-rwxr-xr-x  1 root root 1769776 2026-11-23 17:38 libssl.so.3
 log e2:
 Using default temp DH parameters
 ACCEPT
@@ -86,12 +86,12 @@ victim-content
 cbom_probe: cannot write /tmp/fifo: errno 6
 exit 1
 exit 0
--rw-------  1 root root 577 2026-11-23 17:30 /tmp/public.json
+-rw-------  1 root root 577 2026-11-23 17:38 /tmp/public.json
 {"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target
 === uname -a
 QNX noname 8.0.0 2026/10/30-09:10:05EDT x86pc x86_64
 === ls -l /dev/cbom
-nr--------  1 root root 0 2026-11-23 17:30 /dev/cbom
+nr--------  1 root root 0 2026-11-23 17:38 /dev/cbom
 === cat /dev/cbom (first 400 bytes)
 {"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target":{"sysname":"QNX","release":"8.0.0","machine":"x86pc"},"scanned":21,"processes":[{"pid":131081,"name":"/system/bin/random","libs":[{"path":"/proc/boot/libqcrypto.so.1.0","soname":"libqcrypto.so.1.0","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/qcrypto-openssl-3.so","soname":"qcrypto-openssl-3.so","version":null,
 === read twice: both are complete JSON

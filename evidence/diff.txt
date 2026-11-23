@@ -1,6 +1,5 @@
 verdict: UNSAFE -> WARN
-new 1, gone 0, changed 3, library versions changed 1
-NEW      OK     QCB-007 /data/lab/o35/libcrypto.so.3
+new 0, gone 0, changed 3, library versions changed 1
 CHANGED  QCB-001 /proc/boot/libcrypto.so.3: UNSAFE -> OK
 CHANGED  QCB-002 /system/bin/sshd: UNSAFE -> OK
 CHANGED  QCB-007 /proc/boot/libcrypto.so.3: UNSAFE -> OK

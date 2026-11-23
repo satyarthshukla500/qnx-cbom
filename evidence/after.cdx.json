@@ -1,7 +1,7 @@
 {
  "bomFormat": "CycloneDX",
  "specVersion": "1.6",
- "serialNumber": "urn:uuid:2c8e0117-cdad-5aa2-b326-f98d776286d6",
+ "serialNumber": "urn:uuid:75e5bc0c-e808-54ac-a381-1ce9128943cf",
  "version": 1,
  "metadata": {
   "timestamp": "2026-11-23T00:00:00Z",
@@ -759,10 +759,6 @@
   {
    "name": "qnx-cbom:finding",
    "value": "OK QCB-003 /system/bin/ssh"
-  },
-  {
-   "name": "qnx-cbom:finding",
-   "value": "OK QCB-007 /data/lab/o35/libcrypto.so.3"
   },
   {
    "name": "qnx-cbom:finding",
