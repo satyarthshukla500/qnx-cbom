@@ -1,0 +1,53 @@
+## T4 existing QNX ports of OpenSSL 3.5  Mon Nov 23 11:51:44 UTC 2026
+$ find SDK for any OpenSSL other than 3.0 (libcrypto*/libssl* under $QNX_TARGET, incl usr/local)
+$QNX_TARGET/aarch64le/usr/lib/libcrypto.so.3
+$QNX_TARGET/aarch64le/usr/lib/libssl.so
+$QNX_TARGET/aarch64le/usr/lib/libssl.so.3
+$QNX_TARGET/aarch64le/usr/lib/libcrypto.so
+$QNX_TARGET/x86_64/usr/lib/libcrypto.so.3
+$QNX_TARGET/x86_64/usr/lib/libssl.so
+$QNX_TARGET/x86_64/usr/lib/libssl.so.3
+$QNX_TARGET/x86_64/usr/lib/libcrypto.so
+ls: cannot access '$QNX_TARGET/usr/local/include/openssl': No such file or directory
+
+$ GitHub API: qnx-ports org repos whose name matches ssl/crypt/tls
+  boringssl pushed 2026-05-06T15:31:04Z
+  gnutls pushed 2025-08-19T06:33:15Z
+  s2n-tls pushed 2025-09-04T10:28:16Z
+  openssl pushed 2025-11-25T18:04:48Z
+
+$ GitHub API: qnx-ports/openssl
+ fork: True default_branch: qnx-openssl-3.5.4 pushed: 2025-11-25T18:04:48Z
+$ branches matching qnx
+  ['qnx-3.5.4', 'qnx-openssl-3.5.4', 'qnx-openssl-3.6.0']
+$ compare openssl-3.5.4...qnx-openssl-3.5.4
+  ahead 4 behind 0
+  commit: add QNX configuration target 2025-11-10
+  commit: add QNX build files 2025-11-10
+  commit: update README.md 2025-11-11
+  commit: Change SHLIB_VERSION from 3 to 3.5 2025-11-12
+  file: Configurations/10-main.conf
+  file: VERSION.dat
+  file: qnx/README.md
+  file: qnx/build/Makefile
+  file: qnx/build/build/Makefile
+  file: qnx/build/build/build-hooks
+  file: qnx/build/build/nto-aarch64-le/GNUmakefile
+  file: qnx/build/build/nto-x86_64-o/GNUmakefile
+  file: qnx/build/build/public/configuration.h
+$ compare openssl-3.6.0...qnx-openssl-3.6.0
+  ahead 2 behind 0
+  commit: add QNX port 2025-11-14
+  commit: bumb version to 3.6 2025-11-14
+  file: Configurations/10-main.conf
+  file: VERSION.dat
+Summary in my words: the port adds a qnx / qnx-x86_64 / qnx-aarch64 Configure target (BASE_unix, -lsocket -lm, devcryptoeng on),
+QNX recursive-make build files, and bumps SHLIB_VERSION to 3.5 so it installs under usr/local next to the SDK's 3.0. README says use only with your own apps.
+
+$ github.com/qnx-ports/build-files ports/ entries matching ssl/crypt/tls
+  151 ports; matches: ['gnutls', 's2n-tls']
+
+QNX apk repo: the QNX Everywhere CTI apk page (qnx.com/developers/docs/qnxeverywhere/.../cti/apk.html) lists no repo URL; it says repos are baked into a Makefile and packages come from https://oss.qnx.com/.
+$ curl -o /dev/null -w '%{http_code}' https://oss.qnx.com/
+200
+Could not check: actual apk package index (no URL found in this time box).

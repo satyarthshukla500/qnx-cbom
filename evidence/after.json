@@ -1,0 +1,2697 @@
+{
+ "bad_elf": [],
+ "configs": {
+  "qcrypto": {
+   "entries": [
+    {
+     "plugin": "openssl-3",
+     "tags": [
+      "*"
+     ]
+    }
+   ],
+   "path": "/proc/boot/qcrypto.conf"
+  },
+  "ssh": {
+   "binary": {
+    "openssh_version": "10.4p1",
+    "path": "/system/bin/ssh",
+    "pq_kex": [
+     "mlkem768x25519-sha256",
+     "sntrup761x25519-sha512",
+     "sntrup761x25519-sha512@openssh.com"
+    ]
+   },
+   "host_keys": [],
+   "match_blocks": 0,
+   "path": null,
+   "settings": {},
+   "source": null
+  },
+  "sshd": {
+   "binary": {
+    "openssh_version": "10.4p1",
+    "path": "/system/bin/sshd",
+    "pq_kex": [
+     "mlkem768x25519-sha256",
+     "sntrup761x25519-sha512",
+     "sntrup761x25519-sha512@openssh.com"
+    ]
+   },
+   "host_keys": [
+    "/data/var/ssh/ssh_host_rsa_key",
+    "/data/var/ssh/ssh_host_ed25519_key"
+   ],
+   "includes": 0,
+   "match_blocks": 0,
+   "path": "/system/etc/ssh/sshd_config",
+   "settings": {
+    "Ciphers": {
+     "items": [
+      "aes128-ctr",
+      "aes192-ctr",
+      "aes256-ctr"
+     ],
+     "line": 4,
+     "mode": "explicit",
+     "value": "aes128-ctr,aes192-ctr,aes256-ctr"
+    },
+    "KexAlgorithms": {
+     "items": [
+      "mlkem768x25519-sha256",
+      "curve25519-sha256@libssh.org",
+      "ecdh-sha2-nistp256",
+      "ecdh-sha2-nistp384",
+      "ecdh-sha2-nistp521",
+      "diffie-hellman-group-exchange-sha256"
+     ],
+     "line": 6,
+     "mode": "explicit",
+     "value": "mlkem768x25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256"
+    },
+    "MACs": {
+     "items": [
+      "hmac-sha2-512-etm@openssh.com",
+      "hmac-sha2-256-etm@openssh.com",
+      "umac-128-etm@openssh.com",
+      "hmac-sha2-512",
+      "hmac-sha2-256",
+      "umac-128@openssh.com"
+     ],
+     "line": 5,
+     "mode": "explicit",
+     "value": "hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com"
+    }
+   },
+   "source": "inline"
+  }
+ },
+ "elfs": [
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/cam-disk.so",
+   "image_path": "/proc/boot/cam-disk.so",
+   "kind": "library",
+   "needed": [
+    "libcam.so.2",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "cam-disk.so"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/devb-eide",
+   "image_path": "/proc/boot/devb-eide",
+   "kind": "executable",
+   "needed": [
+    "libsecpol.so.1",
+    "libslog2.so.1",
+    "libcam.so.2",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/devc-ser8250",
+   "image_path": "/proc/boot/devc-ser8250",
+   "kind": "executable",
+   "needed": [
+    "libsecpol.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/fs-dos.so",
+   "image_path": "/proc/boot/fs-dos.so",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "fs-dos.so"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/fs-qnx6.so",
+   "image_path": "/proc/boot/fs-qnx6.so",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "fs-qnx6.so"
+  },
+  {
+   "crypto_libs": [
+    "libqcrypto.so.1.0"
+   ],
+   "id": "ifs:proc/boot/fs-qtd.so",
+   "image_path": "/proc/boot/fs-qtd.so",
+   "kind": "library",
+   "needed": [
+    "libqcrypto.so.1.0",
+    "libslog2.so.1",
+    "libfsnotify.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "fs-qtd.so"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/fsevmgr",
+   "image_path": "/proc/boot/fsevmgr",
+   "kind": "executable",
+   "needed": [
+    "libfsnotify.so.1",
+    "libqh.so.1",
+    "libslog2.so.1",
+    "libsecpol.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/getconf",
+   "image_path": "/proc/boot/getconf",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/io-blk.so",
+   "image_path": "/proc/boot/io-blk.so",
+   "kind": "library",
+   "needed": [
+    "libfsnotify.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "io-blk.so"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/ksh",
+   "image_path": "/proc/boot/ksh",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/ldqnx-64.so.2",
+   "image_path": "/proc/boot/ldqnx-64.so.2",
+   "kind": "library",
+   "needed": [],
+   "part": "ifs",
+   "soname": "ldqnx-64.so.2"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/libc.so.6",
+   "image_path": "/proc/boot/libc.so.6",
+   "kind": "library",
+   "needed": [
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "libc.so.6"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/libcam.so.2",
+   "image_path": "/proc/boot/libcam.so.2",
+   "kind": "library",
+   "needed": [
+    "libsecpol.so.1",
+    "libslog2.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "libcam.so.2"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/libcrypto.so.3",
+   "image_path": "/proc/boot/libcrypto.so.3",
+   "kind": "library",
+   "needed": [
+    "libsocket.so.4",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "libcrypto.so.3"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/libfsnotify.so.1",
+   "image_path": "/proc/boot/libfsnotify.so.1",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "libfsnotify.so.1"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/libgcc_s.so.1",
+   "image_path": "/proc/boot/libgcc_s.so.1",
+   "kind": "library",
+   "needed": [
+    "libc.so.6"
+   ],
+   "part": "ifs",
+   "soname": "libgcc_s.so.1"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/libjail.so.1",
+   "image_path": "/proc/boot/libjail.so.1",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "libjail.so.1"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/libjson.so.1",
+   "image_path": "/proc/boot/libjson.so.1",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "libjson.so.1"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/libm.so.3",
+   "image_path": "/proc/boot/libm.so.3",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "libm.so.3"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/libpci.so.3.0",
+   "image_path": "/proc/boot/libpci.so.3.0",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "libpci.so.3.0"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/libpci_hw_common.so.3.0",
+   "image_path": "/proc/boot/libpci_hw_common.so.3.0",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "libpci_hw_common.so.3.0"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/libqcrypto.so.1.0",
+   "image_path": "/proc/boot/libqcrypto.so.1.0",
+   "kind": "library",
+   "needed": [
+    "libslog2.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "libqcrypto.so.1.0"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/libqh.so.1",
+   "image_path": "/proc/boot/libqh.so.1",
+   "kind": "library",
+   "needed": [
+    "libslog2.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "libqh.so.1"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/libregex.so.1",
+   "image_path": "/proc/boot/libregex.so.1",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "libregex.so.1"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/libsecpol.so.1",
+   "image_path": "/proc/boot/libsecpol.so.1",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "libsecpol.so.1"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/libslog2.so.1",
+   "image_path": "/proc/boot/libslog2.so.1",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "libslog2.so.1"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/libslog2parse.so.1",
+   "image_path": "/proc/boot/libslog2parse.so.1",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "libslog2parse.so.1"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/libslog2shim.so.1",
+   "image_path": "/proc/boot/libslog2shim.so.1",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "libslog2shim.so.1"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/libsocket.so.4",
+   "image_path": "/proc/boot/libsocket.so.4",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "libsocket.so.4"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/libz.so.2",
+   "image_path": "/proc/boot/libz.so.2",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "libz.so.2"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/mount",
+   "image_path": "/proc/boot/mount",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/on",
+   "image_path": "/proc/boot/on",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/pci-server",
+   "image_path": "/proc/boot/pci-server",
+   "kind": "executable",
+   "needed": [
+    "libpci.so.3.0",
+    "libsecpol.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/pci_bkwd_compat.so.3.0",
+   "image_path": "/proc/boot/pci_bkwd_compat.so.3.0",
+   "kind": "library",
+   "needed": [
+    "libpci.so.3.0",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "pci_bkwd_compat.so.3.0"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/pci_cap-0x01.so.3.0",
+   "image_path": "/proc/boot/pci_cap-0x01.so.3.0",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "pci_cap-0x01.so.3.0"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/pci_cap-0x05.so.3.0",
+   "image_path": "/proc/boot/pci_cap-0x05.so.3.0",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "pci_cap-0x05.so.3.0"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/pci_cap-0x10.so.3.0",
+   "image_path": "/proc/boot/pci_cap-0x10.so.3.0",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "pci_cap-0x10.so.3.0"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/pci_cap-0x11.so.3.0",
+   "image_path": "/proc/boot/pci_cap-0x11.so.3.0",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "pci_cap-0x11.so.3.0"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/pci_debug2.so.3.0",
+   "image_path": "/proc/boot/pci_debug2.so.3.0",
+   "kind": "library",
+   "needed": [
+    "libslog2.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "pci_debug2.so.3.0"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/pci_hw-Intel_x86.so.3.1",
+   "image_path": "/proc/boot/pci_hw-Intel_x86.so.3.1",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "pci_hw-Intel_x86.so.3.1"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/pci_slog2.so.3.0",
+   "image_path": "/proc/boot/pci_slog2.so.3.0",
+   "kind": "library",
+   "needed": [
+    "libslog2.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "pci_slog2.so.3.0"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/pci_strings.so.3.0",
+   "image_path": "/proc/boot/pci_strings.so.3.0",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "pci_strings.so.3.0"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/pidin",
+   "image_path": "/proc/boot/pidin",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/procnto-smp-instr",
+   "image_path": "/proc/boot/procnto-smp-instr",
+   "kind": "library",
+   "needed": [],
+   "part": "ifs",
+   "soname": null
+  },
+  {
+   "crypto_libs": [
+    "libcrypto.so.3",
+    "libqcrypto.so.1.0"
+   ],
+   "id": "ifs:proc/boot/qcrypto-openssl-3.so",
+   "image_path": "/proc/boot/qcrypto-openssl-3.so",
+   "kind": "library",
+   "needed": [
+    "libcrypto.so.3",
+    "libqcrypto.so.1.0",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": "qcrypto-openssl-3.so"
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/rtc",
+   "image_path": "/proc/boot/rtc",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/setfacl",
+   "image_path": "/proc/boot/setfacl",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/slog2info",
+   "image_path": "/proc/boot/slog2info",
+   "kind": "executable",
+   "needed": [
+    "libslog2parse.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/slogger2",
+   "image_path": "/proc/boot/slogger2",
+   "kind": "executable",
+   "needed": [
+    "libslog2.so.1",
+    "libsecpol.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/toybox",
+   "image_path": "/proc/boot/toybox",
+   "kind": "executable",
+   "needed": [
+    "libfsnotify.so.1",
+    "libsecpol.so.1",
+    "libm.so.3",
+    "libz.so.2",
+    "libc.so.6"
+   ],
+   "part": "ifs",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "ifs:proc/boot/umount",
+   "image_path": "/proc/boot/umount",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "ifs",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/arp",
+   "image_path": "/system/bin/arp",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libxo.so.0",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [
+    "libcrypto.so.3"
+   ],
+   "id": "system:bin/bsdtar",
+   "image_path": "/system/bin/bsdtar",
+   "kind": "executable",
+   "needed": [
+    "libiconv.so.1",
+    "libcrypto.so.3",
+    "libregex.so.1",
+    "libxml2.so.16",
+    "liblzma.so.5",
+    "libzstd.so.1",
+    "liblz4.so.1",
+    "libbz2.so.1",
+    "libz.so.2",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/chkqnx6fs",
+   "image_path": "/system/bin/chkqnx6fs",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [
+    "libssl.so.3",
+    "libcrypto.so.3"
+   ],
+   "id": "system:bin/curl",
+   "image_path": "/system/bin/curl",
+   "kind": "executable",
+   "needed": [
+    "libcurl.so.12",
+    "libcares.so.8",
+    "libssl.so.3",
+    "libcrypto.so.3",
+    "libz.so.2",
+    "libsocket.so.4",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/devb-loopback",
+   "image_path": "/system/bin/devb-loopback",
+   "kind": "executable",
+   "needed": [
+    "libsecpol.so.1",
+    "libslog2.so.1",
+    "libcam.so.2",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/devb-umass",
+   "image_path": "/system/bin/devb-umass",
+   "kind": "executable",
+   "needed": [
+    "libsecpol.so.1",
+    "libslog2.so.1",
+    "libusbdi.so.2",
+    "libcam.so.2",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/devc-pty",
+   "image_path": "/system/bin/devc-pty",
+   "kind": "executable",
+   "needed": [
+    "libsecpol.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/df",
+   "image_path": "/system/bin/df",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/dhcpcd",
+   "image_path": "/system/bin/dhcpcd",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/dumper",
+   "image_path": "/system/bin/dumper",
+   "kind": "executable",
+   "needed": [
+    "libsecpol.so.1",
+    "libslog2.so.1",
+    "libz.so.2",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/fdisk",
+   "image_path": "/system/bin/fdisk",
+   "kind": "executable",
+   "needed": [
+    "libncursesw.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/fs-nfs3",
+   "image_path": "/system/bin/fs-nfs3",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/fullpath",
+   "image_path": "/system/bin/fullpath",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/gawk",
+   "image_path": "/system/bin/gawk",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libm.so.3",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/getfacl",
+   "image_path": "/system/bin/getfacl",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/hogs",
+   "image_path": "/system/bin/hogs",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/hostname",
+   "image_path": "/system/bin/hostname",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/if_up",
+   "image_path": "/system/bin/if_up",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/ifconfig",
+   "image_path": "/system/bin/ifconfig",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libexpat.so.2",
+    "libm.so.3",
+    "libjail.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/ifmcstat",
+   "image_path": "/system/bin/ifmcstat",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/ifwatchd",
+   "image_path": "/system/bin/ifwatchd",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/io-sock",
+   "image_path": "/system/bin/io-sock",
+   "kind": "executable",
+   "needed": [
+    "libslog2.so.1",
+    "libsecpol.so.1",
+    "libz.so.2",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/io-usb-otg",
+   "image_path": "/system/bin/io-usb-otg",
+   "kind": "executable",
+   "needed": [
+    "libsecpol.so.1",
+    "libpci.so.3.0",
+    "libslog2.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/iperf2",
+   "image_path": "/system/bin/iperf2",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libc++.so.2",
+    "libm.so.3",
+    "libgcc_s.so.1",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/iperf3",
+   "image_path": "/system/bin/iperf3",
+   "kind": "executable",
+   "needed": [
+    "libiperf.so.0",
+    "libsocket.so.4",
+    "libm.so.3",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/ldd",
+   "image_path": "/system/bin/ldd",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/less",
+   "image_path": "/system/bin/less",
+   "kind": "executable",
+   "needed": [
+    "libregex.so.1",
+    "libncursesw.so.1",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/login",
+   "image_path": "/system/bin/login",
+   "kind": "executable",
+   "needed": [
+    "libpam.so.2",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/mkdosfs",
+   "image_path": "/system/bin/mkdosfs",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/mqueue",
+   "image_path": "/system/bin/mqueue",
+   "kind": "executable",
+   "needed": [
+    "libsecpol.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/ndp",
+   "image_path": "/system/bin/ndp",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libxo.so.0",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/netstat",
+   "image_path": "/system/bin/netstat",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libxo.so.0",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [
+    "libcrypto.so.3"
+   ],
+   "id": "system:bin/ntp-keygen",
+   "image_path": "/system/bin/ntp-keygen",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libcrypto.so.3",
+    "libm.so.3",
+    "libintl.so.1",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [
+    "libcrypto.so.3"
+   ],
+   "id": "system:bin/ntpd",
+   "image_path": "/system/bin/ntpd",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libm.so.3",
+    "libcrypto.so.3",
+    "libintl.so.1",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [
+    "libcrypto.so.3"
+   ],
+   "id": "system:bin/ntpdate",
+   "image_path": "/system/bin/ntpdate",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libm.so.3",
+    "libcrypto.so.3",
+    "libintl.so.1",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [
+    "libcrypto.so.3"
+   ],
+   "id": "system:bin/ntpq",
+   "image_path": "/system/bin/ntpq",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libm.so.3",
+    "libedit.so.0",
+    "libcrypto.so.3",
+    "libintl.so.1",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [
+    "libssl.so.3",
+    "libcrypto.so.3"
+   ],
+   "id": "system:bin/openssl",
+   "image_path": "/system/bin/openssl",
+   "kind": "executable",
+   "needed": [
+    "libssl.so.3",
+    "libcrypto.so.3",
+    "libsocket.so.4",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/passwd",
+   "image_path": "/system/bin/passwd",
+   "kind": "executable",
+   "needed": [
+    "libpam.so.2",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/pci-tool",
+   "image_path": "/system/bin/pci-tool",
+   "kind": "executable",
+   "needed": [
+    "libpci.so.3.0",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/pdebug",
+   "image_path": "/system/bin/pdebug",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/pfctl",
+   "image_path": "/system/bin/pfctl",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libm.so.3",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/ping",
+   "image_path": "/system/bin/ping",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libm.so.3",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/pipe",
+   "image_path": "/system/bin/pipe",
+   "kind": "executable",
+   "needed": [
+    "libsecpol.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/qconn",
+   "image_path": "/system/bin/qconn",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libtracelog.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [
+    "libqcrypto.so.1.0"
+   ],
+   "id": "system:bin/random",
+   "image_path": "/system/bin/random",
+   "kind": "executable",
+   "needed": [
+    "libqcrypto.so.1.0",
+    "libsecpol.so.1",
+    "libqh.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/route",
+   "image_path": "/system/bin/route",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/scp",
+   "image_path": "/system/bin/scp",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libregex.so.1",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/secpol",
+   "image_path": "/system/bin/secpol",
+   "kind": "executable",
+   "needed": [
+    "libsecpol.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/secpolmonitor",
+   "image_path": "/system/bin/secpolmonitor",
+   "kind": "executable",
+   "needed": [
+    "libsecpol.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/setkey",
+   "image_path": "/system/bin/setkey",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/sftp-server",
+   "image_path": "/system/bin/sftp-server",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libregex.so.1",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/showmount",
+   "image_path": "/system/bin/showmount",
+   "kind": "executable",
+   "needed": [
+    "librpc.so.2",
+    "libsocket.so.4",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/shutdown",
+   "image_path": "/system/bin/shutdown",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/slay",
+   "image_path": "/system/bin/slay",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/slog2info",
+   "image_path": "/system/bin/slog2info",
+   "kind": "executable",
+   "needed": [
+    "libslog2parse.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [
+    "libcrypto.so.3"
+   ],
+   "id": "system:bin/sntp",
+   "image_path": "/system/bin/sntp",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libm.so.3",
+    "libcrypto.so.3",
+    "libintl.so.1",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/sockstat",
+   "image_path": "/system/bin/sockstat",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libjail.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/sqlite3",
+   "image_path": "/system/bin/sqlite3",
+   "kind": "executable",
+   "needed": [
+    "libsqlite3.so.1",
+    "libz.so.2",
+    "libm.so.3",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [
+    "libcrypto.so.3"
+   ],
+   "id": "system:bin/ssh",
+   "image_path": "/system/bin/ssh",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libregex.so.1",
+    "libcrypto.so.3",
+    "libz.so.2",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [
+    "libcrypto.so.3"
+   ],
+   "id": "system:bin/ssh-keygen",
+   "image_path": "/system/bin/ssh-keygen",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libregex.so.1",
+    "libcrypto.so.3",
+    "libz.so.2",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [
+    "libcrypto.so.3"
+   ],
+   "id": "system:bin/sshd",
+   "image_path": "/system/bin/sshd",
+   "kind": "executable",
+   "needed": [
+    "libsecpol.so.1",
+    "libpam.so.2",
+    "libsocket.so.4",
+    "libregex.so.1",
+    "libcrypto.so.3",
+    "libz.so.2",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [
+    "libcrypto.so.3"
+   ],
+   "id": "system:bin/sshd-auth",
+   "image_path": "/system/bin/sshd-auth",
+   "kind": "executable",
+   "needed": [
+    "libsecpol.so.1",
+    "libpam.so.2",
+    "libsocket.so.4",
+    "libregex.so.1",
+    "libcrypto.so.3",
+    "libz.so.2",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [
+    "libcrypto.so.3"
+   ],
+   "id": "system:bin/sshd-session",
+   "image_path": "/system/bin/sshd-session",
+   "kind": "executable",
+   "needed": [
+    "libsecpol.so.1",
+    "libpam.so.2",
+    "libsocket.so.4",
+    "libregex.so.1",
+    "libcrypto.so.3",
+    "libz.so.2",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/stty",
+   "image_path": "/system/bin/stty",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/su",
+   "image_path": "/system/bin/su",
+   "kind": "executable",
+   "needed": [
+    "libpam.so.2",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/sync",
+   "image_path": "/system/bin/sync",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/sysctl",
+   "image_path": "/system/bin/sysctl",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [
+    "libcrypto.so.3"
+   ],
+   "id": "system:bin/tcpdump",
+   "image_path": "/system/bin/tcpdump",
+   "kind": "executable",
+   "needed": [
+    "librpc.so.2",
+    "libsocket.so.4",
+    "libcrypto.so.3",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/top",
+   "image_path": "/system/bin/top",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/toybox",
+   "image_path": "/system/bin/toybox",
+   "kind": "executable",
+   "needed": [
+    "libfsnotify.so.1",
+    "libsecpol.so.1",
+    "libm.so.3",
+    "libz.so.2",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/tracelogger",
+   "image_path": "/system/bin/tracelogger",
+   "kind": "executable",
+   "needed": [
+    "libtracelog.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/traceroute",
+   "image_path": "/system/bin/traceroute",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/traceroute6",
+   "image_path": "/system/bin/traceroute6",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/usb",
+   "image_path": "/system/bin/usb",
+   "kind": "executable",
+   "needed": [
+    "libusbdi.so.2",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/use",
+   "image_path": "/system/bin/use",
+   "kind": "executable",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:bin/vi",
+   "image_path": "/system/bin/vi",
+   "kind": "executable",
+   "needed": [
+    "libsocket.so.4",
+    "libncursesw.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": null
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/dll/devs-vtnet_pci.so",
+   "image_path": "/system/lib/dll/devs-vtnet_pci.so",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "devs-vtnet_pci.so"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/dll/devu-hcd-ehci.so",
+   "image_path": "/system/lib/dll/devu-hcd-ehci.so",
+   "kind": "library",
+   "needed": [
+    "libm.so.3",
+    "libslog2.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "devu-hcd-ehci.so"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/dll/devu-hcd-uhci.so",
+   "image_path": "/system/lib/dll/devu-hcd-uhci.so",
+   "kind": "library",
+   "needed": [
+    "libm.so.3",
+    "libslog2.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "devu-hcd-uhci.so"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/dll/devu-hcd-xhci.so",
+   "image_path": "/system/lib/dll/devu-hcd-xhci.so",
+   "kind": "library",
+   "needed": [
+    "libm.so.3",
+    "libslog2.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "devu-hcd-xhci.so"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/dll/fs-dos.so",
+   "image_path": "/system/lib/dll/fs-dos.so",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "fs-dos.so"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/dll/mods-pci.so",
+   "image_path": "/system/lib/dll/mods-pci.so",
+   "kind": "library",
+   "needed": [
+    "libpci.so.3.0",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "mods-pci.so"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/dll/mods-phy.so",
+   "image_path": "/system/lib/dll/mods-phy.so",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "mods-phy.so"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/dll/mods-usb.so",
+   "image_path": "/system/lib/dll/mods-usb.so",
+   "kind": "library",
+   "needed": [
+    "libusbdci.so.2",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "mods-usb.so"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/dll/pam/pam_deny.so",
+   "image_path": "/system/lib/dll/pam/pam_deny.so",
+   "kind": "library",
+   "needed": [
+    "libpam.so.2",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "pam_deny.so.2"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/dll/pam/pam_echo.so",
+   "image_path": "/system/lib/dll/pam/pam_echo.so",
+   "kind": "library",
+   "needed": [
+    "libpam.so.2",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "pam_echo.so.2"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/dll/pam/pam_exec.so",
+   "image_path": "/system/lib/dll/pam/pam_exec.so",
+   "kind": "library",
+   "needed": [
+    "libpam.so.2",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "pam_exec.so.2"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/dll/pam/pam_group.so",
+   "image_path": "/system/lib/dll/pam/pam_group.so",
+   "kind": "library",
+   "needed": [
+    "libpam.so.2",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "pam_group.so.2"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/dll/pam/pam_permit.so",
+   "image_path": "/system/lib/dll/pam/pam_permit.so",
+   "kind": "library",
+   "needed": [
+    "libpam.so.2",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "pam_permit.so.2"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/dll/pam/pam_qnx.so",
+   "image_path": "/system/lib/dll/pam/pam_qnx.so",
+   "kind": "library",
+   "needed": [
+    "libpam.so.2",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "pam_qnx.so.2"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/dll/pam/pam_rootok.so",
+   "image_path": "/system/lib/dll/pam/pam_rootok.so",
+   "kind": "library",
+   "needed": [
+    "libpam.so.2",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "pam_rootok.so.2"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/dll/pam/pam_self.so",
+   "image_path": "/system/lib/dll/pam/pam_self.so",
+   "kind": "library",
+   "needed": [
+    "libpam.so.2",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "pam_self.so.2"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libbz2.so.1",
+   "image_path": "/system/lib/libbz2.so.1",
+   "kind": "library",
+   "needed": [
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": "libbz2.so.1"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libc++.so.2",
+   "image_path": "/system/lib/libc++.so.2",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "libc++.so.2"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libcares.so.8",
+   "image_path": "/system/lib/libcares.so.8",
+   "kind": "library",
+   "needed": [
+    "libsocket.so.4",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": "libcares.so.8"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libcatalog.so.1",
+   "image_path": "/system/lib/libcatalog.so.1",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "libcatalog.so.1"
+  },
+  {
+   "crypto_libs": [
+    "libssl.so.3",
+    "libcrypto.so.3"
+   ],
+   "id": "system:lib/libcurl.so.12",
+   "image_path": "/system/lib/libcurl.so.12",
+   "kind": "library",
+   "needed": [
+    "libcares.so.8",
+    "libssl.so.3",
+    "libcrypto.so.3",
+    "libz.so.2",
+    "libsocket.so.4",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": "libcurl.so.12"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libedit.so.0",
+   "image_path": "/system/lib/libedit.so.0",
+   "kind": "library",
+   "needed": [
+    "libregex.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "libedit.so.0"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libexpat.so.2",
+   "image_path": "/system/lib/libexpat.so.2",
+   "kind": "library",
+   "needed": [
+    "libm.so.3",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": "libexpat.so.2"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libfdt.so.1",
+   "image_path": "/system/lib/libfdt.so.1",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "libfdt.so.1"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libiconv.so.1",
+   "image_path": "/system/lib/libiconv.so.1",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "libiconv.so.1"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libintl.so.1",
+   "image_path": "/system/lib/libintl.so.1",
+   "kind": "library",
+   "needed": [
+    "libiconv.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "libintl.so.1"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libiperf.so.0",
+   "image_path": "/system/lib/libiperf.so.0",
+   "kind": "library",
+   "needed": [
+    "libsocket.so.4",
+    "libm.so.3",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": "libiperf.so.0"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/liblzma.so.5",
+   "image_path": "/system/lib/liblzma.so.5",
+   "kind": "library",
+   "needed": [
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": "liblzma.so.5"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libncursesw.so.1",
+   "image_path": "/system/lib/libncursesw.so.1",
+   "kind": "library",
+   "needed": [
+    "libregex.so.1"
+   ],
+   "part": "system",
+   "soname": "libncursesw.so.1"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libpam.so.2",
+   "image_path": "/system/lib/libpam.so.2",
+   "kind": "library",
+   "needed": [
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": "libpam.so.2"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libpanelw.so.1",
+   "image_path": "/system/lib/libpanelw.so.1",
+   "kind": "library",
+   "needed": [
+    "libregex.so.1",
+    "libncursesw.so.1"
+   ],
+   "part": "system",
+   "soname": "libpanelw.so.1"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/librcheck.so.1",
+   "image_path": "/system/lib/librcheck.so.1",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "librcheck.so.1"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/librpc.so.2",
+   "image_path": "/system/lib/librpc.so.2",
+   "kind": "library",
+   "needed": [
+    "libsocket.so.4",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "librpc.so.2"
+  },
+  {
+   "crypto_libs": [
+    "libcrypto.so.3"
+   ],
+   "id": "system:lib/libssl.so.3",
+   "image_path": "/system/lib/libssl.so.3",
+   "kind": "library",
+   "needed": [
+    "libcrypto.so.3",
+    "libsocket.so.4",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "libssl.so.3"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libstdc++.so.6",
+   "image_path": "/system/lib/libstdc++.so.6",
+   "kind": "library",
+   "needed": [
+    "libm.so.3",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "libstdc++.so.6"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libtracelog.so.1",
+   "image_path": "/system/lib/libtracelog.so.1",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "libtracelog.so.1"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libunwind.so.8",
+   "image_path": "/system/lib/libunwind.so.8",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1",
+    "liblzma.so.5",
+    "libz.so.2"
+   ],
+   "part": "system",
+   "soname": "libunwind.so.8"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libusbdci.so.2",
+   "image_path": "/system/lib/libusbdci.so.2",
+   "kind": "library",
+   "needed": [
+    "libpci.so.3.0",
+    "libslog2.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "libusbdci.so.2"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libusbdi.so.2",
+   "image_path": "/system/lib/libusbdi.so.2",
+   "kind": "library",
+   "needed": [
+    "libpci.so.3.0",
+    "libslog2.so.1",
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "libusbdi.so.2"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libxml2.so.16",
+   "image_path": "/system/lib/libxml2.so.16",
+   "kind": "library",
+   "needed": [
+    "libiconv.so.1",
+    "libm.so.3",
+    "libc.so.6"
+   ],
+   "part": "system",
+   "soname": "libxml2.so.16"
+  },
+  {
+   "crypto_libs": [],
+   "id": "system:lib/libxo.so.0",
+   "image_path": "/system/lib/libxo.so.0",
+   "kind": "library",
+   "needed": [
+    "libc.so.6",
+    "libgcc_s.so.1"
+   ],
+   "part": "system",
+   "soname": "libxo.so.0"
+  }
+ ],
+ "findings": [
+  {
+   "evidence": [
+    "Ed25519 256 bit private-key"
+   ],
+   "fix": "Plan a move to ML-DSA (FIPS 204) or SLH-DSA for signing keys once your signing path supports them. OpenSSL 3.5 can generate ML-DSA keys. Until then keep RSA at 3072 bits or more.",
+   "rule": "QCB-004",
+   "severity": "WARN",
+   "source_date": "2026-11-23",
+   "source_url": "https://csrc.nist.gov/pubs/fips/204/final",
+   "subject": "/data/var/ssh/ssh_host_ed25519_key",
+   "title": "Key or certificate uses a quantum-vulnerable algorithm",
+   "unverified": [
+    "NIST transition dates for RSA, ECDSA and EdDSA (NIST IR 8547 draft was found but its dates were not read)."
+   ]
+  },
+  {
+   "evidence": [
+    "RSA 3072 bit private-key"
+   ],
+   "fix": "Plan a move to ML-DSA (FIPS 204) or SLH-DSA for signing keys once your signing path supports them. OpenSSL 3.5 can generate ML-DSA keys. Until then keep RSA at 3072 bits or more.",
+   "rule": "QCB-004",
+   "severity": "WARN",
+   "source_date": "2026-11-23",
+   "source_url": "https://csrc.nist.gov/pubs/fips/204/final",
+   "subject": "/data/var/ssh/ssh_host_rsa_key",
+   "title": "Key or certificate uses a quantum-vulnerable algorithm",
+   "unverified": [
+    "NIST transition dates for RSA, ECDSA and EdDSA (NIST IR 8547 draft was found but its dates were not read)."
+   ]
+  },
+  {
+   "evidence": [
+    "Ed448 456 bit public-key"
+   ],
+   "fix": "Plan a move to ML-DSA (FIPS 204) or SLH-DSA for signing keys once your signing path supports them. OpenSSL 3.5 can generate ML-DSA keys. Until then keep RSA at 3072 bits or more.",
+   "rule": "QCB-004",
+   "severity": "WARN",
+   "source_date": "2026-11-23",
+   "source_url": "https://csrc.nist.gov/pubs/fips/204/final",
+   "subject": "/proc/boot/qtd_public_key.pem",
+   "title": "Key or certificate uses a quantum-vulnerable algorithm",
+   "unverified": [
+    "NIST transition dates for RSA, ECDSA and EdDSA (NIST IR 8547 draft was found but its dates were not read)."
+   ]
+  },
+  {
+   "evidence": [
+    "/proc/boot/qcrypto.conf: openssl-3 tags=*  (all algorithms go to this plug-in)",
+    "/proc/boot/qcrypto-openssl-3.so: contains no ML-KEM/ML-DSA names"
+   ],
+   "fix": "No qcrypto fix exists in SDP 8.0.6: its API has no key-encapsulation type (see evidence/T2-qcrypto-plugin.txt). Use OpenSSL 3.5 directly for post-quantum key exchange.",
+   "rule": "QCB-005",
+   "severity": "WARN",
+   "source_date": "2026-11-23",
+   "source_url": "https://www.qnx.com/developers/docs/8.0/",
+   "subject": "/proc/boot/qcrypto.conf",
+   "title": "qcrypto sends all algorithms to a plug-in without post-quantum algorithms",
+   "unverified": [
+    "Whether a later QNX release adds ML-KEM or ML-DSA to qcrypto.",
+    "The QNX documentation page was not read for this rule; the claim rests on the SDK headers (evidence/T2-qcrypto-plugin.txt)."
+   ]
+  },
+  {
+   "evidence": [
+    "/proc/boot/libcrypto.so.3: OpenSSL 3.5.9 29 Sep 2026",
+    "OpenSSL 3.5 upstream support: until 2030-04-08; scan date 2026-11-23",
+    "linked by 17 files, 14 of them programs"
+   ],
+   "fix": "Replace the library with OpenSSL 3.5 (upstream support until 2030-04-08). QNX's own port is at github.com/qnx-ports/openssl (branches qnx-openssl-3.5.4 and qnx-openssl-3.6.0). Put the new libcrypto/libssl into the image build lists in place of the SDK files, rebuild the image and scan again.",
+   "rule": "QCB-001",
+   "severity": "OK",
+   "source_date": "2026-11-23",
+   "source_url": "https://openssl-library.org/policies/releasestrat/",
+   "subject": "/proc/boot/libcrypto.so.3",
+   "title": "OpenSSL library is within upstream support",
+   "unverified": [
+    "Whether QNX supplies security fixes for OpenSSL 3.0 after 2026-09-07 (the image's 3.0.22 is dated 25 Aug 2026)."
+   ]
+  },
+  {
+   "evidence": [
+    "/system/bin/sshd (OpenSSH 10.4p1) contains: mlkem768x25519-sha256, sntrup761x25519-sha512, sntrup761x25519-sha512@openssh.com.",
+    "/system/etc/ssh/sshd_config line 6: KexAlgorithms mlkem768x25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256 (explicit list)",
+    "A post-quantum key exchange is allowed."
+   ],
+   "fix": "In the sshd_config of the image (the inline block in system.build) start the KexAlgorithms line with mlkem768x25519-sha256 and keep a classical fallback, for example: KexAlgorithms mlkem768x25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256. Rebuild the image and scan again.",
+   "rule": "QCB-002",
+   "severity": "OK",
+   "source_date": "2026-11-23",
+   "source_url": "https://www.openssh.com/txt/release-10.0",
+   "subject": "/system/bin/sshd",
+   "title": "sshd allows post-quantum key exchange",
+   "unverified": [
+    "That the SSH clients you use support mlkem768x25519-sha256.",
+    "The OpenSSH release that first contained the algorithm (only 10.0 was read: it made the algorithm the default)."
+   ]
+  },
+  {
+   "evidence": [
+    "/system/bin/ssh (OpenSSH 10.4p1) contains: mlkem768x25519-sha256, sntrup761x25519-sha512, sntrup761x25519-sha512@openssh.com.",
+    "no KexAlgorithms line: the OpenSSH default list applies",
+    "A post-quantum key exchange is allowed."
+   ],
+   "fix": "In ssh_config start KexAlgorithms with mlkem768x25519-sha256, or remove the KexAlgorithms line so the OpenSSH default (post-quantum first since 10.0) applies.",
+   "rule": "QCB-003",
+   "severity": "OK",
+   "source_date": "2026-11-23",
+   "source_url": "https://www.openssh.com/txt/release-10.0",
+   "subject": "/system/bin/ssh",
+   "title": "ssh client allows post-quantum key exchange",
+   "unverified": [
+    "That the servers you connect to support mlkem768x25519-sha256."
+   ]
+  },
+  {
+   "evidence": [
+    "mapped by /system/bin/openssl (pid 397333)",
+    "/data/lab/o35/libcrypto.so.3: OpenSSL 3.5.9",
+    "OpenSSL 3.5 upstream support: until 2030-04-08; scan date 2026-11-23"
+   ],
+   "fix": "Same as QCB-001: load OpenSSL 3.5 in this process.",
+   "rule": "QCB-007",
+   "severity": "OK",
+   "source_date": "2026-11-23",
+   "source_url": "https://openssl-library.org/policies/releasestrat/",
+   "subject": "/data/lab/o35/libcrypto.so.3",
+   "title": "A running process loads an OpenSSL library within upstream support",
+   "unverified": []
+  },
+  {
+   "evidence": [
+    "mapped by /system/bin/openssl (pid 376852), /system/bin/random (pid 131081), /system/bin/sshd (pid 241679)",
+    "/proc/boot/libcrypto.so.3: OpenSSL 3.5.9",
+    "OpenSSL 3.5 upstream support: until 2030-04-08; scan date 2026-11-23"
+   ],
+   "fix": "Same as QCB-001: load OpenSSL 3.5 in this process.",
+   "rule": "QCB-007",
+   "severity": "OK",
+   "source_date": "2026-11-23",
+   "source_url": "https://openssl-library.org/policies/releasestrat/",
+   "subject": "/proc/boot/libcrypto.so.3",
+   "title": "A running process loads an OpenSSL library within upstream support",
+   "unverified": []
+  }
+ ],
+ "image": {
+  "arch": "x86_64",
+  "build_files": [
+   "system.build",
+   "data.build"
+  ],
+  "counts": {
+   "bad_elf": 0,
+   "crypto_elf": 19,
+   "crypto_executables": 15,
+   "elf": 168,
+   "files": 217,
+   "links": 34,
+   "skipped_outside_roots": 2,
+   "skipped_too_big": 0,
+   "unreadable": 0,
+   "unresolved": 0
+  },
+  "ifs": "ifs.bin",
+  "name": "upgraded-image"
+ },
+ "keys": [
+  {
+   "algorithm": "Ed25519",
+   "curve": null,
+   "id": "data:var/ssh/ssh_host_ed25519_key",
+   "image_path": "/data/var/ssh/ssh_host_ed25519_key",
+   "kind": "private-key",
+   "not_after": null,
+   "quantum_safe": false,
+   "size": 256,
+   "subject": null
+  },
+  {
+   "algorithm": "RSA",
+   "curve": null,
+   "id": "data:var/ssh/ssh_host_rsa_key",
+   "image_path": "/data/var/ssh/ssh_host_rsa_key",
+   "kind": "private-key",
+   "not_after": null,
+   "quantum_safe": false,
+   "size": 3072,
+   "subject": null
+  },
+  {
+   "algorithm": "Ed448",
+   "curve": null,
+   "id": "ifs:proc/boot/qtd_public_key.pem",
+   "image_path": "/proc/boot/qtd_public_key.pem",
+   "kind": "public-key",
+   "not_after": null,
+   "quantum_safe": false,
+   "size": 456,
+   "subject": null
+  }
+ ],
+ "libs": [
+  {
+   "family": "openssl",
+   "id": "ifs:proc/boot/libcrypto.so.3",
+   "image_path": "/proc/boot/libcrypto.so.3",
+   "pq_capable": true,
+   "released": "29 Sep 2026",
+   "soname": "libcrypto.so.3",
+   "version": "3.5.9"
+  },
+  {
+   "family": "qcrypto",
+   "id": "ifs:proc/boot/libqcrypto.so.1.0",
+   "image_path": "/proc/boot/libqcrypto.so.1.0",
+   "pq_capable": false,
+   "released": null,
+   "soname": "libqcrypto.so.1.0",
+   "version": null
+  },
+  {
+   "family": "qcrypto",
+   "id": "ifs:proc/boot/qcrypto-openssl-3.so",
+   "image_path": "/proc/boot/qcrypto-openssl-3.so",
+   "pq_capable": false,
+   "released": null,
+   "soname": "qcrypto-openssl-3.so",
+   "version": null
+  },
+  {
+   "family": "openssl",
+   "id": "system:lib/libssl.so.3",
+   "image_path": "/system/lib/libssl.so.3",
+   "pq_capable": true,
+   "released": null,
+   "soname": "libssl.so.3",
+   "version": null
+  }
+ ],
+ "notes": [],
+ "runtime": {
+  "error_count": 0,
+  "probe_version": "0.1.0",
+  "processes": [
+   {
+    "libs": [
+     {
+      "disk_version": null,
+      "matches_disk": null,
+      "path": "/proc/boot/libqcrypto.so.1.0",
+      "pq_capable": false,
+      "released": null,
+      "soname": "libqcrypto.so.1.0",
+      "version": null
+     },
+     {
+      "disk_version": null,
+      "matches_disk": null,
+      "path": "/proc/boot/qcrypto-openssl-3.so",
+      "pq_capable": false,
+      "released": null,
+      "soname": "qcrypto-openssl-3.so",
+      "version": null
+     },
+     {
+      "disk_version": "3.5.9",
+      "matches_disk": true,
+      "path": "/proc/boot/libcrypto.so.3",
+      "pq_capable": true,
+      "released": "29 Sep 2026",
+      "soname": "libcrypto.so.3",
+      "version": "3.5.9"
+     }
+    ],
+    "name": "/system/bin/random",
+    "pid": 131081
+   },
+   {
+    "libs": [
+     {
+      "disk_version": "3.5.9",
+      "matches_disk": true,
+      "path": "/proc/boot/libcrypto.so.3",
+      "pq_capable": true,
+      "released": "29 Sep 2026",
+      "soname": "libcrypto.so.3",
+      "version": "3.5.9"
+     }
+    ],
+    "name": "/system/bin/sshd",
+    "pid": 241679
+   },
+   {
+    "libs": [
+     {
+      "disk_version": null,
+      "matches_disk": null,
+      "path": "/system/lib/libssl.so.3",
+      "pq_capable": true,
+      "released": null,
+      "soname": "libssl.so.3",
+      "version": null
+     },
+     {
+      "disk_version": "3.5.9",
+      "matches_disk": true,
+      "path": "/proc/boot/libcrypto.so.3",
+      "pq_capable": true,
+      "released": "29 Sep 2026",
+      "soname": "libcrypto.so.3",
+      "version": "3.5.9"
+     }
+    ],
+    "name": "/system/bin/openssl",
+    "pid": 376852
+   },
+   {
+    "libs": [
+     {
+      "disk_version": null,
+      "matches_disk": null,
+      "path": "/data/lab/o35/libssl.so.3",
+      "pq_capable": true,
+      "released": null,
+      "soname": "libssl.so.3",
+      "version": null
+     },
+     {
+      "disk_version": "3.5.9",
+      "matches_disk": true,
+      "path": "/data/lab/o35/libcrypto.so.3",
+      "pq_capable": true,
+      "released": "29 Sep 2026",
+      "soname": "libcrypto.so.3",
+      "version": "3.5.9"
+     }
+    ],
+    "name": "/system/bin/openssl",
+    "pid": 397333
+   }
+  ],
+  "scanned": 22,
+  "schema": "qnx-cbom-probe/1",
+  "target": {
+   "machine": "x86pc",
+   "release": "8.0.0",
+   "sysname": "QNX"
+  }
+ },
+ "scan_date": "2026-11-23",
+ "schema": "qnx-cbom-scan/1",
+ "summary": {
+  "ok": 5,
+  "unsafe": 0,
+  "verdict": "WARN",
+  "warn": 4
+ },
+ "tool": {
+  "name": "qnx-cbom",
+  "version": "0.1.0"
+ },
+ "unverified": []
+}

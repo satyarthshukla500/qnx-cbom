@@ -1,0 +1,756 @@
+{
+ "bomFormat": "CycloneDX",
+ "specVersion": "1.6",
+ "serialNumber": "urn:uuid:a8cbb143-8752-55e4-970a-f750793d6938",
+ "version": 1,
+ "metadata": {
+  "timestamp": "2026-11-23T00:00:00Z",
+  "tools": {
+   "components": [
+    {
+     "type": "application",
+     "name": "qnx-cbom",
+     "version": "0.1.0"
+    }
+   ]
+  },
+  "component": {
+   "type": "firmware",
+   "bom-ref": "image",
+   "name": "stock-image",
+   "properties": [
+    {
+     "name": "qnx-cbom:arch",
+     "value": "x86_64"
+    },
+    {
+     "name": "qnx-cbom:verdict",
+     "value": "UNSAFE"
+    }
+   ]
+  }
+ },
+ "components": [
+  {
+   "type": "library",
+   "bom-ref": "lib:ifs:proc/boot/libcrypto.so.3",
+   "name": "libcrypto.so.3",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/proc/boot/libcrypto.so.3"
+     }
+    ]
+   },
+   "properties": [
+    {
+     "name": "qnx-cbom:pq-capable",
+     "value": "false"
+    }
+   ],
+   "version": "3.0.22",
+   "purl": "pkg:generic/openssl@3.0.22"
+  },
+  {
+   "type": "library",
+   "bom-ref": "lib:ifs:proc/boot/libqcrypto.so.1.0",
+   "name": "libqcrypto.so.1.0",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/proc/boot/libqcrypto.so.1.0"
+     }
+    ]
+   },
+   "properties": [
+    {
+     "name": "qnx-cbom:pq-capable",
+     "value": "false"
+    }
+   ]
+  },
+  {
+   "type": "library",
+   "bom-ref": "lib:ifs:proc/boot/qcrypto-openssl-3.so",
+   "name": "qcrypto-openssl-3.so",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/proc/boot/qcrypto-openssl-3.so"
+     }
+    ]
+   },
+   "properties": [
+    {
+     "name": "qnx-cbom:pq-capable",
+     "value": "false"
+    }
+   ]
+  },
+  {
+   "type": "library",
+   "bom-ref": "lib:system:lib/libssl.so.3",
+   "name": "libssl.so.3",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/system/lib/libssl.so.3"
+     }
+    ]
+   },
+   "properties": [
+    {
+     "name": "qnx-cbom:pq-capable",
+     "value": "false"
+    }
+   ]
+  },
+  {
+   "type": "library",
+   "bom-ref": "elf:ifs:proc/boot/fs-qtd.so",
+   "name": "fs-qtd.so",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/proc/boot/fs-qtd.so"
+     }
+    ]
+   }
+  },
+  {
+   "type": "application",
+   "bom-ref": "elf:system:bin/bsdtar",
+   "name": "bsdtar",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/system/bin/bsdtar"
+     }
+    ]
+   }
+  },
+  {
+   "type": "application",
+   "bom-ref": "elf:system:bin/curl",
+   "name": "curl",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/system/bin/curl"
+     }
+    ]
+   }
+  },
+  {
+   "type": "application",
+   "bom-ref": "elf:system:bin/ntp-keygen",
+   "name": "ntp-keygen",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/system/bin/ntp-keygen"
+     }
+    ]
+   }
+  },
+  {
+   "type": "application",
+   "bom-ref": "elf:system:bin/ntpd",
+   "name": "ntpd",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/system/bin/ntpd"
+     }
+    ]
+   }
+  },
+  {
+   "type": "application",
+   "bom-ref": "elf:system:bin/ntpdate",
+   "name": "ntpdate",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/system/bin/ntpdate"
+     }
+    ]
+   }
+  },
+  {
+   "type": "application",
+   "bom-ref": "elf:system:bin/ntpq",
+   "name": "ntpq",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/system/bin/ntpq"
+     }
+    ]
+   }
+  },
+  {
+   "type": "application",
+   "bom-ref": "elf:system:bin/openssl",
+   "name": "openssl",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/system/bin/openssl"
+     }
+    ]
+   }
+  },
+  {
+   "type": "application",
+   "bom-ref": "elf:system:bin/random",
+   "name": "random",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/system/bin/random"
+     }
+    ]
+   }
+  },
+  {
+   "type": "application",
+   "bom-ref": "elf:system:bin/sntp",
+   "name": "sntp",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/system/bin/sntp"
+     }
+    ]
+   }
+  },
+  {
+   "type": "application",
+   "bom-ref": "elf:system:bin/ssh",
+   "name": "ssh",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/system/bin/ssh"
+     }
+    ]
+   }
+  },
+  {
+   "type": "application",
+   "bom-ref": "elf:system:bin/ssh-keygen",
+   "name": "ssh-keygen",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/system/bin/ssh-keygen"
+     }
+    ]
+   }
+  },
+  {
+   "type": "application",
+   "bom-ref": "elf:system:bin/sshd",
+   "name": "sshd",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/system/bin/sshd"
+     }
+    ]
+   }
+  },
+  {
+   "type": "application",
+   "bom-ref": "elf:system:bin/sshd-auth",
+   "name": "sshd-auth",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/system/bin/sshd-auth"
+     }
+    ]
+   }
+  },
+  {
+   "type": "application",
+   "bom-ref": "elf:system:bin/sshd-session",
+   "name": "sshd-session",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/system/bin/sshd-session"
+     }
+    ]
+   }
+  },
+  {
+   "type": "application",
+   "bom-ref": "elf:system:bin/tcpdump",
+   "name": "tcpdump",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/system/bin/tcpdump"
+     }
+    ]
+   }
+  },
+  {
+   "type": "library",
+   "bom-ref": "elf:system:lib/libcurl.so.12",
+   "name": "libcurl.so.12",
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/system/lib/libcurl.so.12"
+     }
+    ]
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "algo:aes128-ctr",
+   "name": "aes128-ctr",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "block-cipher"
+    }
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "algo:aes192-ctr",
+   "name": "aes192-ctr",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "block-cipher"
+    }
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "algo:aes256-ctr",
+   "name": "aes256-ctr",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "block-cipher"
+    }
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "algo:curve25519-sha256@libssh.org",
+   "name": "curve25519-sha256@libssh.org",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "key-agree",
+     "nistQuantumSecurityLevel": 0
+    }
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "algo:ecdh-sha2-nistp256",
+   "name": "ecdh-sha2-nistp256",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "key-agree",
+     "nistQuantumSecurityLevel": 0
+    }
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "algo:ecdh-sha2-nistp384",
+   "name": "ecdh-sha2-nistp384",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "key-agree",
+     "nistQuantumSecurityLevel": 0
+    }
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "algo:ecdh-sha2-nistp521",
+   "name": "ecdh-sha2-nistp521",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "key-agree",
+     "nistQuantumSecurityLevel": 0
+    }
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "algo:diffie-hellman-group-exchange-sha256",
+   "name": "diffie-hellman-group-exchange-sha256",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "key-agree",
+     "nistQuantumSecurityLevel": 0
+    }
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "algo:hmac-sha2-512-etm@openssh.com",
+   "name": "hmac-sha2-512-etm@openssh.com",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "mac"
+    }
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "algo:hmac-sha2-256-etm@openssh.com",
+   "name": "hmac-sha2-256-etm@openssh.com",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "mac"
+    }
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "algo:umac-128-etm@openssh.com",
+   "name": "umac-128-etm@openssh.com",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "mac"
+    }
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "algo:hmac-sha2-512",
+   "name": "hmac-sha2-512",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "mac"
+    }
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "algo:hmac-sha2-256",
+   "name": "hmac-sha2-256",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "mac"
+    }
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "algo:umac-128@openssh.com",
+   "name": "umac-128@openssh.com",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "mac"
+    }
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "proto:sshd",
+   "name": "sshd settings",
+   "cryptoProperties": {
+    "assetType": "protocol",
+    "protocolProperties": {
+     "type": "ssh",
+     "cryptoRefArray": [
+      "algo:aes128-ctr",
+      "algo:aes192-ctr",
+      "algo:aes256-ctr",
+      "algo:curve25519-sha256@libssh.org",
+      "algo:diffie-hellman-group-exchange-sha256",
+      "algo:ecdh-sha2-nistp256",
+      "algo:ecdh-sha2-nistp384",
+      "algo:ecdh-sha2-nistp521",
+      "algo:hmac-sha2-256",
+      "algo:hmac-sha2-256-etm@openssh.com",
+      "algo:hmac-sha2-512",
+      "algo:hmac-sha2-512-etm@openssh.com",
+      "algo:umac-128-etm@openssh.com",
+      "algo:umac-128@openssh.com"
+     ]
+    }
+   },
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/system/etc/ssh/sshd_config"
+     }
+    ]
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "algo:Ed25519-256",
+   "name": "Ed25519-256",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "signature",
+     "nistQuantumSecurityLevel": 0
+    }
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "key:0",
+   "name": "Ed25519-256 private-key",
+   "cryptoProperties": {
+    "assetType": "related-crypto-material",
+    "relatedCryptoMaterialProperties": {
+     "type": "private-key",
+     "algorithmRef": "algo:Ed25519-256",
+     "size": 256
+    }
+   },
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/data/var/ssh/ssh_host_ed25519_key"
+     }
+    ]
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "algo:RSA-3072",
+   "name": "RSA-3072",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "signature",
+     "nistQuantumSecurityLevel": 0
+    }
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "key:1",
+   "name": "RSA-3072 private-key",
+   "cryptoProperties": {
+    "assetType": "related-crypto-material",
+    "relatedCryptoMaterialProperties": {
+     "type": "private-key",
+     "algorithmRef": "algo:RSA-3072",
+     "size": 3072
+    }
+   },
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/data/var/ssh/ssh_host_rsa_key"
+     }
+    ]
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "algo:Ed448-456",
+   "name": "Ed448-456",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "signature",
+     "nistQuantumSecurityLevel": 0
+    }
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "bom-ref": "key:2",
+   "name": "Ed448-456 public-key",
+   "cryptoProperties": {
+    "assetType": "related-crypto-material",
+    "relatedCryptoMaterialProperties": {
+     "type": "public-key",
+     "algorithmRef": "algo:Ed448-456",
+     "size": 456
+    }
+   },
+   "evidence": {
+    "occurrences": [
+     {
+      "location": "/proc/boot/qtd_public_key.pem"
+     }
+    ]
+   }
+  }
+ ],
+ "dependencies": [
+  {
+   "ref": "elf:ifs:proc/boot/fs-qtd.so",
+   "dependsOn": [
+    "lib:ifs:proc/boot/libqcrypto.so.1.0"
+   ]
+  },
+  {
+   "ref": "lib:ifs:proc/boot/qcrypto-openssl-3.so",
+   "dependsOn": [
+    "lib:ifs:proc/boot/libcrypto.so.3",
+    "lib:ifs:proc/boot/libqcrypto.so.1.0"
+   ]
+  },
+  {
+   "ref": "elf:system:bin/bsdtar",
+   "dependsOn": [
+    "lib:ifs:proc/boot/libcrypto.so.3"
+   ]
+  },
+  {
+   "ref": "elf:system:bin/curl",
+   "dependsOn": [
+    "lib:ifs:proc/boot/libcrypto.so.3",
+    "lib:system:lib/libssl.so.3"
+   ]
+  },
+  {
+   "ref": "elf:system:bin/ntp-keygen",
+   "dependsOn": [
+    "lib:ifs:proc/boot/libcrypto.so.3"
+   ]
+  },
+  {
+   "ref": "elf:system:bin/ntpd",
+   "dependsOn": [
+    "lib:ifs:proc/boot/libcrypto.so.3"
+   ]
+  },
+  {
+   "ref": "elf:system:bin/ntpdate",
+   "dependsOn": [
+    "lib:ifs:proc/boot/libcrypto.so.3"
+   ]
+  },
+  {
+   "ref": "elf:system:bin/ntpq",
+   "dependsOn": [
+    "lib:ifs:proc/boot/libcrypto.so.3"
+   ]
+  },
+  {
+   "ref": "elf:system:bin/openssl",
+   "dependsOn": [
+    "lib:ifs:proc/boot/libcrypto.so.3",
+    "lib:system:lib/libssl.so.3"
+   ]
+  },
+  {
+   "ref": "elf:system:bin/random",
+   "dependsOn": [
+    "lib:ifs:proc/boot/libqcrypto.so.1.0"
+   ]
+  },
+  {
+   "ref": "elf:system:bin/sntp",
+   "dependsOn": [
+    "lib:ifs:proc/boot/libcrypto.so.3"
+   ]
+  },
+  {
+   "ref": "elf:system:bin/ssh",
+   "dependsOn": [
+    "lib:ifs:proc/boot/libcrypto.so.3"
+   ]
+  },
+  {
+   "ref": "elf:system:bin/ssh-keygen",
+   "dependsOn": [
+    "lib:ifs:proc/boot/libcrypto.so.3"
+   ]
+  },
+  {
+   "ref": "elf:system:bin/sshd",
+   "dependsOn": [
+    "lib:ifs:proc/boot/libcrypto.so.3"
+   ]
+  },
+  {
+   "ref": "elf:system:bin/sshd-auth",
+   "dependsOn": [
+    "lib:ifs:proc/boot/libcrypto.so.3"
+   ]
+  },
+  {
+   "ref": "elf:system:bin/sshd-session",
+   "dependsOn": [
+    "lib:ifs:proc/boot/libcrypto.so.3"
+   ]
+  },
+  {
+   "ref": "elf:system:bin/tcpdump",
+   "dependsOn": [
+    "lib:ifs:proc/boot/libcrypto.so.3"
+   ]
+  },
+  {
+   "ref": "elf:system:lib/libcurl.so.12",
+   "dependsOn": [
+    "lib:ifs:proc/boot/libcrypto.so.3",
+    "lib:system:lib/libssl.so.3"
+   ]
+  },
+  {
+   "ref": "lib:system:lib/libssl.so.3",
+   "dependsOn": [
+    "lib:ifs:proc/boot/libcrypto.so.3"
+   ]
+  }
+ ],
+ "properties": [
+  {
+   "name": "qnx-cbom:finding",
+   "value": "UNSAFE QCB-001 /proc/boot/libcrypto.so.3"
+  },
+  {
+   "name": "qnx-cbom:finding",
+   "value": "UNSAFE QCB-002 /system/bin/sshd"
+  },
+  {
+   "name": "qnx-cbom:finding",
+   "value": "UNSAFE QCB-007 /proc/boot/libcrypto.so.3"
+  },
+  {
+   "name": "qnx-cbom:finding",
+   "value": "WARN QCB-004 /data/var/ssh/ssh_host_ed25519_key"
+  },
+  {
+   "name": "qnx-cbom:finding",
+   "value": "WARN QCB-004 /data/var/ssh/ssh_host_rsa_key"
+  },
+  {
+   "name": "qnx-cbom:finding",
+   "value": "WARN QCB-004 /proc/boot/qtd_public_key.pem"
+  },
+  {
+   "name": "qnx-cbom:finding",
+   "value": "WARN QCB-005 /proc/boot/qcrypto.conf"
+  },
+  {
+   "name": "qnx-cbom:finding",
+   "value": "OK QCB-003 /system/bin/ssh"
+  }
+ ]
+}

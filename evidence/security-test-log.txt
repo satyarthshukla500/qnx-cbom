@@ -1,0 +1,36 @@
+## security attack log; 35 attacks; 0 got through
+BLOCKED/HANDLED  build list sources ../../etc/passwd, /etc/passwd, /root/.bashrc -> skipped_outside_roots=2 (existing files), unresolved=1 (missing file), none read, rc=1
+BLOCKED/HANDLED  symlinks to /etc/passwd, to /etc, a self loop and a dir loop inside the IFS folder -> file links counted=2; directory links are not entered; rc=1
+BLOCKED/HANDLED  named pipe called fifo.pem inside the IFS folder (a read would hang) -> finished, rc=1
+BLOCKED/HANDLED  file name, config value and key text containing <script> and onerror -> all shown as &lt;...&gt; text; the page has exactly one script (its own): 1
+BLOCKED/HANDLED  report has CSP meta, no unsafe-inline/eval, no inline handler attributes, no src attributes (parsed with an HTML parser) -> handlers=[], src tags=[], script tags=1
+BLOCKED/HANDLED  file names ';touch PWNED' and '$(touch PWNED2)' -> no file was created
+BLOCKED/HANDLED  --ifs file named '-x;$(id).bin' (passed to dumpifs as an argument) -> rc=2: qnx-cbom: error: dumpifs failed on /tmp/qnxcbom-attack-kj1t7f8t/-x;$(id).bin
+BLOCKED/HANDLED  six malformed ELF files (truncated, 60000 program headers, huge offset, 32-bit, magic only) -> scan finished rc=1, bad_elf=4
+BLOCKED/HANDLED  6 MB sshd_config line and a 70 MB .pem file -> rc=1, finished
+BLOCKED/HANDLED  private key files with a unique marker (and a fake PEM of the marker) in all outputs -> marker absent from json, cbom, html, text, stdout, stderr
+BLOCKED/HANDLED  20 100 files in the IFS folder -> rc=2: qnx-cbom: error: too many files in the boot image folder
+BLOCKED/HANDLED  inline block of 2 MB in system.build -> rc=2: qnx-cbom: error: cannot read /tmp/qnxcbom-attack-kj1t7f8t/i9/proj/output/build/system.build: inline block for x is too big
+BLOCKED/HANDLED  system.build filled with random bytes -> rc=2: qnx-cbom: error: cannot read /tmp/qnxcbom-attack-kj1t7f8t/i9/proj/output/build/s
+BLOCKED/HANDLED  diff with nested scan file -> rc=2: qnx-cbom: error: /tmp/qnxcbom-attack-kj1t7f8t/nested.json is not valid JSON
+BLOCKED/HANDLED  --runtime with nested file -> rc=2: qnx-cbom: error: probe file is not valid JSON
+BLOCKED/HANDLED  diff with empty scan file -> rc=2: qnx-cbom: error: /tmp/qnxcbom-attack-kj1t7f8t/empty.json is not valid JSON
+BLOCKED/HANDLED  --runtime with empty file -> rc=2: qnx-cbom: error: probe file is not valid JSON
+BLOCKED/HANDLED  diff with binary scan file -> rc=2: qnx-cbom: error: /tmp/qnxcbom-attack-kj1t7f8t/binary.json is not valid JSON
+BLOCKED/HANDLED  --runtime with binary file -> rc=2: qnx-cbom: error: probe file is not valid JSON
+BLOCKED/HANDLED  diff with nullbytes scan file -> rc=2: qnx-cbom: error: /tmp/qnxcbom-attack-kj1t7f8t/nullbytes.json is not valid JSON
+BLOCKED/HANDLED  --runtime with nullbytes file -> rc=2: qnx-cbom: error: probe file is not valid JSON
+BLOCKED/HANDLED  diff with wrong scan file -> rc=2: qnx-cbom: error: /tmp/qnxcbom-attack-kj1t7f8t/wrong.json is damaged: field 'find
+BLOCKED/HANDLED  --runtime with wrong file -> rc=2: qnx-cbom: error: not probe output (schema qnx-cbom-probe/1 expected)
+BLOCKED/HANDLED  diff with a 70 MB file -> rc=2: qnx-cbom: error: /tmp/qnxcbom-attack-kj1t7f8t/huge.json is bigger than 64 MiB
+BLOCKED/HANDLED  probe file with 100 000 character path and 1000 character version -> rc=1 (text is cut to its limit)
+BLOCKED/HANDLED  argument with NUL byte -> refused by the operating system layer: embedded null byte
+BLOCKED/HANDLED  odd arguments --ifs /dev/null -> rc=2: qnx-cbom: error: --ifs is not a file: /dev/null
+BLOCKED/HANDLED  1 MB of newlines in a .pub, 50 000 unmatched BEGIN lines in a .pem and in a .key -> finished, rc=1
+BLOCKED/HANDLED  probe capture with 600 000 CBOM-BEGIN lines -> rc=2 qnx-cbom: error: probe file is not valid JSON
+BLOCKED/HANDLED  libcrypto.so.3 cut short so it cannot be read as ELF (verdict must not drop) -> rc=1, QCB-008 raised
+BLOCKED/HANDLED  libcrypto.so.3 replaced by a text file -> rc=1, QCB-008 raised
+BLOCKED/HANDLED  libcrypto.so.3 with mode 000 -> rc=1, QCB-008 raised
+BLOCKED/HANDLED  terminal escape sequences in a file name and in --name -> no ESC byte in standard output or error, rc=1
+BLOCKED/HANDLED  source search for shell=True, os.system, eval, exec, pickle, importlib -> no match
+BLOCKED/HANDLED  third-party imports in the product -> standard library only

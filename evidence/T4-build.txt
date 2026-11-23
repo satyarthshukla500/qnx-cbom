@@ -1,0 +1,71 @@
+## T4 build log summary Mon Nov 23 11:50:41 UTC 2026  (full logs kept in /tmp/qnx-hack-dl/attempt*-*.log, not in repo)
+
+### Attempt 1: Configure linux-generic64 no-asm no-tests CC='qcc -Vgcc_ntox86_64' AR=ntox86_64-ar RANLIB=ntox86_64-ranlib LDLIBS=-lsocket
+configure: 1 x 'successfully configured'
+make result:
+cc: Can't specify -P, -C, -E, -c or -S with -o and have multiple files
+cc: Can't specify -P, -C, -E, -c or -S with -o and have multiple files
+make: *** [Makefile:3297: build_sw] Error 2
+rc=2
+cause: qcc driver rejects the -MMD -MF dependency flags OpenSSL adds to every compile.
+
+### Attempt 2: same + no-makedepend
+../src/openssl-3.5.9/engines/e_afalg.c:27:10: fatal error: linux/version.h: No such file or directory
+make: *** [Makefile:1618: build_sw] Error 2
+rc=2
+configdata ex_libs for linux-generic64:
+    "ex_libs" => "-ldl -pthread",
+cause: linux-* target enables the Linux-only afalg engine (needs linux/version.h) and links -ldl (no libdl in $QNX_TARGET).
+
+### Attempt 3: own --config file (BASE_unix, qcc -Vgcc_ntox86_64, -lsocket, dlfcn, pthreads, gnu-shared), no-asm no-tests no-makedepend. Upstream source unchanged.
+$ cat qnx-generic64.conf   (now demo/qnx-generic64.conf)
+# Configure target used for the first OpenSSL 3.5.9 build test
+# plain unix 64-bit, no linux bits (no afalg, no -ldl)
+my %targets = (
+    "qnx-generic64" => {
+        inherit_from     => [ "BASE_unix" ],
+        CC               => "qcc",
+        cflags           => "-Vgcc_ntox86_64",
+        lflags           => "-Vgcc_ntox86_64",
+        ex_libs          => add("-lsocket"),
+        bn_ops           => "SIXTY_FOUR_BIT_LONG",
+        dso_scheme       => "dlfcn",
+        thread_scheme    => "pthreads",
+        shared_target    => "gnu-shared",
+        shared_cflag     => "-fPIC",
+        shared_extension => ".so.\$(SHLIB_VERSION_NUMBER)",
+    },
+);
+rc=0
+$ ls -la apps/openssl libcrypto.so.3 libssl.so.3 providers/legacy.so
+1446920 apps/openssl
+7176768 libcrypto.so.3
+1769776 libssl.so.3
+201368 providers/legacy.so
+$ file
+apps/openssl:   ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /usr/lib/ldqnx-64.so.2, BuildID[md5
+libcrypto.so.3: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[md5/uuid]=d17a6d8dfcee783a5cc3039d2ce497
+libssl.so.3:    ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[md5/uuid]=e612277e5387c4c310ceb1f495aee4
+$ ntox86_64-readelf -d apps/openssl | NEEDED/SONAME
+ 0x0000000000000001 (NEEDED)             Shared library: [libssl.so.3]
+ 0x0000000000000001 (NEEDED)             Shared library: [libcrypto.so.3]
+ 0x0000000000000001 (NEEDED)             Shared library: [libsocket.so.4]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libgcc_s.so.1]
+$ ntox86_64-readelf -d libcrypto.so.3 | NEEDED/SONAME
+ 0x0000000000000001 (NEEDED)             Shared library: [libsocket.so.4]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libgcc_s.so.1]
+ 0x000000000000000e (SONAME)             Library soname: [libcrypto.so.3]
+$ ntox86_64-readelf -d libssl.so.3 | NEEDED/SONAME
+ 0x0000000000000001 (NEEDED)             Shared library: [libcrypto.so.3]
+ 0x0000000000000001 (NEEDED)             Shared library: [libsocket.so.4]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libgcc_s.so.1]
+ 0x000000000000000e (SONAME)             Library soname: [libssl.so.3]
+$ strings libcrypto.so.3 | grep '^OpenSSL 3'
+OpenSSL 3.5.9 29 Sep 2026
+$ strings libcrypto.so.3 | grep -ciE 'ML-KEM' ; ML-DSA
+44
+47
+Note: SONAME is libcrypto.so.3 / libssl.so.3, same as the SDK's 3.0.22, so it cannot sit next to the system libs without LD_LIBRARY_PATH ordering (the qnx-ports branch renames SHLIB_VERSION to 3.5 for this reason).

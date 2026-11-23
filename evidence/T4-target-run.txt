@@ -1,0 +1,146 @@
+## T4 run on QNX target  Mon Nov 23 11:52:54 UTC 2026
+How: a throwaway QEMU boot of ~/qnximg/output (ifs.bin + disk-qemu.vmdk) with -snapshot (nothing written back),
+no network (-nic none; br0 is not set up and the image has no ssh identity/password I could use),
+TCG (user is not in the kvm group). The build was put on a second IDE disk made with SDK mkqnx6fsimg
+and mounted read-only on the target as /dev/hd1. Driver: a QEMU driver script (an earlier version of lab/run_qemu.py), script: run.sh (below).
+Keys/certs in the test were made on the target in /tmp (RAM) and thrown away with the VM.
+
+$ cat run.sh
+# runs on the QNX target from the attached disk
+D=/data/t4mnt/o35
+export LD_LIBRARY_PATH=$D:$LD_LIBRARY_PATH
+export OPENSSL_CONF=$D/openssl.cnf
+export OPENSSL_MODULES=$D
+O=$D/openssl
+echo "=== uname -a"; uname -a
+echo "=== system openssl version"; /system/bin/openssl version
+echo "=== new openssl version -a"; $O version -a
+echo "=== new openssl list -kem-algorithms"; $O list -kem-algorithms
+echo "=== new openssl list -signature-algorithms | grep -i ml-dsa"; $O list -signature-algorithms | grep -i ml-dsa
+echo "=== new openssl list -tls-groups -tls1_3"; $O list -tls-groups -tls1_3
+cd /tmp
+echo "=== make throwaway ed25519 self-signed cert in /tmp (target RAM only)"
+$O req -x509 -newkey ed25519 -nodes -keyout k.pem -out c.pem -subj /CN=t4 -days 1 2>&1 | tail -2; ls -la c.pem k.pem
+echo "=== s_server -groups X25519MLKEM768 -tls1_3 on 127.0.0.1:4433"
+$O s_server -accept 4433 -cert c.pem -key k.pem -groups X25519MLKEM768 -tls1_3 -naccept 1 -www > /tmp/srv.log 2>&1 &
+sleep 5
+echo "=== s_client -groups X25519MLKEM768 -tls1_3"
+echo | $O s_client -connect 127.0.0.1:4433 -groups X25519MLKEM768 -tls1_3 2>&1 | grep -aE 'CONNECTED|Negotiated|Protocol|Cipher is|Peer signature|Verify return|Server Temp Key|error|errno'
+echo "=== server log"; cat /tmp/srv.log | head -10
+echo "=== negative check: system 3.0 s_client asking for X25519MLKEM768"
+echo | /system/bin/openssl s_client -connect 127.0.0.1:4433 -groups X25519MLKEM768 2>&1 | head -3
+echo "=== T4 TARGET DONE"
+
+$ cat disk.build (mkqnx6fsimg)
+[uid=0 gid=0 perms=0755] o35/openssl=<build3>/apps/openssl
+[uid=0 gid=0 perms=0755] o35/libcrypto.so.3=<build3>/libcrypto.so.3
+[uid=0 gid=0 perms=0755] o35/libssl.so.3=<build3>/libssl.so.3
+[uid=0 gid=0 perms=0755] o35/legacy.so=<build3>/providers/legacy.so
+[uid=0 gid=0 perms=0644] o35/openssl.cnf=<build3>/apps/openssl.cnf
+[uid=0 gid=0 perms=0644] o35/run.sh=<scratch>/t4/run.sh
+
+----- serial console log (ANSI escapes and CR removed) -----
+
+non UEFI or UEFI+CSM boot
+ACPI table not found (0x4746434d)
+System behaves poorly without PCID support.
+overriding mask for controller 2, vector_base 0
+---> Starting slogger2
+---> Starting PCI Services
+---> Starting fsevmgr
+# ---> Starting devb
+---> Mounting file systems
+Path=0 - Intel 82371SB
+ target=0 lun=0     Direct-Access(0) -          QEMU HARDDISK    Rev: 2.5+
+ target=1 lun=0     Direct-Access(0) -          QEMU HARDDISK    Rev: 2.5+
+Path=1 - Intel 82371SB
+ target=0 lun=0            CD-ROM(5) - QEMU     QEMU DVD-ROM     Rev: 2.5+
+---> Mounting file systems
+---> Starting Networking
+if_up: tries exhausted
+ifconfig: interface vtnet0 does not exist
+no valid interfaces found
+---> Starting sshd
+Memory fault (core dumped) 
+---> Starting misc
+
+To exit QEMU, type <ctrl>a x
+
+Process count:21
+Startup complete
+QNX noname 8.0.0 2026/10/30-09:10:05EDT x86pc x86_64
+
+# mkdir -p /data/t4mnt && mount -t qnx6 -r /dev/hd1 /data/t4mnt && ls /data/t4mnt/o35
+legacy.so  libcrypto.so.3  libssl.so.3  openssl  openssl.cnf  run.sh
+# sh /data/t4mnt/o35/run.sh
+=== uname -a
+QNX noname 8.0.0 2026/10/30-09:10:05EDT x86pc x86_64
+=== system openssl version
+OpenSSL 3.0.22 25 Aug 2026 (Library: OpenSSL 3.5.9 29 Sep 2026)
+=== new openssl version -a
+OpenSSL 3.5.9 29 Sep 2026 (Library: OpenSSL 3.5.9 29 Sep 2026)
+built on: Mon Nov 23 11:49:29 2026 UTC
+platform: qnx-generic64
+options:  bn(64,64)
+compiler: qcc -fPIC -Vgcc_ntox86_64  -DOPENSSL_PIC -DOPENSSL_BUILDING_OPENSSL -DNDEBUG
+OPENSSLDIR: "/opt/ossl35/ssl"
+ENGINESDIR: "/opt/ossl35/lib/engines-3"
+MODULESDIR: "/opt/ossl35/lib/ossl-modules"
+Seeding source: os-specific
+CPUINFO: N/A
+=== new openssl list -kem-algorithms
+  { 1.2.840.113549.1.1.1, 2.5.8.1.1, RSA, rsaEncryption } @ default
+  { 1.2.840.10045.2.1, EC, id-ecPublicKey } @ default
+  { 1.3.101.110, X25519 } @ default
+  { 1.3.101.111, X448 } @ default
+  { 2.16.840.1.101.3.4.4.1, id-alg-ml-kem-512, ML-KEM-512, MLKEM512 } @ default
+  { 2.16.840.1.101.3.4.4.2, id-alg-ml-kem-768, ML-KEM-768, MLKEM768 } @ default
+  { 2.16.840.1.101.3.4.4.3, id-alg-ml-kem-1024, ML-KEM-1024, MLKEM1024 } @ default
+  X25519MLKEM768 @ default
+  X448MLKEM1024 @ default
+  SecP256r1MLKEM768 @ default
+  SecP384r1MLKEM1024 @ default
+=== new openssl list -signature-algorithms | grep -i ml-dsa
+  { 2.16.840.1.101.3.4.3.17, id-ml-dsa-44, ML-DSA-44, MLDSA44 } @ default
+  { 2.16.840.1.101.3.4.3.18, id-ml-dsa-65, ML-DSA-65, MLDSA65 } @ default
+  { 2.16.840.1.101.3.4.3.19, id-ml-dsa-87, ML-DSA-87, MLDSA87 } @ default
+=== new openssl list -tls-groups -tls1_3
+secp256r1:secp384r1:secp521r1:x25519:x448:brainpoolP256r1tls13:brainpoolP384r1tls13:brainpoolP512r1tls13:ffdhe2048:ffdhe3072:ffdhe4096:ffdhe6144:ffdhe8192:MLKEM512:MLKEM768:MLKEM1024:SecP256r1MLKEM768:X25519MLKEM768:SecP384r1MLKEM1024
+=== make throwaway ed25519 self-signed cert in /tmp (target RAM only)
+-----
+-rw-r--r--  1 root root 469 2026-11-23 11:52 c.pem
+-rw-------  1 root root 119 2026-11-23 11:52 k.pem
+=== s_server -groups X25519MLKEM768 -tls1_3 on 127.0.0.1:4433
+=== s_client -groups X25519MLKEM768 -tls1_3
+verify error:num=18:self-signed certificate
+CONNECTED(00000004)
+Peer signature type: ed25519
+Negotiated TLS1.3 group: X25519MLKEM768
+Verification error: self-signed certificate
+New, TLSv1.3, Cipher is TLS_AES_256_GCM_SHA384
+Protocol: TLSv1.3
+Verify return code: 18 (self-signed certificate)
+=== server log
+Using default temp DH parameters
+ACCEPT
+   0 items in the session cache
+   0 client connects (SSL_connect())
+   0 client renegotiates (SSL_connect())
+   0 client connects that finished
+   1 server accepts (SSL_accept())
+   0 server renegotiates (SSL_accept())
+   1 server accepts that finished
+   0 session cache hits
+=== negative check: system 3.0 s_client asking for X25519MLKEM768
+01000000:error:80000105:system library:BIO_connect:Connection refused:../src/openssl-3.5.9/crypto/bio/bio_sock2.c:183:calling connect()
+01000000:error:10000067:BIO routines:BIO_connect:connect error:../src/openssl-3.5.9/crypto/bio/bio_sock2.c:185:
+connect:errno=261
+=== T4 TARGET DONE
+# ----- end -----
+
+NOTES on the log:
+- 'system openssl version' line shows the SDK 3.0.22 binary picked up the 3.5.9 libcrypto, because both use SONAME
+  libcrypto.so.3 and LD_LIBRARY_PATH put the new dir first. Same-SONAME collision is real.
+- The 'negative check' at the end is NOT a valid test: s_server had already exited (-naccept 1) and the system
+  binary was again using the 3.5.9 libs (see source paths in the errors). Ignore it.
+- 'Memory fault (core dumped)' at 'Starting sshd' happened in this no-network snapshot boot; not looked into.

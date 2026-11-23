@@ -1,0 +1,8 @@
+{
+  "name": "qnx-cbom-ui-tests",
+  "private": true,
+  "description": "Browser tests for the HTML report (test tool only, not part of the product)",
+  "devDependencies": {
+    "playwright": "1.49.1"
+  }
+}

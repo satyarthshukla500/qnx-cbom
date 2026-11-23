@@ -1,0 +1,1 @@
+jsonschema 4.10.3: evidence/scan-before.cdx.json: VALID against CycloneDX 1.6 schema

@@ -1,0 +1,462 @@
+## T3 run Mon Nov 23 11:43:51 UTC 2026
+Method: ifs.bin extracted with 'dumpifs -x' to a temp dir. The system and data partitions
+are qnx6 filesystems inside disk-qemu; no host tool here reads qnx6 and QEMU was not running,
+so their contents are taken from ~/qnximg/output/build/{system,data}.build (dest=src lines)
+resolved against $QNX_TARGET/x86_64, $QNX_TARGET and ~/qnximg, i.e. the files mkqnx6fsimg packed.
+DT_NEEDED read with ntox86_64-readelf -d. Probe: a shell loop that runs readelf -d on each file (not part of the repository).
+
+$ dumpifs ~/qnximg/output/ifs.bin
+  Offset     Size    Entry Name
+ 1400000      200        0 *.boot
+ 1400200      100     ---- Startup-header flags1=0x21 flags2=0 paddr_bias=0
+ 1400300    30048  1402058 startup.*
+ 1430348       5c     ---- Image-header mountpoint=/
+ 14303a4     1740     ---- Image-directory
+    ----     ----     ---- Root-dirent
+ 1432000    f0000     ---- proc/boot/procnto-smp-instr
+    ----     ----     ---- bin
+    ----       11     ---- bin/cp -> /proc/boot/toybox
+    ----        e     ---- bin/ksh -> /proc/boot/ksh
+    ----       11     ---- bin/rm -> /proc/boot/toybox
+    ----        e     ---- bin/sh -> /proc/boot/ksh
+    ----        d     ---- etc -> /data/var/etc
+    ----     ----     ---- proc
+    ----     ----     ---- proc/boot
+    ----        2     ---- proc/boot/ability -> on
+    ----     ----     ---- proc/boot/build
+ 1431cb9       1a     ---- proc/boot/build.date
+ 1e690fc     10f8     ---- proc/boot/build/data.build
+ 1e67dad     134f     ---- proc/boot/build/ifs.build
+ 1e6aea6      9ef     ---- proc/boot/build/options
+ 1e6a1f4      cb2     ---- proc/boot/build/options.inc
+ 1e65000     2dad     ---- proc/boot/build/system.build
+ 1888000     4000     ---- proc/boot/cam-disk.so
+    ----        6     ---- proc/boot/cat -> toybox
+    ----        6     ---- proc/boot/chmod -> toybox
+    ----        6     ---- proc/boot/dd -> toybox
+ 161d000    22000     ---- proc/boot/devb-eide
+ 1601000    13000     ---- proc/boot/devc-ser8250
+    ----        6     ---- proc/boot/echo -> toybox
+ 18c6000    1a000     ---- proc/boot/fs-dos.so
+ 188c000    3a000     ---- proc/boot/fs-qnx6.so
+ 1e59000     c000     ---- proc/boot/fs-qtd.so
+ 1652000     7000     ---- proc/boot/fsevmgr
+ 15f9000     8000     ---- proc/boot/getconf
+    ----        6     ---- proc/boot/grep -> toybox
+ 183d000    4b000     ---- proc/boot/io-blk.so
+ 1596000    43000     ---- proc/boot/ksh
+ 1792000    3b000     ---- proc/boot/ldqnx-64.so.2
+ 16e5000    ad000     ---- proc/boot/libc.so.6
+ 1823000    1a000     ---- proc/boot/libcam.so.2
+ 18e6000   46d000     ---- proc/boot/libcrypto.so.3
+ 1e06000     e000     ---- proc/boot/libfsnotify.so.1
+ 17cd000    1e000     ---- proc/boot/libgcc_s.so.1
+ 1e00000     6000     ---- proc/boot/libjail.so.1
+ 1dec000     a000     ---- proc/boot/libjson.so.1
+ 17eb000    38000     ---- proc/boot/libm.so.3
+ 1dc1000    2b000     ---- proc/boot/libpci.so.3.0
+    ----       17     ---- proc/boot/libpci_hw_common.so -> libpci_hw_common.so.3.0
+ 16a3000    14000     ---- proc/boot/libpci_hw_common.so.3.0
+ 1e14000     a000     ---- proc/boot/libqcrypto.so.1.0
+ 1e33000    14000     ---- proc/boot/libqh.so.1
+ 1e47000    12000     ---- proc/boot/libregex.so.1
+ 1dbb000     6000     ---- proc/boot/libsecpol.so.1
+    ----        d     ---- proc/boot/libslog2.so -> libslog2.so.1
+ 18e0000     6000     ---- proc/boot/libslog2.so.1
+ 1df6000     a000     ---- proc/boot/libslog2parse.so.1
+ 1db7000     4000     ---- proc/boot/libslog2shim.so.1
+    ----        e     ---- proc/boot/libsocket.so -> libsocket.so.4
+ 1d53000    49000     ---- proc/boot/libsocket.so.4
+ 1d9c000    1b000     ---- proc/boot/libz.so.2
+    ----        6     ---- proc/boot/ln -> toybox
+    ----        6     ---- proc/boot/ls -> toybox
+ 15f2000     5000     ---- proc/boot/mount
+ 1e6bf90      65c     ---- proc/boot/mount_fs.sh
+ 157a000     9000     ---- proc/boot/on
+ 16b7000    2e000     ---- proc/boot/pci-server
+    ----       16     ---- proc/boot/pci_bkwd_compat.so -> pci_bkwd_compat.so.3.0
+ 169a000     6000     ---- proc/boot/pci_bkwd_compat.so.3.0
+    ----       13     ---- proc/boot/pci_cap-0x01.so -> pci_cap-0x01.so.3.0
+ 1678000     6000     ---- proc/boot/pci_cap-0x01.so.3.0
+    ----       13     ---- proc/boot/pci_cap-0x05.so -> pci_cap-0x05.so.3.0
+ 167e000     6000     ---- proc/boot/pci_cap-0x05.so.3.0
+    ----       13     ---- proc/boot/pci_cap-0x10.so -> pci_cap-0x10.so.3.0
+ 1684000     8000     ---- proc/boot/pci_cap-0x10.so.3.0
+    ----       13     ---- proc/boot/pci_cap-0x11.so -> pci_cap-0x11.so.3.0
+ 168c000     8000     ---- proc/boot/pci_cap-0x11.so.3.0
+    ----       11     ---- proc/boot/pci_debug2.so -> pci_debug2.so.3.0
+ 16a0000     3000     ---- proc/boot/pci_debug2.so.3.0
+    ----       17     ---- proc/boot/pci_hw-Intel_x86.so -> pci_hw-Intel_x86.so.3.1
+ 1659000    1c000     ---- proc/boot/pci_hw-Intel_x86.so.3.1
+ 1431ae4       b5     ---- proc/boot/pci_hw.cfg
+ 1431c2b       8e     ---- proc/boot/pci_server.cfg
+    ----       10     ---- proc/boot/pci_slog2.so -> pci_slog2.so.3.0
+ 1675000     3000     ---- proc/boot/pci_slog2.so.3.0
+    ----       12     ---- proc/boot/pci_strings.so -> pci_strings.so.3.0
+ 1694000     6000     ---- proc/boot/pci_strings.so.3.0
+ 15d9000    19000     ---- proc/boot/pidin
+ 1e1e000    15000     ---- proc/boot/qcrypto-openssl-3.so
+ 1431cd3       11     ---- proc/boot/qcrypto.conf
+ 1431b99       92     ---- proc/boot/qtd_public_key.pem
+    ----        6     ---- proc/boot/rm -> toybox
+ 1583000     f000     ---- proc/boot/rtc
+    ----        7     ---- proc/boot/setconf -> getconf
+ 1592000     4000     ---- proc/boot/setfacl
+    ----        3     ---- proc/boot/sh -> ksh
+    ----        6     ---- proc/boot/sleep -> toybox
+ 1614000     9000     ---- proc/boot/slog2info
+ 163f000    13000     ---- proc/boot/slogger2
+ 1e6c5ec      55c     ---- proc/boot/startup-script
+ 1e6b895      6fb     ---- proc/boot/startup.sh
+ 1522000    58000     ---- proc/boot/toybox
+ 15f7000     2000     ---- proc/boot/umount
+    ----        2     ---- proc/boot/waitfor -> on
+    ----        d     ---- tmp -> /data/var/tmp
+    ----     ----     ---- usr
+    ----     ----     ---- usr/bin
+    ----        f     ---- usr/bin/ssh -> /system/bin/ssh
+    ----     ----     ---- usr/share
+    ----       14     ---- usr/share/terminfo -> /system/etc/terminfo
+    ----        9     ---- var -> /data/var
+ 1e6cb48       44     ---- Image-trailer
+Image SHA512=d54c61c8f735624d7125e5e0f611985d07f637218e82863779aac67d72a6ad327a93b9d272136a218d83bb7cfae73c050bd574cf5adea1ecf271bba80457f63d
+Image cksum=0x9b766847
+Startup SHA512=6ec91a73f92f98880b65b7c3647d8e7f285f76484b8959d127cbfe80f06a3fd91e91084d755b02858546f030541f8b8d76841502acfad8afb6cdd2fae9ebb1a9
+Startup cksum=0xa19fba8b
+
+$ <shell loop over the files> <ifs-extract-dir>  (full output)
+### IFS (dumpifs -x of ifs.bin)
+ELF ifs:proc/boot/cam-disk.so | NEEDED: libcam.so.2 libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/devb-eide | NEEDED: libsecpol.so.1 libslog2.so.1 libcam.so.2 libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/devc-ser8250 | NEEDED: libsecpol.so.1 libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/fs-dos.so | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/fs-qnx6.so | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/fs-qtd.so | NEEDED: libqcrypto.so.1.0 libslog2.so.1 libfsnotify.so.1 libc.so.6 libgcc_s.so.1  | QCRYPTO
+ELF ifs:proc/boot/fsevmgr | NEEDED: libfsnotify.so.1 libqh.so.1 libslog2.so.1 libsecpol.so.1 libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/getconf | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/io-blk.so | NEEDED: libfsnotify.so.1 libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/ksh | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/ldqnx-64.so.2 | NEEDED:  |
+ELF ifs:proc/boot/libc.so.6 | NEEDED: libgcc_s.so.1  |
+ELF ifs:proc/boot/libcam.so.2 | NEEDED: libsecpol.so.1 libslog2.so.1 libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/libcrypto.so.3 | NEEDED: libsocket.so.4 libc.so.6  |
+ELF ifs:proc/boot/libfsnotify.so.1 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/libgcc_s.so.1 | NEEDED: libc.so.6  |
+ELF ifs:proc/boot/libjail.so.1 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/libjson.so.1 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/libm.so.3 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/libpci.so.3.0 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/libpci_hw_common.so.3.0 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/libqcrypto.so.1.0 | NEEDED: libslog2.so.1 libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/libqh.so.1 | NEEDED: libslog2.so.1 libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/libregex.so.1 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/libsecpol.so.1 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/libslog2.so.1 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/libslog2parse.so.1 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/libslog2shim.so.1 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/libsocket.so.4 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/libz.so.2 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/mount | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/on | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/pci-server | NEEDED: libpci.so.3.0 libsecpol.so.1 libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/pci_bkwd_compat.so.3.0 | NEEDED: libpci.so.3.0 libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/pci_cap-0x01.so.3.0 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/pci_cap-0x05.so.3.0 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/pci_cap-0x10.so.3.0 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/pci_cap-0x11.so.3.0 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/pci_debug2.so.3.0 | NEEDED: libslog2.so.1 libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/pci_hw-Intel_x86.so.3.1 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/pci_slog2.so.3.0 | NEEDED: libslog2.so.1 libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/pci_strings.so.3.0 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/pidin | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/procnto-smp-instr | NEEDED:  |
+ELF ifs:proc/boot/qcrypto-openssl-3.so | NEEDED: libcrypto.so.3 libqcrypto.so.1.0 libc.so.6 libgcc_s.so.1  | CRYPTO QCRYPTO
+ELF ifs:proc/boot/rtc | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/setfacl | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/slog2info | NEEDED: libslog2parse.so.1 libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/slogger2 | NEEDED: libslog2.so.1 libsecpol.so.1 libc.so.6 libgcc_s.so.1  |
+ELF ifs:proc/boot/toybox | NEEDED: libfsnotify.so.1 libsecpol.so.1 libm.so.3 libz.so.2 libc.so.6  |
+ELF ifs:proc/boot/umount | NEEDED: libc.so.6 libgcc_s.so.1  |
+
+### system partition (from system.build manifest)
+ELF system:lib/libstdc++.so.6 | NEEDED: libm.so.3 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/librcheck.so.1 | NEEDED: libc.so.6 libgcc_s.so.1  |
+UNRESOLVED system:lib/librcheck.so <- librcheck.so.1
+ELF system:lib/libunwind.so.8 | NEEDED: libc.so.6 libgcc_s.so.1 liblzma.so.5 libz.so.2  |
+ELF system:lib/librpc.so.2 | NEEDED: libsocket.so.4 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/libedit.so.0 | NEEDED: libregex.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/libc++.so.2 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:lib/libncursesw.so.1 | NEEDED: libregex.so.1  |
+ELF system:lib/libintl.so.1 | NEEDED: libiconv.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/libtracelog.so.1 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:lib/libexpat.so.2 | NEEDED: libm.so.3 libc.so.6  |
+ELF system:lib/libpanelw.so.1 | NEEDED: libregex.so.1 libncursesw.so.1  |
+ELF system:lib/libiconv.so.1 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:lib/libcatalog.so.1 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:lib/libbz2.so.1 | NEEDED: libc.so.6  |
+ELF system:lib/libxml2.so.16 | NEEDED: libiconv.so.1 libm.so.3 libc.so.6  |
+ELF system:lib/libxo.so.0 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:lib/libiperf.so.0 | NEEDED: libsocket.so.4 libm.so.3 libc.so.6  |
+ELF system:bin/shutdown | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:bin/sync | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:bin/hogs | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:bin/sqlite3 | NEEDED: libsqlite3.so.1 libz.so.2 libm.so.3 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/pdebug | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:bin/ifconfig | NEEDED: libsocket.so.4 libexpat.so.2 libm.so.3 libjail.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/netstat | NEEDED: libsocket.so.4 libxo.so.0 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/pci-tool | NEEDED: libpci.so.3.0 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/tracelogger | NEEDED: libtracelog.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/if_up | NEEDED: libsocket.so.4 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/df | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:bin/fdisk | NEEDED: libncursesw.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/hostname | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:bin/use | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:bin/mkdosfs | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:bin/openssl | NEEDED: libssl.so.3 libcrypto.so.3 libsocket.so.4 libc.so.6  | CRYPTO SSL
+ELF system:bin/chkqnx6fs | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:bin/gawk | NEEDED: libsocket.so.4 libm.so.3 libc.so.6  |
+UNRESOLVED system:bin/awk <- gawk
+ELF system:bin/getfacl | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:bin/ntpdate | NEEDED: libsocket.so.4 libm.so.3 libcrypto.so.3 libintl.so.1 libc.so.6  | CRYPTO
+ELF system:bin/arp | NEEDED: libsocket.so.4 libxo.so.0 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/curl | NEEDED: libcurl.so.12 libcares.so.8 libssl.so.3 libcrypto.so.3 libz.so.2 libsocket.so.4 libc.so.6  | CRYPTO SSL
+ELF system:bin/fullpath | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:bin/ifmcstat | NEEDED: libsocket.so.4 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/ifwatchd | NEEDED: libsocket.so.4 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/iperf2 | NEEDED: libsocket.so.4 libc++.so.2 libm.so.3 libgcc_s.so.1 libc.so.6  |
+ELF system:bin/iperf3 | NEEDED: libiperf.so.0 libsocket.so.4 libm.so.3 libc.so.6  |
+ELF system:bin/ndp | NEEDED: libsocket.so.4 libxo.so.0 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/ntp-keygen | NEEDED: libsocket.so.4 libcrypto.so.3 libm.so.3 libintl.so.1 libc.so.6  | CRYPTO
+ELF system:bin/ntpq | NEEDED: libsocket.so.4 libm.so.3 libedit.so.0 libcrypto.so.3 libintl.so.1 libc.so.6  | CRYPTO
+ELF system:bin/pfctl | NEEDED: libsocket.so.4 libm.so.3 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/route | NEEDED: libsocket.so.4 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/secpolmonitor | NEEDED: libsecpol.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/showmount | NEEDED: librpc.so.2 libsocket.so.4 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/sntp | NEEDED: libsocket.so.4 libm.so.3 libcrypto.so.3 libintl.so.1 libc.so.6  | CRYPTO
+ELF system:bin/sockstat | NEEDED: libsocket.so.4 libjail.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/stty | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:bin/tcpdump | NEEDED: librpc.so.2 libsocket.so.4 libcrypto.so.3 libc.so.6  | CRYPTO
+ELF system:bin/top | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:bin/usb | NEEDED: libusbdi.so.2 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/sysctl | NEEDED: libsocket.so.4 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/slog2info | NEEDED: libslog2parse.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/vi | NEEDED: libsocket.so.4 libncursesw.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/ldd | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:bin/less | NEEDED: libregex.so.1 libncursesw.so.1 libc.so.6  |
+ELF system:bin/slay | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:bin/bsdtar | NEEDED: libiconv.so.1 libcrypto.so.3 libregex.so.1 libxml2.so.16 liblzma.so.5 libzstd.so.1 liblz4.so.1 libbz2.so.1 libz.so.2 libc.so.6  | CRYPTO
+UNRESOLVED system:bin/copy_settings.sh <- ~/qnx800/host/linux/x86_64/../../common/mkqnximage/inputs/copy_settings.sh
+ELF system:bin/toybox | NEEDED: libfsnotify.so.1 libsecpol.so.1 libm.so.3 libz.so.2 libc.so.6  |
+UNRESOLVED system:bin/ascii <- toybox
+UNRESOLVED system:bin/base64 <- toybox
+UNRESOLVED system:bin/basename <- toybox
+UNRESOLVED system:bin/bc <- toybox
+UNRESOLVED system:bin/bunzip2 <- toybox
+UNRESOLVED system:bin/bzcat <- toybox
+UNRESOLVED system:bin/cal <- toybox
+UNRESOLVED system:bin/chgrp <- toybox
+UNRESOLVED system:bin/chown <- toybox
+UNRESOLVED system:bin/cksum <- toybox
+UNRESOLVED system:bin/clear <- toybox
+UNRESOLVED system:bin/cmp <- toybox
+UNRESOLVED system:bin/comm <- toybox
+UNRESOLVED system:bin/cp <- toybox
+UNRESOLVED system:bin/cpio <- toybox
+UNRESOLVED system:bin/crc32 <- toybox
+UNRESOLVED system:bin/cut <- toybox
+UNRESOLVED system:bin/date <- toybox
+UNRESOLVED system:bin/diff <- toybox
+UNRESOLVED system:bin/dirname <- toybox
+UNRESOLVED system:bin/dos2unix <- toybox
+UNRESOLVED system:bin/du <- toybox
+UNRESOLVED system:bin/egrep <- toybox
+UNRESOLVED system:bin/env <- toybox
+UNRESOLVED system:bin/expand <- toybox
+UNRESOLVED system:bin/expr <- toybox
+UNRESOLVED system:bin/false <- toybox
+UNRESOLVED system:bin/fgrep <- toybox
+UNRESOLVED system:bin/file <- toybox
+UNRESOLVED system:bin/find <- toybox
+UNRESOLVED system:bin/fmt <- toybox
+UNRESOLVED system:bin/groups <- toybox
+UNRESOLVED system:bin/gunzip <- toybox
+UNRESOLVED system:bin/gzip <- toybox
+UNRESOLVED system:bin/hd <- toybox
+UNRESOLVED system:bin/head <- toybox
+UNRESOLVED system:bin/hexdump <- toybox
+UNRESOLVED system:bin/id <- toybox
+UNRESOLVED system:bin/install <- toybox
+UNRESOLVED system:bin/link <- toybox
+UNRESOLVED system:bin/logname <- toybox
+UNRESOLVED system:bin/md5sum <- toybox
+UNRESOLVED system:bin/mkdir <- toybox
+UNRESOLVED system:bin/mkfifo <- toybox
+UNRESOLVED system:bin/mktemp <- toybox
+UNRESOLVED system:bin/more <- toybox
+UNRESOLVED system:bin/mv <- toybox
+UNRESOLVED system:bin/nl <- toybox
+UNRESOLVED system:bin/nohup <- toybox
+UNRESOLVED system:bin/od <- toybox
+UNRESOLVED system:bin/paste <- toybox
+UNRESOLVED system:bin/patch <- toybox
+UNRESOLVED system:bin/printenv <- toybox
+UNRESOLVED system:bin/printf <- toybox
+UNRESOLVED system:bin/pwd <- toybox
+UNRESOLVED system:bin/readlink <- toybox
+UNRESOLVED system:bin/realpath <- toybox
+UNRESOLVED system:bin/rmdir <- toybox
+UNRESOLVED system:bin/sed <- toybox
+UNRESOLVED system:bin/seq <- toybox
+UNRESOLVED system:bin/sha1sum <- toybox
+UNRESOLVED system:bin/sleep <- toybox
+UNRESOLVED system:bin/sort <- toybox
+UNRESOLVED system:bin/split <- toybox
+UNRESOLVED system:bin/stat <- toybox
+UNRESOLVED system:bin/strings <- toybox
+UNRESOLVED system:bin/tail <- toybox
+UNRESOLVED system:bin/tar <- toybox
+UNRESOLVED system:bin/tee <- toybox
+UNRESOLVED system:bin/test <- toybox
+UNRESOLVED system:bin/time <- toybox
+UNRESOLVED system:bin/timeout <- toybox
+UNRESOLVED system:bin/touch <- toybox
+UNRESOLVED system:bin/tr <- toybox
+UNRESOLVED system:bin/true <- toybox
+UNRESOLVED system:bin/truncate <- toybox
+UNRESOLVED system:bin/tty <- toybox
+UNRESOLVED system:bin/uname <- toybox
+UNRESOLVED system:bin/uniq <- toybox
+UNRESOLVED system:bin/unix2dos <- toybox
+UNRESOLVED system:bin/unlink <- toybox
+UNRESOLVED system:bin/uudecode <- toybox
+UNRESOLVED system:bin/uuencode <- toybox
+UNRESOLVED system:bin/uuidgen <- toybox
+UNRESOLVED system:bin/wc <- toybox
+UNRESOLVED system:bin/which <- toybox
+UNRESOLVED system:bin/whoami <- toybox
+UNRESOLVED system:bin/xargs <- toybox
+UNRESOLVED system:bin/xxd <- toybox
+UNRESOLVED system:bin/yes <- toybox
+UNRESOLVED system:bin/zcat <- toybox
+ELF system:bin/login | NEEDED: libpam.so.2 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/su | NEEDED: libpam.so.2 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/passwd | NEEDED: libpam.so.2 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/ping | NEEDED: libsocket.so.4 libm.so.3 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/traceroute | NEEDED: libsocket.so.4 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/traceroute6 | NEEDED: libsocket.so.4 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/fs-nfs3 | NEEDED: libsocket.so.4 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/dumper | NEEDED: libsecpol.so.1 libslog2.so.1 libz.so.2 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/qconn | NEEDED: libsocket.so.4 libtracelog.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/mqueue | NEEDED: libsecpol.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/random | NEEDED: libqcrypto.so.1.0 libsecpol.so.1 libqh.so.1 libc.so.6 libgcc_s.so.1  | QCRYPTO
+ELF system:bin/ntpd | NEEDED: libsocket.so.4 libm.so.3 libcrypto.so.3 libintl.so.1 libc.so.6  | CRYPTO
+ELF system:bin/devb-loopback | NEEDED: libsecpol.so.1 libslog2.so.1 libcam.so.2 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/devb-umass | NEEDED: libsecpol.so.1 libslog2.so.1 libusbdi.so.2 libcam.so.2 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/devc-pty | NEEDED: libsecpol.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/pipe | NEEDED: libsecpol.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/io-sock | NEEDED: libslog2.so.1 libsecpol.so.1 libz.so.2 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/dll/mods-pci.so | NEEDED: libpci.so.3.0 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/dll/mods-phy.so | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:lib/dll/mods-usb.so | NEEDED: libusbdci.so.2 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/libfdt.so.1 | NEEDED: libc.so.6 libgcc_s.so.1  |
+ELF system:lib/libusbdci.so.2 | NEEDED: libpci.so.3.0 libslog2.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/dhcpcd | NEEDED: libsocket.so.4 libc.so.6  |
+ELF system:bin/sshd | NEEDED: libsecpol.so.1 libpam.so.2 libsocket.so.4 libregex.so.1 libcrypto.so.3 libz.so.2 libc.so.6  | CRYPTO
+ELF system:bin/ssh-keygen | NEEDED: libsocket.so.4 libregex.so.1 libcrypto.so.3 libz.so.2 libc.so.6  | CRYPTO
+ELF system:bin/sshd-session | NEEDED: libsecpol.so.1 libpam.so.2 libsocket.so.4 libregex.so.1 libcrypto.so.3 libz.so.2 libc.so.6  | CRYPTO
+ELF system:bin/sshd-auth | NEEDED: libsecpol.so.1 libpam.so.2 libsocket.so.4 libregex.so.1 libcrypto.so.3 libz.so.2 libc.so.6  | CRYPTO
+ELF system:bin/scp | NEEDED: libsocket.so.4 libregex.so.1 libc.so.6  |
+ELF system:bin/sftp-server | NEEDED: libsocket.so.4 libregex.so.1 libc.so.6  |
+ELF system:bin/ssh | NEEDED: libsocket.so.4 libregex.so.1 libcrypto.so.3 libz.so.2 libc.so.6  | CRYPTO
+ELF system:lib/libpam.so.2 | NEEDED: libc.so.6  |
+ELF system:lib/dll/pam/pam_deny.so | NEEDED: libpam.so.2 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/dll/pam/pam_echo.so | NEEDED: libpam.so.2 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/dll/pam/pam_exec.so | NEEDED: libpam.so.2 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/dll/pam/pam_group.so | NEEDED: libpam.so.2 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/dll/pam/pam_permit.so | NEEDED: libpam.so.2 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/dll/pam/pam_qnx.so | NEEDED: libpam.so.2 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/dll/pam/pam_rootok.so | NEEDED: libpam.so.2 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/dll/pam/pam_self.so | NEEDED: libpam.so.2 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/libssl.so.3 | NEEDED: libcrypto.so.3 libsocket.so.4 libc.so.6  | CRYPTO
+ELF system:lib/libcurl.so.12 | NEEDED: libcares.so.8 libssl.so.3 libcrypto.so.3 libz.so.2 libsocket.so.4 libc.so.6  | CRYPTO SSL
+ELF system:lib/libcares.so.8 | NEEDED: libsocket.so.4 libc.so.6  |
+ELF system:/bin/setkey | NEEDED: libsocket.so.4 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/liblzma.so.5 | NEEDED: libc.so.6  |
+UNRESOLVED system:bin/cleanup_tmp <- ~/qnx800/host/linux/x86_64/../../common/mkqnximage/inputs/cleanup_tmp
+ELF system:bin/secpol | NEEDED: libsecpol.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:bin/io-usb-otg | NEEDED: libsecpol.so.1 libpci.so.3.0 libslog2.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/dll/devu-hcd-xhci.so | NEEDED: libm.so.3 libslog2.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/dll/devu-hcd-ehci.so | NEEDED: libm.so.3 libslog2.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/dll/devu-hcd-uhci.so | NEEDED: libm.so.3 libslog2.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/libusbdi.so.2 | NEEDED: libpci.so.3.0 libslog2.so.1 libc.so.6 libgcc_s.so.1  |
+ELF system:lib/dll/fs-dos.so | NEEDED: libc.so.6 libgcc_s.so.1  |
+UNRESOLVED system:addr_list <- 10.255.255.254:172.27.5.202:$guessed_addr
+UNRESOLVED system:IFS <- :
+ELF system:lib/dll/devs-vtnet_pci.so | NEEDED: libc.so.6 libgcc_s.so.1  |
+
+### data partition (from data.build manifest)
+UNRESOLVED data:var/db <- dhcpcd
+UNRESOLVED data:var/etc/resolv.conf <- /data/var/dhcpcd/resolv.conf
+UNRESOLVED data:var/etc/profile <- /system/etc/profile
+UNRESOLVED data:BASEDIR <- /data/home
+UNRESOLVED data:UIDRANGE <- 1000
+UNRESOLVED data:GIDRANGE <- 1000
+UNRESOLVED data:TERM <- qansi
+UNRESOLVED data:PATH <- /proc/boot:/system/bin
+UNRESOLVED data:HOSTNAME <- noname
+UNRESOLVED data:IP_ADDR <- dhcp
+UNRESOLVED data:TIME_SERVERS <- pool.ntp.org
+UNRESOLVED data:TERM <- qansi
+UNRESOLVED data:PATH <- /proc/boot:/system/bin
+UNRESOLVED data:TERM <- qansi
+UNRESOLVED data:PATH <- /proc/boot:/system/bin
+UNRESOLVED data:TERM <- qansi
+UNRESOLVED data:PATH <- /proc/boot:/system/bin
+UNRESOLVED data:TERM <- qansi
+UNRESOLVED data:PATH <- /proc/boot:/system/bin
+UNRESOLVED data:TERM <- qansi
+UNRESOLVED data:PATH <- /proc/boot:/system/bin
+UNRESOLVED data:TERM <- qansi
+UNRESOLVED data:PATH <- /proc/boot:/system/bin
+UNRESOLVED data:TERM <- qansi
+UNRESOLVED data:PATH <- /proc/boot:/system/bin
+
+## Counts
+ELF files scanned: 168
+link libcrypto: 17
+link libssl: 3
+link libqcrypto: 3
+any of the three: 19
+executables (bin/) using any of the three: 15
+
+## Crypto config / key / cert files
+$ cat <ifs>/proc/boot/qcrypto.conf
+openssl-3 tags=*
+$ openssl pkey -pubin -text (type line only) <ifs>/proc/boot/qtd_public_key.pem
+ED448 Public-Key:
+$ grep -n sshd_config/HostKey/KexAlgorithms system.build
+270:[perms=444] etc/ssh/sshd_config={
+272:HostKey /data/var/ssh/ssh_host_rsa_key
+273:HostKey /data/var/ssh/ssh_host_ed25519_key
+274:Ciphers aes128-ctr,aes192-ctr,aes256-ctr
+275:MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
+276:KexAlgorithms curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256
+$ grep -n 'var/ssh/ssh_host' data.build (pre-generated host keys, OPT_SSHD_PREGEN=yes)
+90: var/ssh/ssh_host_rsa_key
+91: var/ssh/ssh_host_ed25519_key
+$ cut -d' ' -f1 ~/qnximg/local/misc_files/*.pub (key type only)
+ssh_host_rsa_key.pub: ssh-rsa
+ssh_host_ed25519_key.pub: ssh-ed25519
+Note: qtd_private_key.pem exists in ~/qnximg/local/misc_files (host side); grep shows it is not listed in any .build file:
+~/qnximg/output/build/data.build:0
+~/qnximg/output/build/ifs.build:0
+~/qnximg/output/build/system.build:0
+~/qnximg/output/build/boot_part.build:0
+
+## OpenSSH PQC check
+$ strings $QNX_TARGET/x86_64/usr/sbin/sshd | grep -oE 'OpenSSH_[0-9.]+p[0-9]'
+OpenSSH_10.4p1
+$ strings $QNX_TARGET/x86_64/usr/bin/ssh | grep -oE 'mlkem768x25519-sha256|sntrup761x25519-sha512'
+mlkem768x25519-sha256
+sntrup761x25519-sha512
+=> ssh binaries know the PQ hybrid kex names, but the image sshd_config KexAlgorithms line above lists only classical kex.

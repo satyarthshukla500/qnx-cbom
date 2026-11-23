@@ -1,0 +1,105 @@
+## T1 commands run Mon Nov 23 11:18:49 UTC 2026
+$ find $QNX_TARGET -name 'libcrypto*' -o -name 'libssl*'
+$QNX_TARGET/aarch64le/usr/lib/libcrypto.so.3 -> 
+$QNX_TARGET/aarch64le/usr/lib/libssl.so -> libssl.so.3
+$QNX_TARGET/aarch64le/usr/lib/libcrypto.so.3.sym -> 
+$QNX_TARGET/aarch64le/usr/lib/libssl.so.3.sym -> 
+$QNX_TARGET/aarch64le/usr/lib/libssl.so.3 -> 
+$QNX_TARGET/aarch64le/usr/lib/libcrypto.so -> libcrypto.so.3
+$QNX_TARGET/x86_64/usr/lib/libcrypto.so.3 -> 
+$QNX_TARGET/x86_64/usr/lib/libssl.so -> libssl.so.3
+$QNX_TARGET/x86_64/usr/lib/libcrypto.so.3.sym -> 
+$QNX_TARGET/x86_64/usr/lib/libssl.so.3.sym -> 
+$QNX_TARGET/x86_64/usr/lib/libssl.so.3 -> 
+$QNX_TARGET/x86_64/usr/lib/libcrypto.so -> libcrypto.so.3
+
+### x86_64: x86_64/usr/lib/libcrypto.so.3
+$ strings | grep -E 'OpenSSL [0-9]'
+OpenSSL 3.0.22 25 Aug 2026
+$ strings | grep -ciE 'ML-KEM|MLKEM|ML-DSA|MLDSA|SLH-DSA'
+0
+
+### x86_64: x86_64/usr/lib/libcrypto.so.3.sym
+$ strings | grep -E 'OpenSSL [0-9]'
+OpenSSL 3.0.22 25 Aug 2026
+$ strings | grep -ciE 'ML-KEM|MLKEM|ML-DSA|MLDSA|SLH-DSA'
+0
+### x86_64: x86_64/usr/lib/libssl.so.3
+MLKEM/X25519MLKEM count:
+0
+### x86_64: x86_64/usr/lib/libssl.so.3.sym
+MLKEM/X25519MLKEM count:
+0
+
+### aarch64le: aarch64le/usr/lib/libcrypto.so.3
+$ strings | grep -E 'OpenSSL [0-9]'
+OpenSSL 3.0.22 25 Aug 2026
+$ strings | grep -ciE 'ML-KEM|MLKEM|ML-DSA|MLDSA|SLH-DSA'
+0
+
+### aarch64le: aarch64le/usr/lib/libcrypto.so.3.sym
+$ strings | grep -E 'OpenSSL [0-9]'
+OpenSSL 3.0.22 25 Aug 2026
+$ strings | grep -ciE 'ML-KEM|MLKEM|ML-DSA|MLDSA|SLH-DSA'
+0
+### aarch64le: aarch64le/usr/lib/libssl.so.3
+MLKEM/X25519MLKEM count:
+0
+### aarch64le: aarch64le/usr/lib/libssl.so.3.sym
+MLKEM/X25519MLKEM count:
+0
+
+$ grep OPENSSL_VERSION_TEXT in headers
+# define OPENSSL_VERSION_STR "3.0.22"
+# define OPENSSL_VERSION_TEXT "OpenSSL 3.0.22 25 Aug 2026"
+
+$ find openssl binaries in SDK
+$QNX_TARGET/aarch64le/usr/bin/openssl
+$QNX_HOST/usr/bin/openssl
+$QNX_TARGET/x86_64/usr/bin/openssl
+
+$ $QNX_HOST/usr/bin/openssl version -a
+OpenSSL 3.0.22 25 Aug 2026 (Library: OpenSSL 3.0.22 25 Aug 2026)
+built on: Fri Oct  2 01:16:05 2026 UTC
+platform: linux-x86_64
+options:  bn(64,64)
+compiler: x86_64-unknown-linux-gnu-gcc -fPIC -pthread -m64 -Wa,--noexecstack -m64 -DOPENSSL_USE_NODELETE -DL_ENDIAN -DOPENSSL_PIC -DOPENSSL_BUILDING_OPENSSL -DNDEBUG
+OPENSSLDIR: "/usr/ssl"
+ENGINESDIR: "/usr/lib64/engines-3"
+MODULESDIR: "/usr/lib64/ossl-modules"
+Seeding source: os-specific
+CPUINFO: OPENSSL_ia32cap=0xfed83203078bffff:0x400004219c01a9
+
+$ file $QNX_HOST/usr/bin/openssl
+$QNX_HOST/usr/bin/openssl: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, with debug_info, not stripped
+$ ldd host openssl (crypto libs)
+$ $QNX_HOST/usr/bin/openssl list -kem-algorithms
+  { 1.2.840.113549.1.1.1, 2.5.8.1.1, RSA, rsaEncryption } @ default
+
+$ strings $QNX_TARGET/x86_64/usr/bin/openssl | grep -E 'OpenSSL [0-9]'; readelf NEEDED
+OpenSSL 3.0.22 25 Aug 2026
+ 0x0000000000000001 (NEEDED)             Shared library: [libssl.so.3]
+ 0x0000000000000001 (NEEDED)             Shared library: [libcrypto.so.3]
+ 0x0000000000000001 (NEEDED)             Shared library: [libsocket.so.4]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+
+$ strings $QNX_TARGET/aarch64le/usr/bin/openssl | grep -E 'OpenSSL [0-9]'; readelf NEEDED
+OpenSSL 3.0.22 25 Aug 2026
+ 0x0000000000000001 (NEEDED)             Shared library: [libssl.so.3]
+ 0x0000000000000001 (NEEDED)             Shared library: [libcrypto.so.3]
+ 0x0000000000000001 (NEEDED)             Shared library: [libsocket.so.4]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+
+$ find ossl-modules / engines dirs
+$QNX_TARGET/aarch64le/usr/lib/ossl-modules
+$QNX_TARGET/aarch64le/usr/lib/engines-3
+$QNX_TARGET/x86_64/usr/lib/ossl-modules
+$QNX_TARGET/x86_64/usr/lib/engines-3
+$QNX_TARGET/aarch64le/usr/lib/ossl-modules/fips.so
+$QNX_TARGET/aarch64le/usr/lib/ossl-modules/legacy.so
+$QNX_TARGET/aarch64le/usr/lib/ossl-modules/legacy.so.sym
+$QNX_TARGET/aarch64le/usr/lib/ossl-modules/fips.so.sym
+$QNX_TARGET/x86_64/usr/lib/ossl-modules/fips.so
+$QNX_TARGET/x86_64/usr/lib/ossl-modules/legacy.so
+$QNX_TARGET/x86_64/usr/lib/ossl-modules/legacy.so.sym
+$QNX_TARGET/x86_64/usr/lib/ossl-modules/fips.so.sym

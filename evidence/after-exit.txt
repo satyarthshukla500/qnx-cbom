@@ -1,0 +1,1 @@
+exit code of the scan of the upgraded image: 0

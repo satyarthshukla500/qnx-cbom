@@ -1,0 +1,19 @@
+## T1 quick re-run Mon Nov 23 15:55:24 UTC 2026
+$ strings $QNX_TARGET/x86_64/usr/lib/libcrypto.so.3 | grep -E '^OpenSSL [0-9]'
+OpenSSL 3.0.22 25 Aug 2026
+$ strings ... | grep -ciE 'ML-KEM|MLKEM|ML-DSA|MLDSA|SLH-DSA'
+0
+$ strings $QNX_TARGET/aarch64le/usr/lib/libcrypto.so.3 | grep -E '^OpenSSL [0-9]'
+OpenSSL 3.0.22 25 Aug 2026
+$ strings ... | grep -ciE 'ML-KEM|MLKEM|ML-DSA|MLDSA|SLH-DSA'
+0
+$ qcc -V
+	12.2.0,gcc_ntoaarch64le
+	12.2.0,gcc_ntox86_64_gpp
+	12.2.0,gcc_ntoaarch64le_cxx
+	12.2.0,gcc_ntox86_64	(default)
+$ qemu-system-x86_64 --version
+QEMU emulator version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)
+$ dumpifs --version
+dumpifs: Missing image file system name
+

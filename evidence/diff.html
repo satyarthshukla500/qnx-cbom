@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;none&#x27;; style-src &#x27;sha256-8bA+ZZiyMfVMiAPiZwim+Mz4N+3vMqC+z1G9zCQult4=&#x27;; img-src data:; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;"><title>qnx-cbom diff</title><style>
+:root{color-scheme:light dark;--bg:#ffffff;--fg:#1a1f2b;--muted:#4b5563;--line:#d1d5db;--card:#f3f4f6;--link:#1d4ed8;
+--unsafe-bg:#fde8e8;--unsafe-fg:#9b1c1c;--warn-bg:#fef3c7;--warn-fg:#7c2d12;--ok-bg:#dcfce7;--ok-fg:#14532d}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1420;--fg:#e6e9f0;--muted:#aab2c0;--line:#2b3446;--card:#18202f;--link:#8ab4ff;
+--unsafe-bg:#4c1d1d;--unsafe-fg:#fecaca;--warn-bg:#4a3410;--warn-fg:#fde68a;--ok-bg:#14391f;--ok-fg:#bbf7d0}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px 48px}
+header{padding:24px 0 8px}
+h1{font-size:1.6rem;margin:0 0 4px}h2{font-size:1.25rem;margin:32px 0 12px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.meta{color:var(--muted);margin:0}
+code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;overflow-wrap:anywhere}
+a{color:var(--link)}
+:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+[hidden]{display:none !important}
+.verdict{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:16px;border-radius:8px;border:2px solid var(--line);margin:16px 0}
+.verdict .word{font-size:1.5rem;font-weight:700}
+.verdict.UNSAFE{background:var(--unsafe-bg);color:var(--unsafe-fg);border-color:var(--unsafe-fg)}
+.verdict.WARN{background:var(--warn-bg);color:var(--warn-fg);border-color:var(--warn-fg)}
+.verdict.OK{background:var(--ok-bg);color:var(--ok-fg);border-color:var(--ok-fg)}
+.counts{display:flex;gap:8px;flex-wrap:wrap}
+.sev{display:inline-block;font-weight:700;border-radius:4px;padding:1px 8px;white-space:nowrap}
+.sev.UNSAFE{background:var(--unsafe-bg);color:var(--unsafe-fg);border:1px solid var(--unsafe-fg)}
+.sev.WARN{background:var(--warn-bg);color:var(--warn-fg);border:1px solid var(--warn-fg)}
+.sev.OK{background:var(--ok-bg);color:var(--ok-fg);border:1px solid var(--ok-fg)}
+nav ul{list-style:none;display:flex;flex-wrap:wrap;gap:8px 16px;padding:0;margin:8px 0}
+.controls{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin-bottom:8px}
+.group{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+button{font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:6px;padding:4px 12px;cursor:pointer}
+button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+input[type=search]{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 8px;min-width:200px}
+#list{list-style:none;padding:0;margin:0}
+.finding{border:1px solid var(--line);border-radius:8px;margin:8px 0;background:var(--card)}
+.finding summary::before{content:"B8";font-size:1.1em}.finding details[open] summary::before{content:"BE"}
+.finding summary{cursor:pointer;padding:10px 12px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+.finding .body{padding:0 12px 12px}
+.finding ul{margin:4px 0 8px;padding-left:20px}
+.fix{border-left:4px solid var(--line);padding:4px 12px;margin:8px 0}
+.small{color:var(--muted);font-size:.9em}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--card)}
+.empty{color:var(--muted);padding:12px;border:1px dashed var(--line);border-radius:8px}
+@media print{.controls,nav,button{display:none !important}}
+@media (max-width:600px){table{min-width:560px}h1{font-size:1.3rem}.verdict .word{font-size:1.25rem}input[type=search]{min-width:0;width:100%}}
+</style></head>
+<body><div class="wrap"><header><h1>qnx-cbom diff</h1><p class="meta">stock-image → upgraded-image</p></header><div class="verdict WARN" role="status"><span class="word">UNSAFE → WARN</span><span>No new problems</span></div><section><h2>New findings</h2><div class="scroll" role="region" aria-label="New findings" tabindex="0"><table><thead><tr><th scope="col">Severity</th><th scope="col">Rule</th><th scope="col">Subject</th><th scope="col">Title</th></tr></thead><tbody><tr><td><span class="sev OK">✔ OK</span></td><td><code>QCB-007</code></td><td><code>/data/lab/o35/libcrypto.so.3</code></td><td>A running process loads an OpenSSL library within upstream support</td></tr></tbody></table></div></section><section><h2>Findings that are gone</h2><p class="empty">None.</p></section><section><h2>Changed severity</h2><div class="scroll" role="region" aria-label="Changed severity" tabindex="0"><table><thead><tr><th scope="col">Rule</th><th scope="col">Subject</th><th scope="col">Before</th><th scope="col">After</th></tr></thead><tbody><tr><td><code>QCB-001</code></td><td><code>/proc/boot/libcrypto.so.3</code></td><td><span class="sev UNSAFE">✖ UNSAFE</span></td><td><span class="sev OK">✔ OK</span></td></tr><tr><td><code>QCB-002</code></td><td><code>/system/bin/sshd</code></td><td><span class="sev UNSAFE">✖ UNSAFE</span></td><td><span class="sev OK">✔ OK</span></td></tr><tr><td><code>QCB-007</code></td><td><code>/proc/boot/libcrypto.so.3</code></td><td><span class="sev UNSAFE">✖ UNSAFE</span></td><td><span class="sev OK">✔ OK</span></td></tr></tbody></table></div></section><section><h2>Library versions</h2><div class="scroll" role="region" aria-label="Library versions" tabindex="0"><table><thead><tr><th scope="col">Path</th><th scope="col">Before</th><th scope="col">After</th></tr></thead><tbody><tr><td><code>/proc/boot/libcrypto.so.3</code></td><td>3.0.22</td><td>3.5.9</td></tr></tbody></table></div></section></div></body></html>

@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "openssl_policy": {
+    "source_url": "https://openssl-library.org/policies/releasestrat/",
+    "source_date": "2026-11-23",
+    "series": {
+      "1.0": {
+        "eol": null
+      },
+      "1.1": {
+        "eol": null
+      },
+      "3.0": {
+        "eol": "2026-09-07"
+      },
+      "3.2": {
+        "eol": "2025-11-23"
+      },
+      "3.3": {
+        "eol": "2026-04-09"
+      },
+      "3.4": {
+        "eol": "2026-10-22"
+      },
+      "3.5": {
+        "eol": "2030-04-08"
+      },
+      "3.6": {
+        "eol": "2026-11-01"
+      },
+      "4.0": {
+        "eol": "2027-05-14"
+      },
+      "4.1": {
+        "eol": "2027-11-23"
+      }
+    }
+  },
+  "rules": {
+    "QCB-001": {
+      "title": "OpenSSL library is past upstream end of life",
+      "severity": "UNSAFE",
+      "fix": "Replace the library with OpenSSL 3.5 (upstream support until 2030-04-08). QNX's own port is at github.com/qnx-ports/openssl (branches qnx-openssl-3.5.4 and qnx-openssl-3.6.0). Put the new libcrypto/libssl into the image build lists in place of the SDK files, rebuild the image and scan again.",
+      "source_url": "https://openssl-library.org/policies/releasestrat/",
+      "source_date": "2026-11-23",
+      "unverified": [
+        "Whether QNX supplies security fixes for OpenSSL 3.0 after 2026-09-07 (the image's 3.0.22 is dated 25 Aug 2026)."
+      ],
+      "title_ok": "OpenSSL library is within upstream support"
+    },
+    "QCB-002": {
+      "title": "sshd does not allow post-quantum key exchange",
+      "severity": "UNSAFE",
+      "fix": "In the sshd_config of the image (the inline block in system.build) start the KexAlgorithms line with mlkem768x25519-sha256 and keep a classical fallback, for example: KexAlgorithms mlkem768x25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256. Rebuild the image and scan again.",
+      "source_url": "https://www.openssh.com/txt/release-10.0",
+      "source_date": "2026-11-23",
+      "unverified": [
+        "That the SSH clients you use support mlkem768x25519-sha256.",
+        "The OpenSSH release that first contained the algorithm (only 10.0 was read: it made the algorithm the default)."
+      ],
+      "title_ok": "sshd allows post-quantum key exchange"
+    },
+    "QCB-003": {
+      "title": "ssh client does not allow post-quantum key exchange",
+      "severity": "WARN",
+      "fix": "In ssh_config start KexAlgorithms with mlkem768x25519-sha256, or remove the KexAlgorithms line so the OpenSSH default (post-quantum first since 10.0) applies.",
+      "source_url": "https://www.openssh.com/txt/release-10.0",
+      "source_date": "2026-11-23",
+      "unverified": [
+        "That the servers you connect to support mlkem768x25519-sha256."
+      ],
+      "title_ok": "ssh client allows post-quantum key exchange"
+    },
+    "QCB-004": {
+      "title": "Key or certificate uses a quantum-vulnerable algorithm",
+      "severity": "WARN",
+      "fix": "Plan a move to ML-DSA (FIPS 204) or SLH-DSA for signing keys once your signing path supports them. OpenSSL 3.5 can generate ML-DSA keys. Until then keep RSA at 3072 bits or more.",
+      "source_url": "https://csrc.nist.gov/pubs/fips/204/final",
+      "source_date": "2026-11-23",
+      "unverified": [
+        "NIST transition dates for RSA, ECDSA and EdDSA (NIST IR 8547 draft was found but its dates were not read)."
+      ],
+      "title_ok": "Key or certificate uses a post-quantum algorithm"
+    },
+    "QCB-005": {
+      "title": "qcrypto sends all algorithms to a plug-in without post-quantum algorithms",
+      "severity": "WARN",
+      "fix": "No qcrypto fix exists in SDP 8.0.6: its API has no key-encapsulation type (see evidence/T2-qcrypto-plugin.txt). Use OpenSSL 3.5 directly for post-quantum key exchange.",
+      "source_url": "https://www.qnx.com/developers/docs/8.0/",
+      "source_date": "2026-11-23",
+      "unverified": [
+        "Whether a later QNX release adds ML-KEM or ML-DSA to qcrypto.",
+        "The QNX documentation page was not read for this rule; the claim rests on the SDK headers (evidence/T2-qcrypto-plugin.txt)."
+      ],
+      "title_ok": "qcrypto plug-in has post-quantum algorithms"
+    },
+    "QCB-006": {
+      "title": "A running process loads a different OpenSSL library than the image holds",
+      "severity": "WARN",
+      "fix": "The disk scan does not describe this process. Remove the LD_LIBRARY_PATH override that points at the other library, or put the library into the image and scan again.",
+      "source_url": "https://www.qnx.com/developers/docs/8.0/",
+      "source_date": "2026-11-23",
+      "unverified": [
+        "No QNX documentation page is cited; the rule compares two facts the tool measured itself."
+      ],
+      "title_ok": "A running process loads the library the image holds"
+    },
+    "QCB-007": {
+      "title": "A running process loads an OpenSSL library past upstream end of life",
+      "severity": "UNSAFE",
+      "fix": "Same as QCB-001: load OpenSSL 3.5 in this process.",
+      "source_url": "https://openssl-library.org/policies/releasestrat/",
+      "source_date": "2026-11-23",
+      "unverified": [],
+      "title_ok": "A running process loads an OpenSSL library within upstream support"
+    },
+    "QCB-008": {
+      "title": "A file that decides a verdict could not be analysed",
+      "title_ok": "",
+      "severity": "UNSAFE",
+      "fix": "Make the file readable (valid ELF, readable permissions, inside the allowed folders, under 64 MiB) and scan again. Until then the verdict cannot be trusted, so the scan fails.",
+      "source_url": "https://www.qnx.com/developers/docs/8.0/",
+      "source_date": "2026-11-23",
+      "unverified": []
+    }
+  }
+}

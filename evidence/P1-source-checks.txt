@@ -1,0 +1,45 @@
+## P1 source checks  Mon Nov 23 15:55:03 UTC 2026
+
+$ curl https://api.github.com/repos/qnx-ports/openssl  (fields: full_name default_branch pushed_at license)
+qnx-ports/openssl qnx-openssl-3.5.4 2025-11-25T18:04:48Z Apache-2.0
+$ curl https://api.github.com/repos/qnx-ports/openssl/branches  (names containing qnx)
+['qnx-3.5.4', 'qnx-openssl-3.5.4', 'qnx-openssl-3.6.0']
+
+$ curl https://openssl-library.org/policies/releasestrat/   (live page, text lines about 3.0)
+Last modified 07 May 2026
+Versions 3.0, 1.1.1 and 1.0.2 are no longer supported. Extended support for 3.0, 1.1.1 and 1.0.2 to gain access to security fixes for those versions is available
+Version 3.5 will be supported until 2030-04-08 (LTS)
+$ curl https://web.archive.org/web/2025/https://openssl-library.org/policies/releasestrat/   (earlier copy of the same page)
+Version 3.0 will be supported until 2026-09-07 (LTS)
+
+$ curl https://www.openssh.com/txt/release-10.0 | grep -B1 -A3 mlkem768x25519 | head -4
+ * ssh(1): the hybrid post-quantum algorithm mlkem768x25519-sha256
+   is now used by default for key agreement. This algorithm is
+   considered to be safe against attack by quantum computers,
+   is guaranteed to be no less strong than the popular
+   curve25519-sha256 algorithm, has been standardised by NIST
+
+$ curl https://csrc.nist.gov/pubs/fips/203/final  (title)
+FIPS 203, Module-Lattice-Based Key-Encapsulation Mechanism Standard | CSRC
+$ curl https://csrc.nist.gov/pubs/fips/204/final  (title)
+FIPS 204, Module-Lattice-Based Digital Signature Standard | CSRC
+$ curl https://csrc.nist.gov/pubs/ir/8547/ipd  (title)
+IR 8547, Transition to Post-Quantum Cryptography Standards | CSRC
+
+$ curl https://raw.githubusercontent.com/CycloneDX/specification/master/schema/{bom-1.6,spdx,jsf-0.82}.schema.json
+262666 bom-1.6.schema.json
+8058 jsf-0.82.schema.json
+63418 spdx.schema.json
+
+## OpenSSL support dates as printed on the policy page
+# live copy
+Version 4.1 will be supported until 2027-11-23
+Version 4.0 will be supported until 2027-05-14
+Version 3.5 will be supported until 2030-04-08 (LTS)
+# earlier copy (web.archive.org, 2025)
+Version 3.6 will be supported until 2026-11-01
+Version 3.5 will be supported until 2030-04-08 (LTS)
+Version 3.4 will be supported until 2026-10-22
+Version 3.3 will be supported until 2026-04-09
+Version 3.2 will be supported until 2025-11-23
+Version 3.0 will be supported until 2026-09-07 (LTS)

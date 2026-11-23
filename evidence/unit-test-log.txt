@@ -1,0 +1,38 @@
+test_entries (test_parsers.BuildListTests.test_entries) ... ok
+test_garbage_does_not_crash (test_parsers.BuildListTests.test_garbage_does_not_crash) ... ok
+test_inline_block (test_parsers.BuildListTests.test_inline_block) ... ok
+test_unclosed_block (test_parsers.BuildListTests.test_unclosed_block) ... ok
+test_qcrypto (test_parsers.ConfigTests.test_qcrypto) ... ok
+test_ssh_client_host_blocks (test_parsers.ConfigTests.test_ssh_client_host_blocks) ... ok
+test_sshd (test_parsers.ConfigTests.test_sshd) ... ok
+test_needed_soname_interp (test_parsers.ElfTests.test_needed_soname_interp) ... ok
+test_not_elf (test_parsers.ElfTests.test_not_elf) ... ok
+test_truncated_and_hostile (test_parsers.ElfTests.test_truncated_and_hostile) ... ok
+test_strings (test_parsers.LibInfoTests.test_strings) ... ok
+test_inside_outside_links (test_parsers.SafePathTests.test_inside_outside_links) ... ok
+test_bad_input_gives_one_line (test_product.CliTests.test_bad_input_gives_one_line) ... ok
+test_corrupt_scan_files (test_product.CliTests.test_corrupt_scan_files) ... ok
+test_scan_outputs_and_exit_codes (test_product.CliTests.test_scan_outputs_and_exit_codes) ... ok
+test_cbom_schema (test_product.HostileTests.test_cbom_schema) ... ok
+test_config_parser_matches_openssh_line_rules (test_product.HostileTests.test_config_parser_matches_openssh_line_rules) ... ok
+test_corrupt_crypto_file_fails_closed (test_product.HostileTests.test_corrupt_crypto_file_fails_closed) ... ok
+test_hostile_elf_in_image_does_not_stop_scan (test_product.HostileTests.test_hostile_elf_in_image_does_not_stop_scan) ... ok
+test_injection_and_secrets_and_paths (test_product.HostileTests.test_injection_and_secrets_and_paths) ... ok
+test_no_quadratic_hangs (test_product.HostileTests.test_no_quadratic_hangs) ... ok
+test_report_with_many_findings_and_empty (test_product.HostileTests.test_report_with_many_findings_and_empty) ... ok
+test_swapped_in_link_is_refused (test_product.HostileTests.test_swapped_in_link_is_refused) ... ok
+test_unreadable_file_does_not_stop_scan (test_product.HostileTests.test_unreadable_file_does_not_stop_scan) ... ok
+test_garbage (test_product.KeyTests.test_garbage) ... ok
+test_real_keys (test_product.KeyTests.test_real_keys) ... ok
+test_console_capture (test_product.RuleTests.test_console_capture) ... ok
+test_eol_depends_on_date (test_product.RuleTests.test_eol_depends_on_date) ... ok
+test_other_rules_and_summary (test_product.RuleTests.test_other_rules_and_summary) ... ok
+test_probe_input_checks (test_product.RuleTests.test_probe_input_checks) ... ok
+test_runtime_rules (test_product.RuleTests.test_runtime_rules) ... ok
+test_sshd_modes (test_product.RuleTests.test_sshd_modes) ... ok
+test_unknown_series_gives_note_not_finding (test_product.RuleTests.test_unknown_series_gives_note_not_finding) ... ok
+
+----------------------------------------------------------------------
+Ran 33 tests
+
+OK

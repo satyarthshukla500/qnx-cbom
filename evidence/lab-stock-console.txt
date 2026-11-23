@@ -1,0 +1,133 @@
+
+non UEFI or UEFI+CSM boot
+ACPI table not found (0x4746434d)
+System behaves poorly without PCID support.
+overriding mask for controller 2, vector_base 0
+---> Starting slogger2
+---> Starting PCI Services
+---> Starting fsevmgr
+---> Starting devb
+# ---> Mounting file systems
+Path=0 - Intel 82371SB
+ target=0 lun=0     Direct-Access(0) -          QEMU HARDDISK    Rev: 2.5+
+ target=1 lun=0     Direct-Access(0) -          QEMU HARDDISK    Rev: 2.5+
+Path=1 - Intel 82371SB
+ target=0 lun=0            CD-ROM(5) - QEMU     QEMU DVD-ROM     Rev: 2.5+
+---> Mounting file systems
+---> Starting Networking
+if_up: tries exhausted
+ifconfig: interface vtnet0 does not exist
+no valid interfaces found
+---> Starting sshd
+Memory fault (core dumped) 
+---> Starting misc
+
+To exit QEMU, type <ctrl>a x
+
+Process count:21
+Startup complete
+QNX noname 8.0.0 2026/10/30-09:10:05EDT x86pc x86_64
+
+# mkdir -p /data/lab && mount -t qnx6 -r /dev/hd1 /data/lab && echo MOUNT-DONE && ls /data/lab
+MOUNT-DONE
+after_all.sh  o35            probe_run.sh   ssh_run.sh
+cbom_probe    probe_edge.sh  resmgr_run.sh  stock_all.sh
+# sh /data/lab/stock_all.sh
+=== uname -a
+QNX noname 8.0.0 2026/10/30-09:10:05EDT x86pc x86_64
+=== probe with nothing crypto-related started by this script
+CBOM-BEGIN
+{"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target":{"sysname":"QNX","release":"8.0.0","machine":"x86pc"},"scanned":19,"processes":[{"pid":131081,"name":"/system/bin/random","libs":[{"path":"/proc/boot/libqcrypto.so.1.0","soname":"libqcrypto.so.1.0","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/qcrypto-openssl-3.so","soname":"qcrypto-openssl-3.so","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.0.22","released":"25 Aug 2026","pq_capable":false}]}],"errors":[]}
+CBOM-END len=577 crc32=52010b98
+=== throwaway key and certificate in /tmp (target RAM only)
+-----
+=== start a TLS server with the image's OpenSSL (port 4433)
+=== probe 1: image library in use
+CBOM-BEGIN
+{"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target":{"sysname":"QNX","release":"8.0.0","machine":"x86pc"},"scanned":20,"processes":[{"pid":131081,"name":"/system/bin/random","libs":[{"path":"/proc/boot/libqcrypto.so.1.0","soname":"libqcrypto.so.1.0","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/qcrypto-openssl-3.so","soname":"qcrypto-openssl-3.so","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.0.22","released":"25 Aug 2026","pq_capable":false}]},{"pid":376851,"name":"/system/bin/openssl","libs":[{"path":"/system/lib/libssl.so.3","soname":"libssl.so.3","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.0.22","released":"25 Aug 2026","pq_capable":false}]}],"errors":[]}
+CBOM-END len=864 crc32=a7cfe74c
+=== start a TLS server with OpenSSL 3.5.9 from the payload disk through LD_LIBRARY_PATH (port 4434)
+=== probe 2: both servers running
+CBOM-BEGIN
+{"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target":{"sysname":"QNX","release":"8.0.0","machine":"x86pc"},"scanned":21,"processes":[{"pid":131081,"name":"/system/bin/random","libs":[{"path":"/proc/boot/libqcrypto.so.1.0","soname":"libqcrypto.so.1.0","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/qcrypto-openssl-3.so","soname":"qcrypto-openssl-3.so","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.0.22","released":"25 Aug 2026","pq_capable":false}]},{"pid":376851,"name":"/system/bin/openssl","libs":[{"path":"/system/lib/libssl.so.3","soname":"libssl.so.3","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.0.22","released":"25 Aug 2026","pq_capable":false}]},{"pid":397332,"name":"/system/bin/openssl","libs":[{"path":"/data/lab/o35/libssl.so.3","soname":"libssl.so.3","version":null,"released":null,"pq_capable":true},{"path":"/data/lab/o35/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.5.9","released":"29 Sep 2026","pq_capable":true}]}],"errors":[]}
+CBOM-END len=1153 crc32=d2f60691
+=== probe of one process only (-p) and file output (-o)
+exit 0
+{"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target":{"sysname":"QNX","release":"8.0.0","machine":"x86pc"},"scanned":1,"processes":[],"errors":[]}
+CBOM-BEGIN
+{"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target":{"sysname":"QNX","release":"8.0.0","machine":"x86pc"},"scanned":1,"processes":[],"errors":[{"pid":999999,"what":"open /proc/<pid>/as: errno 2"}]}
+CBOM-END len=207 crc32=d1e84a66
+cbom_probe: bad pid: abc
+exit 2
+=== long program name (200 characters) with a library from a directory that is removed afterwards
+=== state before deleting the library files
+total 17474
+-rwxr-xr-x  1 root root 7176768 2026-11-23 17:30 libcrypto.so.3
+-rwxr-xr-x  1 root root 1769776 2026-11-23 17:30 libssl.so.3
+log e2:
+Using default temp DH parameters
+ACCEPT
+log e1:
+Could not open file or uri for loading server certificate private key from /tmp/none.pem
+01000000:error:80000002:system library:file_open:No such file or directory:../src/openssl-3.5.9/providers/implementations/storemgmt/file_store.c:265:calling stat(/tmp/none.pem)
+1
+=== probe after the library files were deleted
+CBOM-BEGIN
+{"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target":{"sysname":"QNX","release":"8.0.0","machine":"x86pc"},"scanned":20,"processes":[{"pid":131081,"name":"/system/bin/random","libs":[{"path":"/proc/boot/libqcrypto.so.1.0","soname":"libqcrypto.so.1.0","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/qcrypto-openssl-3.so","soname":"qcrypto-openssl-3.so","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.0.22","released":"25 Aug 2026","pq_capable":false}]},{"pid":540691,"name":"/data/var/tmp/nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn","libs":[{"path":"/data/var/tmp/gone/libssl.so.3","soname":"libssl.so.3","version":null,"released":null,"pq_capable":false},{"path":"/data/var/tmp/gone/libcrypto.so.3","soname":"libcrypto.so.3","version":null,"released":null,"pq_capable":false}]}],"errors":[{"pid":540691,"what":"read mapped library: errno 2"},{"pid":540691,"what":"read mapped library: errno 2"}]}
+CBOM-END len=1166 crc32=94fcb7fe
+exit 0
+=== probe 15 times while short-lived processes start and end
+runs 15, failed runs 0
+1
+=== -o attacks: a hard link to another file, a fifo, an existing world-readable file
+cbom_probe: cannot write /tmp/hardlink: errno 1
+exit 1
+victim-content
+cbom_probe: cannot write /tmp/fifo: errno 6
+exit 1
+exit 0
+-rw-------  1 root root 577 2026-11-23 17:30 /tmp/public.json
+{"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target
+=== uname -a
+QNX noname 8.0.0 2026/10/30-09:10:05EDT x86pc x86_64
+=== ls -l /dev/cbom
+nr--------  1 root root 0 2026-11-23 17:30 /dev/cbom
+=== cat /dev/cbom (first 400 bytes)
+{"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target":{"sysname":"QNX","release":"8.0.0","machine":"x86pc"},"scanned":21,"processes":[{"pid":131081,"name":"/system/bin/random","libs":[{"path":"/proc/boot/libqcrypto.so.1.0","soname":"libqcrypto.so.1.0","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/qcrypto-openssl-3.so","soname":"qcrypto-openssl-3.so","version":null,
+=== read twice: both are complete JSON
+577
+577
+=== uname -a
+QNX noname 8.0.0 2026/10/30-09:10:05EDT x86pc x86_64
+=== openssl version (image)
+OpenSSL 3.0.22 25 Aug 2026 (Library: OpenSSL 3.0.22 25 Aug 2026)
+=== sshd -t (config test)
+Memory fault (core dumped) 
+exit 139
+=== sshd -T, key exchange line
+Memory fault (core dumped) 
+=== host keys present
+total 6
+-r--------  1 root root  387 2026-11-18 05:30 ssh_host_ed25519_key
+-r--------  1 root root 2578 2026-11-18 05:30 ssh_host_rsa_key
+=== start sshd in debug mode on 127.0.0.1:2222
+=== sshd log so far
+debug1: sshd version OpenSSH_10.4, OpenSSL 3.0.22 25 Aug 2026
+=== sshd running?
+     pid tid name                         prio STATE          Blocked                     
+=== probe
+CBOM-BEGIN
+{"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target":{"sysname":"QNX","release":"8.0.0","machine":"x86pc"},"scanned":19,"processes":[{"pid":131081,"name":"/system/bin/random","libs":[{"path":"/proc/boot/libqcrypto.so.1.0","soname":"libqcrypto.so.1.0","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/qcrypto-openssl-3.so","soname":"qcrypto-openssl-3.so","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.0.22","released":"25 Aug 2026","pq_capable":false}]}],"errors":[]}
+CBOM-END len=577 crc32=52010b98
+=== ssh login asking only for mlkem768x25519-sha256
+debug1: connect to address 127.0.0.1 port 2222: Connection refused
+ssh: connect to host 127.0.0.1 port 2222: Connection refused
+=== sshd log (last lines)
+debug1: sshd version OpenSSH_10.4, OpenSSL 3.0.22 25 Aug 2026
+=== the way the boot script starts sshd (config test only, no extra options)
+Memory fault (core dumped) 
+exit 139
+=== same test with the OpenSSL 3.5.9 library from the payload disk in front (LD_LIBRARY_PATH)
+exit 0
+=== LAB DONE
+# 

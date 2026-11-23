@@ -1,0 +1,126 @@
+
+non UEFI or UEFI+CSM boot
+ACPI table not found (0x4746434d)
+System behaves poorly without PCID support.
+overriding mask for controller 2, vector_base 0
+---> Starting slogger2
+---> Starting PCI Services
+---> Starting fsevmgr
+---> Starting devb
+# ---> Mounting file systems
+Path=0 - Intel 82371SB
+ target=0 lun=0     Direct-Access(0) -          QEMU HARDDISK    Rev: 2.5+
+ target=1 lun=0     Direct-Access(0) -          QEMU HARDDISK    Rev: 2.5+
+Path=1 - Intel 82371SB
+ target=0 lun=0            CD-ROM(5) - QEMU     QEMU DVD-ROM     Rev: 2.5+
+---> Mounting file systems
+mount: Can't mount /boot (type qnx6) 
+mount: Possible reason: Invalid argument 
+---> Starting Networking
+if_up: tries exhausted
+ifconfig: interface vtnet0 does not exist
+no valid interfaces found
+---> Starting sshd
+---> Starting misc
+
+To exit QEMU, type <ctrl>a x
+
+Process count:22
+Startup complete
+QNX noname 8.0.0 2026/10/30-09:10:05EDT x86pc x86_64
+
+# mkdir -p /data/lab && mount -t qnx6 -r /dev/hd1 /data/lab && echo MOUNT-DONE && ls /data/lab
+MOUNT-DONE
+after_all.sh  o35            probe_run.sh   ssh_run.sh
+cbom_probe    probe_edge.sh  resmgr_run.sh  stock_all.sh
+# sh /data/lab/after_all.sh
+=== uname -a
+QNX noname 8.0.0 2026/10/30-09:10:05EDT x86pc x86_64
+=== probe with nothing crypto-related started by this script
+CBOM-BEGIN
+{"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target":{"sysname":"QNX","release":"8.0.0","machine":"x86pc"},"scanned":20,"processes":[{"pid":131081,"name":"/system/bin/random","libs":[{"path":"/proc/boot/libqcrypto.so.1.0","soname":"libqcrypto.so.1.0","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/qcrypto-openssl-3.so","soname":"qcrypto-openssl-3.so","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.5.9","released":"29 Sep 2026","pq_capable":true}]},{"pid":241679,"name":"/system/bin/sshd","libs":[{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.5.9","released":"29 Sep 2026","pq_capable":true}]}],"errors":[]}
+CBOM-END len=749 crc32=51b3460f
+=== throwaway key and certificate in /tmp (target RAM only)
+-----
+=== start a TLS server with the image's OpenSSL (port 4433)
+=== probe 1: image library in use
+CBOM-BEGIN
+{"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target":{"sysname":"QNX","release":"8.0.0","machine":"x86pc"},"scanned":21,"processes":[{"pid":131081,"name":"/system/bin/random","libs":[{"path":"/proc/boot/libqcrypto.so.1.0","soname":"libqcrypto.so.1.0","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/qcrypto-openssl-3.so","soname":"qcrypto-openssl-3.so","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.5.9","released":"29 Sep 2026","pq_capable":true}]},{"pid":241679,"name":"/system/bin/sshd","libs":[{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.5.9","released":"29 Sep 2026","pq_capable":true}]},{"pid":376852,"name":"/system/bin/openssl","libs":[{"path":"/system/lib/libssl.so.3","soname":"libssl.so.3","version":null,"released":null,"pq_capable":true},{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.5.9","released":"29 Sep 2026","pq_capable":true}]}],"errors":[]}
+CBOM-END len=1033 crc32=bd5b1ae6
+=== start a TLS server with OpenSSL 3.5.9 from the payload disk through LD_LIBRARY_PATH (port 4434)
+=== probe 2: both servers running
+CBOM-BEGIN
+{"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target":{"sysname":"QNX","release":"8.0.0","machine":"x86pc"},"scanned":22,"processes":[{"pid":131081,"name":"/system/bin/random","libs":[{"path":"/proc/boot/libqcrypto.so.1.0","soname":"libqcrypto.so.1.0","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/qcrypto-openssl-3.so","soname":"qcrypto-openssl-3.so","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.5.9","released":"29 Sep 2026","pq_capable":true}]},{"pid":241679,"name":"/system/bin/sshd","libs":[{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.5.9","released":"29 Sep 2026","pq_capable":true}]},{"pid":376852,"name":"/system/bin/openssl","libs":[{"path":"/system/lib/libssl.so.3","soname":"libssl.so.3","version":null,"released":null,"pq_capable":true},{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.5.9","released":"29 Sep 2026","pq_capable":true}]},{"pid":397333,"name":"/system/bin/openssl","libs":[{"path":"/data/lab/o35/libssl.so.3","soname":"libssl.so.3","version":null,"released":null,"pq_capable":true},{"path":"/data/lab/o35/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.5.9","released":"29 Sep 2026","pq_capable":true}]}],"errors":[]}
+CBOM-END len=1322 crc32=89e30622
+=== probe of one process only (-p) and file output (-o)
+exit 0
+{"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target":{"sysname":"QNX","release":"8.0.0","machine":"x86pc"},"scanned":1,"processes":[],"errors":[]}
+CBOM-BEGIN
+{"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target":{"sysname":"QNX","release":"8.0.0","machine":"x86pc"},"scanned":1,"processes":[],"errors":[{"pid":999999,"what":"open /proc/<pid>/as: errno 2"}]}
+CBOM-END len=207 crc32=d1e84a66
+cbom_probe: bad pid: abc
+exit 2
+=== uname -a
+QNX noname 8.0.0 2026/10/30-09:10:05EDT x86pc x86_64
+=== openssl version (image)
+OpenSSL 3.0.22 25 Aug 2026 (Library: OpenSSL 3.5.9 29 Sep 2026)
+=== sshd -t (config test)
+exit 0
+=== sshd -T, key exchange line
+KexAlgorithms mlkem768x25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256
+=== host keys present
+total 6
+-r--------  1 root root  387 2026-11-23 17:29 ssh_host_ed25519_key
+-r--------  1 root root 2578 2026-11-23 17:29 ssh_host_rsa_key
+=== start sshd in debug mode on 127.0.0.1:2222
+=== sshd log so far
+debug1: sshd version OpenSSH_10.4, OpenSSL 3.5.9 29 Sep 2026
+debug1: private host key #0: ssh-rsa SHA256:iJvmaN8IStFAisqumUtk4iI3ljrugueQJ6R3+IjDvzs
+debug1: private host key #1: ssh-ed25519 SHA256:SpdEVb2KvWQh6nruns9LtF2g4wJFECInz4wMH3od/ow
+debug1: rexec_argv[1]='-f'
+debug1: rexec_argv[2]='/system/etc/ssh/sshd_config'
+debug1: rexec_argv[3]='-D'
+debug1: rexec_argv[4]='-e'
+debug1: rexec_argv[5]='-d'
+debug1: rexec_argv[6]='-p'
+debug1: rexec_argv[7]='2222'
+debug1: rexec_argv[8]='-o'
+debug1: rexec_argv[9]='ListenAddress=127.0.0.1'
+debug1: rexec_argv[10]='-o'
+debug1: rexec_argv[11]='StrictModes=no'
+debug1: Bind to port 2222 on 127.0.0.1.
+Server listening on 127.0.0.1 port 2222.
+=== sshd running?
+     pid tid name                         prio STATE          Blocked                     
+  241679   1 system/bin/sshd               10r SIGWAITINFO                                
+  548884   1 system/bin/sshd               10r SIGWAITINFO                                
+=== probe
+CBOM-BEGIN
+{"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target":{"sysname":"QNX","release":"8.0.0","machine":"x86pc"},"scanned":21,"processes":[{"pid":131081,"name":"/system/bin/random","libs":[{"path":"/proc/boot/libqcrypto.so.1.0","soname":"libqcrypto.so.1.0","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/qcrypto-openssl-3.so","soname":"qcrypto-openssl-3.so","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.5.9","released":"29 Sep 2026","pq_capable":true}]},{"pid":241679,"name":"/system/bin/sshd","libs":[{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.5.9","released":"29 Sep 2026","pq_capable":true}]},{"pid":548884,"name":"/system/bin/sshd","libs":[{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.5.9","released":"29 Sep 2026","pq_capable":true}]}],"errors":[]}
+CBOM-END len=923 crc32=a725ce50
+=== ssh login asking only for mlkem768x25519-sha256
+debug1: kex: algorithm: mlkem768x25519-sha256
+Authenticated to 127.0.0.1 ([127.0.0.1]:2222) using "publickey".
+debug1: Sending command: echo LOGIN-OK
+LOGIN-OK
+=== sshd log (last lines)
+debug1: session_exit_message: session 0 channel 0 pid 626714 exit 0
+debug1: session_exit_message: release channel 0
+debug1: session_by_channel: session 0 channel 0
+debug1: session_close_by_channel: channel 0 child 0
+Close session: user root from 127.0.0.1 port 25667 id 0
+debug1: channel 0: free: server-session, nchannels 1
+Received disconnect from 127.0.0.1 port 25667:11: disconnected by user
+Disconnected from user root 127.0.0.1 port 25667
+debug1: do_cleanup
+debug1: mm_reap: child exited with status 255
+debug1: do_cleanup
+debug1: PAM: cleanup
+debug1: PAM: closing session
+debug1: PAM: deleting credentials
+=== the way the boot script starts sshd (config test only, no extra options)
+exit 0
+=== same test with the OpenSSL 3.5.9 library from the payload disk in front (LD_LIBRARY_PATH)
+exit 0
+=== LAB DONE
+# 

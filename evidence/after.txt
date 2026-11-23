@@ -1,0 +1,9 @@
+qnx-cbom 0.1.0  image upgraded-image (x86_64)  scan date 2026-11-23
+verdict: WARN   UNSAFE 0  WARN 4  OK 5
+files 217, ELF 168, crypto-linked ELF 19 (15 programs)
+not analysed: skipped_outside_roots 2
+runtime: 4 processes map crypto libraries (8 mappings), 22 processes read
+WARN   QCB-004 /data/var/ssh/ssh_host_ed25519_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /data/var/ssh/ssh_host_rsa_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /proc/boot/qtd_public_key.pem - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-005 /proc/boot/qcrypto.conf - qcrypto sends all algorithms to a plug-in without post-quantum algorithms

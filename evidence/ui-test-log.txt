@@ -1,0 +1,72 @@
+PASS  [small] page load -> 4 findings in list (expected 4)
+PASS  [small] filter button UNSAFE -> 2 shown, 0 wrong severity, aria-pressed=true
+PASS  [small] filter button WARN -> 1 shown, 0 wrong severity, aria-pressed=true
+PASS  [small] filter button OK -> 1 shown, 0 wrong severity, aria-pressed=true
+PASS  [small] filter button ALL -> 4 shown, 0 wrong severity, aria-pressed=true
+PASS  [small] search box, no match -> 0 shown, empty message visible=true
+PASS  [small] search box "qcb-002" -> 1 shown (expected 1)
+PASS  [small] search box cleared -> 4 shown
+PASS  [small] sort button rule -> list of 4 is ordered by rule
+PASS  [small] sort button subject -> list of 4 is ordered by subject
+PASS  [small] sort button severity -> list of 4 is ordered by severity
+PASS  [small] Expand all -> 4 of 4 open
+PASS  [small] Collapse all -> 0 open
+PASS  [small] click on a finding summary -> details opened
+PASS  [small] keyboard Enter on summary -> details opened
+PASS  [small] Copy fix button -> label "Copied", clipboard equals fix text
+PASS  [small] source link -> https://openssl-library.org/policies/releasestrat/ rel=noopener noreferrer
+PASS  [small] nav link #findings -> section visible, url ends #findings
+PASS  [small] nav link #programs -> section visible, url ends #programs
+PASS  [small] nav link #libraries -> section visible, url ends #libraries
+PASS  [small] nav link #keys -> section visible, url ends #keys
+PASS  [small] nav link #config -> section visible, url ends #config
+PASS  [small] nav link #runtime -> section visible, url ends #runtime
+PASS  [small] nav link #method -> section visible, url ends #method
+PASS  [small] narrow window 360 px -> page-wide horizontal overflow 0px
+PASS  [small] Tab key moves focus -> A:Findings > A:Programs > A:Libraries > A:Keys > A:Configuration > A:Runtime
+PASS  [small] console errors and warnings -> none
+PASS  [small] network requests leaving the page -> none
+PASS  [empty] page load -> 0 findings in list (expected 0)
+PASS  [empty] empty state -> message "No findings." visible
+PASS  [empty] filter and sort buttons exist -> 4 filter buttons present
+PASS  [empty] nav link #findings -> section visible, url ends #findings
+PASS  [empty] nav link #programs -> section visible, url ends #programs
+PASS  [empty] nav link #libraries -> section visible, url ends #libraries
+PASS  [empty] nav link #keys -> section visible, url ends #keys
+PASS  [empty] nav link #config -> section visible, url ends #config
+PASS  [empty] nav link #runtime -> section visible, url ends #runtime
+PASS  [empty] nav link #method -> section visible, url ends #method
+PASS  [empty] narrow window 360 px -> page-wide horizontal overflow 0px
+PASS  [empty] Tab key moves focus -> A:Findings > A:Programs > A:Libraries > A:Keys > A:Configuration > A:Runtime
+PASS  [empty] console errors and warnings -> none
+PASS  [empty] network requests leaving the page -> none
+PASS  [large] page load -> 600 findings in list (expected 600)
+PASS  [large] filter button UNSAFE -> 200 shown, 0 wrong severity, aria-pressed=true
+PASS  [large] filter button WARN -> 200 shown, 0 wrong severity, aria-pressed=true
+PASS  [large] filter button OK -> 200 shown, 0 wrong severity, aria-pressed=true
+PASS  [large] filter button ALL -> 600 shown, 0 wrong severity, aria-pressed=true
+PASS  [large] search box, no match -> 0 shown, empty message visible=true
+PASS  [large] search box "/x/7" -> 11 shown (expected 11)
+PASS  [large] search box cleared -> 600 shown
+PASS  [large] sort button rule -> list of 600 is ordered by rule
+PASS  [large] sort button subject -> list of 600 is ordered by subject
+PASS  [large] sort button severity -> list of 600 is ordered by severity
+PASS  [large] Expand all -> 600 of 600 open
+PASS  [large] Collapse all -> 0 open
+PASS  [large] click on a finding summary -> details opened
+PASS  [large] keyboard Enter on summary -> details opened
+PASS  [large] Copy fix button -> label "Copied", clipboard equals fix text
+PASS  [large] source link -> https://openssl-library.org/policies/releasestrat/ rel=noopener noreferrer
+PASS  [large] nav link #findings -> section visible, url ends #findings
+PASS  [large] nav link #programs -> section visible, url ends #programs
+PASS  [large] nav link #libraries -> section visible, url ends #libraries
+PASS  [large] nav link #keys -> section visible, url ends #keys
+PASS  [large] nav link #config -> section visible, url ends #config
+PASS  [large] nav link #runtime -> section visible, url ends #runtime
+PASS  [large] nav link #method -> section visible, url ends #method
+PASS  [large] narrow window 360 px -> page-wide horizontal overflow 0px
+PASS  [large] Tab key moves focus -> A:Findings > A:Programs > A:Libraries > A:Keys > A:Configuration > A:Runtime
+PASS  [large] console errors and warnings -> none
+PASS  [large] network requests leaving the page -> none
+PASS  [hostile] script/markup in file names and config text -> injected elements 0, dialogs 0, shown as text: true
+TOTAL controls/checks 71, failed 0

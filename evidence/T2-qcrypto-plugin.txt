@@ -1,0 +1,122 @@
+## T2 commands run Mon Nov 23 11:42:09 UTC 2026
+$ ls -la $QNX_TARGET/usr/include/qcrypto/
+ 
+4096 .
+12288 ..
+43480 qcrypto.h
+1953 qcrypto_dyn.h
+5251 qcrypto_error.h
+15990 qcrypto_keys.h
+27103 qcrypto_plugin.h
+
+$ find $QNX_TARGET -iname '*qcrypto*' (binaries/libs only)
+$QNX_TARGET/aarch64le/lib/dll/qcrypto-openssl-3.so
+$QNX_TARGET/aarch64le/lib/dll/qcrypto-openssl-3.so.sym
+$QNX_TARGET/aarch64le/usr/bin/qcrypto
+$QNX_TARGET/aarch64le/usr/bin/qcrypto.sym
+$QNX_TARGET/aarch64le/usr/lib/libqcrypto.so
+$QNX_TARGET/aarch64le/usr/lib/libqcrypto.so.1.0
+$QNX_TARGET/aarch64le/usr/lib/libqcrypto.so.1.0.sym
+$QNX_TARGET/aarch64le/usr/lib/libqcrypto_dyn.so
+$QNX_TARGET/aarch64le/usr/lib/libqcrypto_dyn.so.1.0
+$QNX_TARGET/aarch64le/usr/lib/libqcrypto_dyn.so.1.0.sym
+$QNX_TARGET/aarch64le/usr/lib/libqcrypto_pluginS.a
+$QNX_TARGET/usr/include/qcrypto
+$QNX_TARGET/usr/include/qcrypto/qcrypto.h
+$QNX_TARGET/usr/include/qcrypto/qcrypto_dyn.h
+$QNX_TARGET/usr/include/qcrypto/qcrypto_error.h
+$QNX_TARGET/usr/include/qcrypto/qcrypto_keys.h
+$QNX_TARGET/usr/include/qcrypto/qcrypto_plugin.h
+$QNX_TARGET/x86_64/lib/dll/qcrypto-openssl-3.so
+$QNX_TARGET/x86_64/lib/dll/qcrypto-openssl-3.so.sym
+$QNX_TARGET/x86_64/usr/bin/qcrypto
+$QNX_TARGET/x86_64/usr/bin/qcrypto.sym
+$QNX_TARGET/x86_64/usr/lib/libqcrypto.so
+$QNX_TARGET/x86_64/usr/lib/libqcrypto.so.1.0
+$QNX_TARGET/x86_64/usr/lib/libqcrypto.so.1.0.sym
+$QNX_TARGET/x86_64/usr/lib/libqcrypto_dyn.so
+$QNX_TARGET/x86_64/usr/lib/libqcrypto_dyn.so.1.0
+$QNX_TARGET/x86_64/usr/lib/libqcrypto_dyn.so.1.0.sym
+$QNX_TARGET/x86_64/usr/lib/libqcrypto_pluginS.a
+
+$ grep -c register_algorithm qcrypto_plugin.h
+1
+$ grep -ciE 'kem|encap|decap' qcrypto_plugin.h qcrypto.h qcrypto_keys.h
+$QNX_TARGET/usr/include/qcrypto/qcrypto_keys.h:0
+$QNX_TARGET/usr/include/qcrypto/qcrypto_plugin.h:0
+$QNX_TARGET/usr/include/qcrypto/qcrypto.h:0
+$ grep -ciE 'derive|agree|shared_secret' (all qcrypto headers)
+$QNX_TARGET/usr/include/qcrypto/qcrypto_dyn.h:0
+$QNX_TARGET/usr/include/qcrypto/qcrypto.h:0
+$QNX_TARGET/usr/include/qcrypto/qcrypto_keys.h:1
+$QNX_TARGET/usr/include/qcrypto/qcrypto_plugin.h:0
+$QNX_TARGET/usr/include/qcrypto/qcrypto_error.h:0
+$ grep -E '_request\(' qcrypto.h qcrypto_keys.h | function names only
+qcrypto_cipher_request
+qcrypto_digest_request
+qcrypto_kdf_request
+qcrypto_keygen_request
+qcrypto_mac_request
+qcrypto_rng_request
+qcrypto_signature_request
+$ find qcrypto.conf samples in SDK and ~/qnximg
+(none found if blank)
+$ ls SDK qcrypto manual pages
+crypto_developers.html
+crypto_integrators.html
+cryptodev_h_defines.html
+devcrypto_algorithm_t.html
+devcrypto_intro.html
+devcrypto_ioctl_api.html
+devcrypto_plugin_api.html
+qcrypto.html
+qcrypto_add_primitives.html
+qcrypto_algorithm_t.html
+qcrypto_apis.html
+qcrypto_certicom_plugin.html
+qcrypto_cipher_args_t.html
+qcrypto_configuration.html
+qcrypto_digests.html
+qcrypto_digital_signing.html
+qcrypto_kdf.html
+qcrypto_kdf_args_t.html
+qcrypto_key_args_t.html
+qcrypto_key_generation.html
+qcrypto_mac.html
+qcrypto_openssl_plugin.html
+qcrypto_padding.html
+qcrypto_rng.html
+qcrypto_rng_args_t.html
+qcrypto_signature_args_t.html
+qcrypto_supported_primitives.html
+qcrypto_symmetric_cryptography.html
+qcrypto_tomcrypt_plugin.html
+
+## Reading notes (my own words, no header text copied)
+- Plugin entry: a plugin is a DLL named qcrypto-<name>.so exposing a qcrypto_plugin_ops_t
+  (init / uninit / get_desc). In its init it calls register_algorithm() once per algorithm.
+  Static helper lib: libqcrypto_pluginS.a (linked with --whole-archive per the docs).
+- Algorithm object (qcrypto_algorithm_t) = free-text name (max 32 chars incl NUL) + a type
+  + a union of ops tables. So NEW NAMES are open-ended, but the TYPE is a closed set of
+  7 defines: QCRYPTO_DIGEST_TYPE, QCRYPTO_RNG_TYPE, QCRYPTO_KEYGEN_TYPE, QCRYPTO_CIPHER_TYPE,
+  QCRYPTO_MAC_TYPE, QCRYPTO_KDF_TYPE, QCRYPTO_SIGNATURE_TYPE (QCRYPTO_MAX_TYPE ends the list).
+- Signatures (ML-DSA, SLH-DSA): YES, fits. A plugin can register e.g. "ml-dsa-65" as
+  QCRYPTO_SIGNATURE_TYPE with qcrypto_signature_ops_t (init/sign_oneshot/verify_oneshot/size),
+  and a matching QCRYPTO_KEYGEN_TYPE entry. Key enums have escape hatches:
+  qcrypto_key_alg_type_t has QCRYPTO_CUSTOM_KEY_ALG (=100 and up), qcrypto_key_type_t has
+  QCRYPTO_CUSTOM_KEY, qcrypto_key_args_t has a 'private' void* member. Users reach it with
+  qcrypto_keygen_request()/qcrypto_signature_request() by name. Not tested by running code yet.
+- KEM (ML-KEM): NO native slot. There is no KEM / encapsulate / decapsulate type, and no
+  key-agreement (derive / shared secret) call in the public API at all, even for ECDH/DH
+  (a DH key alg enum exists but no derive op). A KEM could only be shoe-horned into another
+  type (e.g. misuse the KDF or cipher ops), which an app would have to know about. A real KEM
+  needs a new algorithm type that only QNX can add to libqcrypto.
+- Config: no qcrypto.conf sample ships in the SDK or in ~/qnximg. Format from the SDK manual
+  (qcrypto_configuration.html): one line per plugin "<plugin> tags=<tag>[,<tag>...]", top-down
+  match, last line should be tags=*; default path /etc/qcrypto.conf, override via
+  _CS_CONFIG_PATH or qcrypto_set_config_path(). Untagged requests use __progname as the tag.
+- Shipped plugins documented: OpenSSL (qcrypto-openssl-3.so), Certicom, TomCrypt.
+  OpenSSL plugin doc lists signatures rsa-*, dsa-*, ecdsa-*, eddsa-pure; no PQC.
+
+$ strings qcrypto-openssl-3.so (x86_64) | grep -ciE 'ml-?kem|ml-?dsa|slh'
+0
