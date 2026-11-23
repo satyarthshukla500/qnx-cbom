@@ -4,6 +4,10 @@
 
 **Why this is useful.** A QNX image is built once and then runs in the field for years, so what is inside it has to be known and checked: the OpenSSL 3.0 series left upstream support on 2026-09-07, OpenSSH 10 made a hybrid post-quantum key exchange its default, and RSA and elliptic-curve keys are the ones a quantum computer breaks. The stock QNX 8.0 image that this was tested on ships OpenSSL 3.0.22 and an `sshd_config` that allows only classical key exchange, although its `sshd` binary supports `mlkem768x25519-sha256`. A file-level scan cannot tell you whether a process really uses the library the image holds (a `LD_LIBRARY_PATH` setting can replace it), and an inventory that is wrong about that is worse than none.
 
+**Who it is for.** Teams that build and ship QNX images for long-lived products (QNX is used in vehicles, medical devices, factory systems and robots) and have to answer customers or auditors about the cryptography inside them; and CI jobs that must stop a build when the image gets worse.
+
+**What the probe does on a running system.** It is a separate small program that only reads: it opens `/proc/<pid>/as` read-only, asks for the memory map, and reads the library files it finds there. It changes no other process and needs no change to the kernel or to the programs it inspects. Its source is one C file (`probe/cbom_probe.c`) plus the optional resource manager header, so it can be reviewed in one sitting. No claim is made about its effect on timing; none was measured.
+
 **Why it needs QNX knowledge.** It reads the QNX boot image and the `mkqnximage` build lists, and its probe runs on the target and uses QNX's own process interface (`/proc/<pid>/as` with `devctl`, the calls `pidin` uses) and a QNX resource manager.
 
 Category: Developer Tooling & Host Tools. Licence: MIT.
@@ -15,6 +19,18 @@ The real results of the lab runs are in `evidence/`. With only Python 3.12:
 PYTHONPATH=src python3 -m qnxcbom diff evidence/before.json evidence/after.json
 ```
 Then open `evidence/before.html`, `evidence/after.html` and `evidence/diff.html` in a browser (they are single files, nothing is loaded from the network).
+
+## How it works, in five steps
+
+1. **Read the image.** The boot image is unpacked with `dumpifs -x`; the system and data partitions are taken from the `mkqnximage` build lists (`system.build`, `data.build`) and the SDK files they name.
+2. **Read every ELF file** with a small bounded reader: which libraries it needs, whether it is a program or a library.
+3. **Read the crypto files:** the version banner inside `libcrypto`, key and certificate type and size (never the key material), `qcrypto.conf`, `sshd_config`, `ssh_config`.
+4. **Ask the running system** (optional): the probe lists which crypto libraries each process has really mapped, and the scan compares them with the image files.
+5. **Apply the rules** in `src/qnxcbom/rules.json` and write the outputs.
+
+**Why not just check package versions?** The tested image has no package list; the OpenSSL version exists only inside the library file, and which library a program loads can differ from the file in the image (an `LD_LIBRARY_PATH` setting is enough). The probe measures that; a file or package check cannot.
+
+**Terms.** *CBOM*: a bill of materials for cryptography (what algorithms, keys and libraries a system contains), here in the CycloneDX 1.6 format. *Post-quantum / ML-KEM*: key-agreement algorithms (NIST FIPS 203) meant to resist quantum computers; `mlkem768x25519-sha256` is the hybrid of ML-KEM-768 and X25519 that OpenSSH offers. *qcrypto*: QNX's own crypto API with plug-ins. *Resource manager*: a QNX server that appears as a file in the path space (here `/dev/cbom`). *IFS*: the boot image of a QNX system. *Probe*: the small program that runs on the target.
 
 ## What is in the repository
 
@@ -142,6 +158,13 @@ What the run showed (`evidence/`):
 - qcrypto: SDP 8.0.6 has no key-encapsulation type (reading of the SDK headers, `evidence/T2-qcrypto-plugin.txt`), so QCB-005 has no in-place fix.
 - The aarch64le probe compiles; it has not been run.
 - The resource manager is a read-only file at `/dev/cbom`; it was run on the QEMU target (`evidence/lab-stock-console.txt`).
+
+## What is not done yet
+
+- Reading the qnx6 system and data partitions straight from a disk image (today their content comes from the build lists).
+- Running the aarch64le probe on a target (it compiles; no aarch64 QEMU was available here).
+- Building and testing QNX's own OpenSSL 3.5 port as the upgrade, instead of the lab build.
+- Finding the faulting function in the stock `sshd`.
 
 ## Tests
 
