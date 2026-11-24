@@ -116,7 +116,8 @@ def _walk_ifs(ifs_dir, counts, unverified):
                 yield os.path.relpath(path, ifs_dir).replace(os.sep, "/"), path
 
 
-def _collect(ifs_dir, build_dir, roots, counts, unverified, disk_parts):
+def _collect(ifs_dir, build_dir, roots, counts, unverified, disk_parts=None):
+    disk_parts = disk_parts or {}
     """Return a list of file records: {id, part, path, image_path, real, text}."""
     records = []
     for rel, real in _walk_ifs(ifs_dir, counts, unverified):

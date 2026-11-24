@@ -2,7 +2,7 @@
 PY = python3
 
 check:
-	cd tests && PYTHONPATH=../src $(PY) -W error::SyntaxWarning -m unittest test_parsers test_product
+	cd tests && PYTHONPATH=../src $(PY) -W error::SyntaxWarning -m unittest test_parsers test_product test_qnx6
 	@if [ -d tests/ui/node_modules ]; then node tests/ui/ui_test.js; else echo "ui test skipped: run 'cd tests/ui && npm install && npx playwright install chromium'"; fi
 
 fetch-schema:

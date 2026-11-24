@@ -14,7 +14,7 @@ step "schema files"
 [ -f build/schema/bom-1.6.schema.json ] || make -s fetch-schema
 
 step "unit tests"
-( cd tests && PYTHONPATH=../src python3 -W ignore -m unittest -v test_parsers test_product ) > "$out/unit-test-log.txt" 2>&1 || fails=$((fails+1))
+( cd tests && PYTHONPATH=../src python3 -W ignore -m unittest -v test_parsers test_product test_qnx6 ) > "$out/unit-test-log.txt" 2>&1 || fails=$((fails+1))
 sed -i -E 's/^(Ran [0-9]+ tests?) in [0-9.]+s$/\1/' "$out/unit-test-log.txt"  # no timings in the evidence
 tail -3 "$out/unit-test-log.txt"
 
