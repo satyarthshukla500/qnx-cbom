@@ -1,0 +1,11 @@
+$ bin/qnx-cbom scan --ifs <stock project>/output/ifs.bin --build-dir <stock project>/output/build --disk <stock project>/output/disk-qemu --date 2026-11-23 --json scan-disk.json --text -
+qnx-cbom 0.1.0  image qnximg (x86_64)  scan date 2026-11-23
+verdict: UNSAFE   UNSAFE 2  WARN 4  OK 1
+files 315, ELF 260, crypto-linked ELF 19 (15 programs)
+UNSAFE QCB-001 /proc/boot/libcrypto.so.3 - OpenSSL library is past upstream end of life
+UNSAFE QCB-002 /system/bin/sshd - sshd does not allow post-quantum key exchange
+WARN   QCB-004 /data/var/ssh/ssh_host_ed25519_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /data/var/ssh/ssh_host_rsa_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /proc/boot/qtd_public_key.pem - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-005 /proc/boot/qcrypto.conf - qcrypto sends all algorithms to a plug-in without post-quantum algorithms
+exit code: 1

@@ -5,13 +5,16 @@ import posixpath
 import re
 import shutil
 import stat
+import struct
 import subprocess
 import tempfile
 
-from . import buildlist, configs, elf, keys, libinfo, safepath
+from . import buildlist, configs, elf, keys, libinfo, qnx6, safepath
 
 MAX_FILES = 20_000
 MAX_CONFIG_BYTES = 256 * 1024
+MAX_DISK_BYTES = 1024 * 1024 * 1024
+DISK_PARTS = {0xB2: "system", 0xB3: "data"}  # MBR types that mkqnximage gives its qnx6 partitions
 MOUNTS = {"ifs": "/", "system": "/system/", "data": "/data/"}
 CRYPTO_PREFIXES = ("libcrypto", "libssl", "libqcrypto")
 KEY_SUFFIXES = (".pem", ".crt", ".cer", ".pub", ".key")
@@ -47,6 +50,50 @@ def extract_ifs(ifs_file: str, out_dir: str) -> None:
         raise ScanError("dumpifs failed on " + ifs_file)
 
 
+def extract_disk(disk_file, out_dir, counts, unverified):
+    """Read the system and data partitions of a disk image (qnx6) into out_dir/<part>/.
+    Returns ({part: [records]}, {part: "disk image" or why the build list is used instead}).
+    A partition that cannot be read completely is left out, so the build list is used for it."""
+    found, sources, total = {}, {}, 0
+    try:
+        with open(disk_file, "rb") as handle:
+            size = os.fstat(handle.fileno()).st_size
+            table = {DISK_PARTS[k]: (start, length) for k, start, length in qnx6.partitions(handle, size) if k in DISK_PARTS}
+            for part in ("system", "data"):
+                if part not in table:
+                    sources[part] = "build list (no partition of that type in the disk image)"
+                    continue
+                try:
+                    fs = qnx6.Qnx6(handle, *table[part])
+                    entries = [item for item in fs.walk() if item[1] == "file"]
+                    records = []
+                    for path, _, length, node in entries:
+                        base = posixpath.basename(path)
+                        if length > safepath.MAX_FILE_BYTES:
+                            counts["skipped_too_big"] += 1
+                            if _relevant(base):
+                                unverified.append({"id": part + ":" + path, "image_path": MOUNTS[part] + path, "reason": "file is bigger than 64 MiB"})
+                            continue
+                        total += length
+                        if total > MAX_DISK_BYTES:
+                            raise qnx6.Qnx6Error("more than 1 GiB of files")
+                        real = os.path.join(out_dir, part, path)
+                        os.makedirs(os.path.dirname(real), exist_ok=True)
+                        with open(real, "wb") as out:
+                            out.write(fs.read(node, safepath.MAX_FILE_BYTES))
+                        records.append({"part": part, "path": path, "real": real, "text": None})
+                except (qnx6.Qnx6Error, OSError, struct.error) as err:
+                    sources[part] = "build list (the disk image part could not be read: " + str(err)[:120] + ")"
+                    continue
+                found[part] = records
+                sources[part] = "disk image"
+    except OSError as err:
+        raise ScanError(f"cannot read {disk_file}: {err.strerror}")
+    except qnx6.Qnx6Error as err:
+        raise ScanError(f"{disk_file}: {err}")
+    return found, sources
+
+
 def _walk_ifs(ifs_dir, counts, unverified):
     """Yield (relative path, real path) for regular files; links are counted, not followed."""
     seen = 0
@@ -69,13 +116,16 @@ def _walk_ifs(ifs_dir, counts, unverified):
                 yield os.path.relpath(path, ifs_dir).replace(os.sep, "/"), path
 
 
-def _collect(ifs_dir, build_dir, roots, counts, unverified):
+def _collect(ifs_dir, build_dir, roots, counts, unverified, disk_parts):
     """Return a list of file records: {id, part, path, image_path, real, text}."""
     records = []
     for rel, real in _walk_ifs(ifs_dir, counts, unverified):
         records.append({"part": "ifs", "path": rel, "real": real, "text": None})
     found_list = False
     for part in ("system", "data"):
+        if part in disk_parts:
+            records += disk_parts[part]
+            continue
         list_file = os.path.join(build_dir, part + ".build")
         if not os.path.isfile(list_file):
             continue
@@ -99,7 +149,7 @@ def _collect(ifs_dir, build_dir, roots, counts, unverified):
                                            "reason": {"outside": "source is outside the allowed folders", "too-big": "file is bigger than 64 MiB"}.get(reason, "source file not found")})
             if len(records) > MAX_FILES:
                 raise ScanError("too many files in the build lists")
-    if not found_list:
+    if not found_list and not disk_parts:
         raise ScanError("no system.build or data.build in " + build_dir)
     seen, unique = set(), []
     for rec in records:
@@ -156,6 +206,14 @@ def _analyse_elf(rec, base, model, counts):
     return info
 
 
+def _text_config(rec, base):
+    """A text file that only has the name of a program (for example the PAM file /system/etc/pam/sshd)."""
+    if base not in ("sshd", "ssh"):
+        return False
+    head = _read(rec, 4096)
+    return bool(head) and b"\0" not in head
+
+
 def _analyse_text(rec, base, model):
     """Configuration files and keys; inline blocks and plain files alike."""
     text_names = {"qcrypto.conf": "qcrypto", "sshd_config": "sshd", "ssh_config": "ssh"}
@@ -201,17 +259,17 @@ def _finish_configs(model):
     del model["host_key_paths"]
 
 
-def scan_image(ifs_dir, build_dir, roots, name, arch, ifs_label):
+def scan_image(ifs_dir, build_dir, roots, name, arch, ifs_label, disk_parts=None, sources=None):
     counts = {"links": 0, "skipped_outside_roots": 0, "skipped_too_big": 0, "unresolved": 0, "bad_elf": 0, "unreadable": 0}
     model = {"elfs": [], "libs": [], "keys": [], "bad_elf": [], "unverified": [], "config_files": {}, "ssh_binaries": {}}
-    records = _collect(ifs_dir, build_dir, roots, counts, model["unverified"])
+    records = _collect(ifs_dir, build_dir, roots, counts, model["unverified"], disk_parts or {})
     model["host_key_paths"] = _host_key_paths(records)
     for rec in records:
         base = posixpath.basename(rec["path"])
         try:
             info = _analyse_elf(rec, base, model, counts) if rec["real"] else None
             if info is None and not any(u["id"] == rec["id"] for u in model["unverified"][-1:]):
-                if rec["real"] and _expect_elf(base):
+                if rec["real"] and _expect_elf(base) and not _text_config(rec, base):
                     model["unverified"].append({"id": rec["id"], "image_path": rec["image_path"], "reason": "file is not an ELF file"})
                 _analyse_text(rec, base, model)
         except OSError:
@@ -228,13 +286,30 @@ def scan_image(ifs_dir, build_dir, roots, name, arch, ifs_label):
                       "build_files": [p + ".build" for p in ("system", "data")
                                       if os.path.isfile(os.path.join(build_dir, p + ".build"))],
                       "counts": counts}
+    if sources:
+        model["image"]["sources"] = sources
+        model["image"]["partition_notes"] = [f"{part} partition: files from the {how}" for part, how in sorted(sources.items())
+                                             if how != "disk image"]
     return model
 
 
-def scan_with_temp(ifs_file, ifs_dir, build_dir, roots, name, arch):
-    """Scan, extracting the boot image first when a file was given."""
-    if ifs_dir:
-        return scan_image(ifs_dir, build_dir, roots, name, arch, os.path.basename(os.path.abspath(ifs_dir)))
+def scan_with_temp(ifs_file, ifs_dir, build_dir, roots, name, arch, disk=None):
+    """Scan, extracting the boot image first when a file was given. With a disk image the
+    system and data partitions are read from it (into a temporary folder) instead of the build lists."""
     with tempfile.TemporaryDirectory(prefix="qnxcbom-ifs-") as temp:
-        extract_ifs(ifs_file, temp)
-        return scan_image(temp, build_dir, roots, name, arch, os.path.basename(ifs_file))
+        disk_dir = os.path.join(temp, "disk")
+        os.mkdir(disk_dir)
+        extra = {"skipped_too_big": 0}
+        unverified = []
+        parts, sources = extract_disk(disk, disk_dir, extra, unverified) if disk else ({}, None)
+        if ifs_dir:
+            ifs_dir_used, label = ifs_dir, os.path.basename(os.path.abspath(ifs_dir))
+        else:
+            ifs_dir_used = os.path.join(temp, "ifs")
+            os.mkdir(ifs_dir_used)
+            extract_ifs(ifs_file, ifs_dir_used)
+            label = os.path.basename(ifs_file)
+        model = scan_image(ifs_dir_used, build_dir, roots, name, arch, label, parts, sources)
+        model["image"]["counts"]["skipped_too_big"] += extra["skipped_too_big"]
+        model["unverified"] += unverified
+        return model

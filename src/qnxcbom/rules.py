@@ -168,7 +168,7 @@ def _unverified(model):
 
 
 def evaluate(model, today: date):
-    model["notes"] = []
+    model["notes"] = list(model["image"].get("partition_notes", []))
     findings = _eol_disk(model, today)
     findings += _ssh_findings(model["configs"]["sshd"], "QCB-002", RULES["QCB-002"]["severity"], model)
     findings += _ssh_findings(model["configs"]["ssh"], "QCB-003", RULES["QCB-003"]["severity"], model)

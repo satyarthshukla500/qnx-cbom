@@ -1,0 +1,22 @@
+$ python3 -I lab/qnx6_check.py <stock project>/output/disk-qemu <stock project>/output/build live.log   (live.log: lab/run_qemu.py with lab/target/list_files.sh, -snapshot)
+== 1. what the reader finds in the disk image disk-qemu
+partition boot (type 0xb1): block size 4096, 32 inodes, dir 1, file 1
+partition system (type 0xb2): block size 4096, 1152 inodes, dir 13, file 225, link 2
+partition data (type 0xb3): block size 4096, 3072 inodes, dir 43, file 26, link 3, other 2
+
+== 2. disk image against the build lists (system.build, data.build)
+system: on disk 225, named in the list 225, in both 225
+  in the list, not on disk: 0 []
+  on disk, not in the list: 0 []
+  list entries of type hard link: 91
+data: on disk 26, named in the list 21, in both 21
+  in the list, not on disk: 0 []
+  on disk, not in the list: 5 ['/data/var/dhcpcd/duid', '/data/var/dhcpcd/resolv.conf', '/data/var/dumper/sshd.core', '/data/var/random/rnd-seed', '/data/var/run/dhcpcd/pid']
+  list entries of type hard link: 0
+
+== 3. disk image against a live listing inside the running QNX 8.0 target (cksum of every file)
+live files 259, disk files 251, in both 251
+same size and checksum: 249 of 251
+different content: 2 ['/data/var/dumper/sshd.core', '/data/var/random/rnd-seed']
+live only (made or moved while the target ran): ['/data/lab/after_all.sh', '/data/lab/cbom_probe', '/data/lab/list_files.sh', '/data/lab/probe_edge.sh', '/data/lab/probe_run.sh', '/data/lab/resmgr_run.sh', '/data/lab/ssh_run.sh', '/data/lab/stock_all.sh']
+disk only: []

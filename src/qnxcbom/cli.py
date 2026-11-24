@@ -30,6 +30,7 @@ def _parser():
     where.add_argument("--ifs", metavar="FILE", help="boot image file (extracted with dumpifs -x)")
     where.add_argument("--ifs-dir", metavar="DIR", help="boot image already extracted with dumpifs -x")
     scan.add_argument("--build-dir", required=True, metavar="DIR", help="folder with system.build and data.build")
+    scan.add_argument("--disk", metavar="FILE", help="disk image (mkqnximage output/disk-qemu): read the system and data partitions from it instead of the build lists")
     scan.add_argument("--project-dir", metavar="DIR", help="mkqnximage project folder (default: two levels above --build-dir)")
     scan.add_argument("--sdk-root", action="append", default=[], metavar="DIR", help="extra folder for build-list sources")
     scan.add_argument("--arch", choices=ARCHES, default="x86_64")
@@ -94,10 +95,12 @@ def _scan(args):
         _dir(args.ifs_dir, "--ifs-dir")
     elif not os.path.isfile(args.ifs):
         raise UserError(f"--ifs is not a file: {args.ifs}")
+    if args.disk and not os.path.isfile(args.disk):
+        raise UserError(f"--disk is not a file: {args.disk}")
     probe = runtime.load(args.runtime) if args.runtime else None
     roots = _roots(args)
     name = args.name or os.path.basename(os.path.realpath(args.project_dir or os.path.join(args.build_dir, "..", "..")))
-    body = image.scan_with_temp(args.ifs, args.ifs_dir, args.build_dir, roots, name, args.arch)
+    body = image.scan_with_temp(args.ifs, args.ifs_dir, args.build_dir, roots, name, args.arch, args.disk)
     model = {"schema": "qnx-cbom-scan/1", "tool": {"name": "qnx-cbom", "version": __version__},
              "scan_date": today.isoformat(), **body, "runtime": None}
     if probe:

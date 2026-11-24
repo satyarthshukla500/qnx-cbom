@@ -14,11 +14,12 @@ Each row is one claim, the raw file that shows it, and the command that reproduc
 | `/dev/cbom` serves the probe's JSON report as a file on the target (two reads, both complete JSON) | `evidence/lab-stock-console.txt` (section `ls -l /dev/cbom`) | `demo/run-demo.sh` (SDK, QEMU) |
 | The lab image with OpenSSL 3.5.9 scans WARN, exit code 0 | `evidence/after.txt`, `evidence/after-exit.txt` | `PYTHONPATH=src python3 -m qnxcbom diff evidence/before.json evidence/after.json` shows the flip (no SDK); the scan itself: `demo/run-demo.sh` |
 | An SSH login on that image negotiated `mlkem768x25519-sha256` | `evidence/lab-upgraded-console.txt` (`debug1: kex: algorithm: mlkem768x25519-sha256`) | `demo/run-demo.sh` (SDK, QEMU) |
+| The scanner reads the system and data partitions from the real qnx6 disk image, and agrees with the running target (225 + 26 files; 249 of the 251 files have the same size and checksum as a listing taken inside QNX 8.0; the other 2 are rewritten at boot) | `evidence/qnx6-image-check.txt`, `evidence/qnx6-live-listing.txt`, `evidence/scan-disk-run.txt` | `bin/qnx-cbom scan --ifs ~/qnximg/output/ifs.bin --build-dir ~/qnximg/output/build --disk ~/qnximg/output/disk-qemu --text -` (SDK); the comparison: `python3 -I lab/qnx6_check.py DISK BUILD_DIR LIVE_LOG` |
 | The demo reproduces the committed output | `evidence/final-regression.txt` (before, override, after and diff texts identical, 34 unit tests OK) | `demo/run-demo.sh`, then compare with `evidence/` |
 
 ## Known limits
 
-- The qnx6 system and data partitions are not read from the disk image (no qnx6 reader on the host); their content comes from the build lists. A file that the build lists name but that cannot be read is reported, never silently skipped. Reading them straight from a disk image is not done yet.
+- The qnx6 reader (`--disk`) was only tried on images made by `mkqnx6fsimg` / `mkqnximage` from SDP 8.0.6 (the stock image and small test images). It does not check the superblock checksums, does not use the second superblock, and ignores qnx6 features those tools do not produce (for example encrypted or snapshot volumes); an image it cannot follow makes that partition fall back to the build list, with a note in the report. The boot partition (type 0xb1, a copy of the boot image) is not scanned from the disk. Without `--disk` the partitions come from the build lists only.
 - The aarch64le probe compiles but has not been run. A retry with `qemu-system-aarch64` installed failed at `mkqnximage --arch=aarch64le`: the SDK has no `startup-qemu-virt`, so no aarch64 image could be built.
 - The upgraded image is a **lab build on QEMU** with my own OpenSSL 3.5.9, not a shipped fix and not a `qnx-ports` build. QNX's own OpenSSL 3.5 port is the upgrade path to use: github.com/qnx-ports/openssl (branches `qnx-openssl-3.5.4`, `qnx-openssl-3.6.0`; their existence was checked, `evidence/P1-source-checks.txt`; their content was not built or tested here, which is also still to do). In the upgraded image `/system/bin/openssl` is still the 3.0.22 program running on the 3.5.9 library; its banner shows both.
 - No real-time or timing claim is made; nothing was measured.
@@ -56,7 +57,7 @@ Then open `evidence/before.html`, `evidence/after.html` and `evidence/diff.html`
 
 ## How it works, in five steps
 
-1. **Read the image.** The boot image is unpacked with `dumpifs -x`; the system and data partitions are taken from the `mkqnximage` build lists (`system.build`, `data.build`) and the SDK files they name.
+1. **Read the image.** The boot image is unpacked with `dumpifs -x`; the system and data partitions are read from the disk image with `--disk`, or else taken from the `mkqnximage` build lists (`system.build`, `data.build`) and the SDK files they name.
 2. **Read every ELF file** with a small bounded reader: which libraries it needs, whether it is a program or a library.
 3. **Read the crypto files:** the version banner inside `libcrypto`, key and certificate type and size (never the key material), `qcrypto.conf`, `sshd_config`, `ssh_config`.
 4. **Ask the running system** (optional): the probe lists which crypto libraries each process has really mapped, and the scan compares them with the image files.
@@ -101,7 +102,7 @@ The scanner needs no build: `bin/qnx-cbom` runs from the checkout (`python3 -m q
 bin/qnx-cbom scan --ifs ~/qnximg/output/ifs.bin --build-dir ~/qnximg/output/build \
     --json scan.json --cbom scan.cdx.json --html report.html --text -
 ```
-Inputs: the boot image (`--ifs`, or an already extracted folder with `--ifs-dir`) and the mkqnximage build lists `system.build` and `data.build` in `--build-dir`. The system and data partitions are qnx6 file systems that this tool does not read from the disk image; their content is taken from the build lists and the SDK files they name. Sources are only opened inside the project folder and the SDK folders (`$QNX_TARGET`, `--sdk-root`).
+Inputs: the boot image (`--ifs`, or an already extracted folder with `--ifs-dir`) and the mkqnximage build lists `system.build` and `data.build` in `--build-dir`. The system and data partitions are qnx6 file systems. With `--disk FILE` (the `output/disk-qemu` image of `mkqnximage`) they are read from the real disk image by a read-only qnx6 reader written in Python (`src/qnxcbom/qnx6.py`, nothing is mounted); without it their content is taken from the build lists and the SDK files they name. If one partition cannot be read completely, the build list is used for that partition only and the report says so in its notes. On the stock image the disk read finds 315 files and 260 ELF files (the build lists name 217 and 168: the 91 `[type=hlink]` entries, which the list reader does not count as files, are separate names of one toybox program, 2 files whose list sources lie outside the allowed folders, and 5 files made while the image was run: `evidence/qnx6-image-check.txt`); the verdict and the 19 crypto-linked files are the same (`evidence/scan-disk-run.txt`). Sources are only opened inside the project folder and the SDK folders (`$QNX_TARGET`, `--sdk-root`).
 
 Real output for the stock image (`evidence/scan-before-run.txt`):
 ```
