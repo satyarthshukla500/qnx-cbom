@@ -38,7 +38,7 @@ Each row is one claim, the raw file that shows it, and the command that reproduc
 
 **Why it needs QNX knowledge.** It reads the QNX boot image and the `mkqnximage` build lists, and its probe runs on the target and uses QNX's own process interface (`/proc/<pid>/as` with `devctl`, the calls `pidin` uses) and a QNX resource manager.
 
-Category: Developer Tooling & Host Tools. Licence: MIT.
+Category: Developer Tooling & Host Tools. Licence: Apache License 2.0. Copyright 2026 Satyarth Shukla.
 
 ## Why this runs on QNX
 
