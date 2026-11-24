@@ -1,8 +1,8 @@
-## final regression from a clean clone of the commit that adds the README changes
+## final regression from a clean clone of the final commit
 ## 1. tests/regression.sh (unit tests, real-image scan + CycloneDX schema check, readelf cross-check, browser click-through, attack list)
 == schema files
 == unit tests
-Ran 34 tests
+Ran 38 tests
 
 OK
 == scan of the real image
@@ -21,12 +21,12 @@ regression.sh exit: 0
 == 1/6 probe (qcc, x86_64 and aarch64le)
 == 2/6 OpenSSL 3.5.9 for QNX
 openssl-3.5.9.tar.gz: OK
--rwxr-xr-x 1 user user 1446920 Nov 24 04:38 apps/openssl
--rwxr-xr-x 1 user user 7176768 Nov 24 04:38 libcrypto.so.3
--rwxr-xr-x 1 user user 1769776 Nov 24 04:38 libssl.so.3
+-rwxr-xr-x 1 user user 1446920 Nov 24 05:58 apps/openssl
+-rwxr-xr-x 1 user user 7176768 Nov 24 05:58 libcrypto.so.3
+-rwxr-xr-x 1 user user 1769776 Nov 24 05:58 libssl.so.3
 == 3/6 upgraded lab image
--rw-r--r-- 1 user user 159732224 Nov 24 04:38 output/disk-qemu
--rw-r--r-- 1 user user  12479428 Nov 24 04:38 output/ifs.bin
+-rw-r--r-- 1 user user 159732224 Nov 24 05:58 output/disk-qemu
+-rw-r--r-- 1 user user  12479428 Nov 24 05:58 output/ifs.bin
 == 4/6 payload disk
 == 5/6 two QEMU boots (stock and upgraded), this takes several minutes
 == 6/6 scans

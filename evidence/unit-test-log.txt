@@ -32,8 +32,12 @@ test_probe_input_checks (test_product.RuleTests.test_probe_input_checks) ... ok
 test_runtime_rules (test_product.RuleTests.test_runtime_rules) ... ok
 test_sshd_modes (test_product.RuleTests.test_sshd_modes) ... ok
 test_unknown_series_gives_note_not_finding (test_product.RuleTests.test_unknown_series_gives_note_not_finding) ... ok
+test_disk_errors_are_one_line (test_qnx6.Qnx6Tests.test_disk_errors_are_one_line) ... ok
+test_hostile_images_fail_cleanly (test_qnx6.Qnx6Tests.test_hostile_images_fail_cleanly) ... ok
+test_reads_files_names_links_and_big_files (test_qnx6.Qnx6Tests.test_reads_files_names_links_and_big_files) ... ok
+test_scan_reads_the_disk_and_falls_back_per_partition (test_qnx6.Qnx6Tests.test_scan_reads_the_disk_and_falls_back_per_partition) ... ok
 
 ----------------------------------------------------------------------
-Ran 34 tests
+Ran 38 tests
 
 OK
