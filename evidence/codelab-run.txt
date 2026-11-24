@@ -1,0 +1,205 @@
+# Codelab commands, run from a fresh clone of the repository. ~ stands for a scratch folder that holds qnx-cbom/ (the clone) and qnx-image/.
+# The clone was made from the local copy of the repository (the public repository was still empty); everything else is as in the page.
+## Step 1
+$ python3 --version
+Python 3.12.3
+
+$ qemu-system-x86_64 --version | head -1
+QEMU emulator version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)
+
+$ qcc -V 2>&1 | head -2
+cc: targets available in ~/qnx800/host/linux/x86_64/etc/qcc:
+	12.2.0,gcc_ntoaarch64le
+
+$ echo $QNX_TARGET
+~/qnx800/target/qnx
+
+## Step 2
+$ cd ~/qnx-image && mkqnximage --type=qemu --build < /dev/null 2>&1 | tail -6
+    ~/qnx800/target/qnx
+
+Options with non-default values:
+
+
+For full list of options, run "mkqnximage --options"
+
+$ cd ~/qnx-image && ls output
+build
+di.params
+disk-qemu
+disk-qemu.vmdk
+diskimage.out
+ifs.bin
+inc
+option_files
+options
+procnto-smp-instr.sym
+
+$ cd ~/qnx-image && ls output/build | head -12
+20-resolv.conf
+boot_part.build
+build.date
+data.build
+dhcpcd-run-hooks
+disk.layout
+expandfs.sh
+generate_files
+group
+ifs.build
+mount_fs.sh
+passwd
+
+$ cd ~/qnx-image && ls output/build/*.build
+output/build/boot_part.build
+output/build/data.build
+output/build/ifs.build
+output/build/system.build
+
+$ cd ~/qnx-image && grep -n "libcrypto" output/build/ifs.build output/build/system.build
+output/build/ifs.build:164:usr/lib/libcrypto.so.3
+
+## Step 3
+$ cd ~/qnx-cbom && bin/qnx-cbom scan --ifs ~/qnx-image/output/ifs.bin --build-dir ~/qnx-image/output/build --date 2026-11-23 --text -; echo "exit code: $?"
+qnx-cbom 0.1.0  image qnx-image (x86_64)  scan date 2026-11-23
+verdict: UNSAFE   UNSAFE 2  WARN 4  OK 1
+files 217, ELF 168, crypto-linked ELF 19 (15 programs)
+not analysed: skipped_outside_roots 2
+UNSAFE QCB-001 /proc/boot/libcrypto.so.3 - OpenSSL library is past upstream end of life
+UNSAFE QCB-002 /system/bin/sshd - sshd does not allow post-quantum key exchange
+WARN   QCB-004 /data/var/ssh/ssh_host_ed25519_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /data/var/ssh/ssh_host_rsa_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /proc/boot/qtd_public_key.pem - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-005 /proc/boot/qcrypto.conf - qcrypto sends all algorithms to a plug-in without post-quantum algorithms
+exit code: 1
+
+$ cd ~/qnx-cbom && bin/qnx-cbom scan --ifs ~/qnx-image/output/ifs.bin --build-dir ~/qnx-image/output/build --disk ~/qnx-image/output/disk-qemu --date 2026-11-23 --text -; echo "exit code: $?"
+qnx-cbom 0.1.0  image qnx-image (x86_64)  scan date 2026-11-23
+verdict: UNSAFE   UNSAFE 2  WARN 4  OK 1
+files 310, ELF 259, crypto-linked ELF 19 (15 programs)
+UNSAFE QCB-001 /proc/boot/libcrypto.so.3 - OpenSSL library is past upstream end of life
+UNSAFE QCB-002 /system/bin/sshd - sshd does not allow post-quantum key exchange
+WARN   QCB-004 /data/var/ssh/ssh_host_ed25519_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /data/var/ssh/ssh_host_rsa_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /proc/boot/qtd_public_key.pem - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-005 /proc/boot/qcrypto.conf - qcrypto sends all algorithms to a plug-in without post-quantum algorithms
+exit code: 1
+
+## Step 4
+$ cd ~/qnx-cbom && bin/qnx-cbom scan --ifs ~/qnx-image/output/ifs.bin --build-dir ~/qnx-image/output/build --date 2026-11-23 --json ~/scan.json --cbom ~/bom.cdx.json --html ~/report.html --text /dev/null; echo "exit code: $?"
+exit code: 1
+
+$ python3 -c 'import json; b=json.load(open("bom.cdx.json")); c=b["components"]; print(b["bomFormat"], b["specVersion"]); print(len(c), "components"); print(sorted({x["type"] for x in c}))'
+CycloneDX 1.6
+42 components
+['application', 'cryptographic-asset', 'library']
+
+$ grep -o "<h2[^>]*>[^<]*" report.html | sed "s/<h2[^>]*>//"
+Findings
+Crypto-linked programs and libraries
+Crypto libraries
+Keys and certificates
+Configuration
+Runtime
+Method and limits
+
+## Step 5
+$ cd ~/qnx-cbom && make -C probe 2>&1 | tail -6
+make: Entering directory '~/qnx-cbom/probe'
+mkdir -p build/x86_64
+qcc -Vgcc_ntox86_64 -O2 -Wall -Wextra -Werror -fstack-protector-strong -D_FORTIFY_SOURCE=2 -DCBOM_WITH_RESMGR -o build/x86_64/cbom_probe cbom_probe.c
+mkdir -p build/aarch64le
+qcc -Vgcc_ntoaarch64le -O2 -Wall -Wextra -Werror -fstack-protector-strong -D_FORTIFY_SOURCE=2 -DCBOM_WITH_RESMGR -o build/aarch64le/cbom_probe cbom_probe.c
+make: Leaving directory '~/qnx-cbom/probe'
+
+$ cd ~/qnx-cbom && ls probe/build/x86_64 probe/build/aarch64le
+probe/build/aarch64le:
+cbom_probe
+
+probe/build/x86_64:
+cbom_probe
+
+$ cd ~/qnx-cbom && bin/qnx-cbom scan --ifs ~/qnx-image/output/ifs.bin --build-dir ~/qnx-image/output/build --date 2026-11-23 --name stock-image --runtime evidence/probe-stock.txt --json ~/runtime.json --text -; echo "exit code: $?"
+qnx-cbom 0.1.0  image stock-image (x86_64)  scan date 2026-11-23
+verdict: UNSAFE   UNSAFE 3  WARN 4  OK 1
+files 217, ELF 168, crypto-linked ELF 19 (15 programs)
+not analysed: skipped_outside_roots 2
+runtime: 2 processes map crypto libraries (5 mappings), 20 processes read
+UNSAFE QCB-001 /proc/boot/libcrypto.so.3 - OpenSSL library is past upstream end of life
+UNSAFE QCB-002 /system/bin/sshd - sshd does not allow post-quantum key exchange
+UNSAFE QCB-007 /proc/boot/libcrypto.so.3 - A running process loads an OpenSSL library past upstream end of life
+WARN   QCB-004 /data/var/ssh/ssh_host_ed25519_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /data/var/ssh/ssh_host_rsa_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /proc/boot/qtd_public_key.pem - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-005 /proc/boot/qcrypto.conf - qcrypto sends all algorithms to a plug-in without post-quantum algorithms
+exit code: 1
+
+## Step 5, part 2: the target run is taken from the committed evidence (a QEMU boot is not repeated here)
+$ cd ~/qnx-cbom && sed -n "/=== ls -l \/dev\/cbom/,/=== read twice/p" evidence/lab-stock-console.txt | cut -c1-230
+=== ls -l /dev/cbom
+nr--------  1 root root 0 2026-11-23 17:38 /dev/cbom
+=== cat /dev/cbom (first 400 bytes)
+{"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target":{"sysname":"QNX","release":"8.0.0","machine":"x86pc"},"scanned":21,"processes":[{"pid":131081,"name":"/system/bin/random","libs":[{"path":"/proc/boot/libqcrypto.so.1.0"
+=== read twice: both are complete JSON
+
+$ cd ~/qnx-cbom && sed -n "/=== read twice/,+3p" evidence/lab-stock-console.txt | head -4
+=== read twice: both are complete JSON
+577
+577
+=== uname -a
+
+$ cd ~/qnx-cbom && sed -n "/=== probe 1: image library in use/,/CBOM-END/p" evidence/lab-stock-console.txt | cut -c1-120
+=== probe 1: image library in use
+CBOM-BEGIN
+{"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target":{"sysname":"QNX","release":"8.0.0","machine":"x86pc"},"sca
+CBOM-END len=864 crc32=a7cfe74c
+
+$ python3 -c 'import json; t=open("evidence/probe-stock.txt").read(); j=json.loads(t.split("CBOM-BEGIN\n")[1].split("\nCBOM-END")[0]); print("scanned", j["scanned"]); [print(p["name"], [(l["soname"], l["version"]) for l in p["libs"]]) for p in j["processes"]]'
+scanned 20
+/system/bin/random [('libqcrypto.so.1.0', None), ('qcrypto-openssl-3.so', None), ('libcrypto.so.3', '3.0.22')]
+/system/bin/openssl [('libssl.so.3', None), ('libcrypto.so.3', '3.0.22')]
+
+## Step 6
+$ cd ~/qnx-cbom && PYTHONPATH=src python3 -m qnxcbom diff evidence/before.json evidence/after.json; echo "exit code: $?"
+verdict: UNSAFE -> WARN
+new 0, gone 0, changed 3, library versions changed 1
+CHANGED  QCB-001 /proc/boot/libcrypto.so.3: UNSAFE -> OK
+CHANGED  QCB-002 /system/bin/sshd: UNSAFE -> OK
+CHANGED  QCB-007 /proc/boot/libcrypto.so.3: UNSAFE -> OK
+LIBRARY  /proc/boot/libcrypto.so.3: 3.0.22 -> 3.5.9
+result: no new problems
+exit code: 0
+
+## Step 6, part 2: the login on the upgraded lab image is taken from the committed evidence
+$ cd ~/qnx-cbom && grep -n "kex: algorithm\|LOGIN-OK" evidence/lab-upgraded-console.txt
+100:debug1: kex: algorithm: mlkem768x25519-sha256
+102:debug1: Sending command: echo LOGIN-OK
+103:LOGIN-OK
+
+$ cd ~/qnx-cbom && grep -n "OpenSSL 3\|KexAlgorithms mlkem" evidence/lab-upgraded-console.txt | cut -c1-150
+48:=== start a TLS server with OpenSSL 3.5.9 from the payload disk through LD_LIBRARY_PATH (port 4434)
+64:OpenSSL 3.0.22 25 Aug 2026 (Library: OpenSSL 3.5.9 29 Sep 2026)
+68:KexAlgorithms mlkem768x25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exch
+75:debug1: sshd version OpenSSH_10.4, OpenSSL 3.5.9 29 Sep 2026
+121:=== same test with the OpenSSL 3.5.9 library from the payload disk in front (LD_LIBRARY_PATH)
+
+## Step 7
+$ cd ~/qnx-cbom && bin/qnx-cbom diff evidence/before.json ~/runtime.json; echo "exit code: $?"
+verdict: UNSAFE -> UNSAFE
+new 0, gone 0, changed 0, library versions changed 0
+result: no new problems
+exit code: 0
+
+$ cd ~/qnx-cbom && bin/qnx-cbom diff evidence/after.json ~/runtime.json --text -; echo "exit code: $?"
+verdict: WARN -> UNSAFE
+new 0, gone 0, changed 3, library versions changed 1
+CHANGED  QCB-001 /proc/boot/libcrypto.so.3: OK -> UNSAFE
+CHANGED  QCB-002 /system/bin/sshd: OK -> UNSAFE
+CHANGED  QCB-007 /proc/boot/libcrypto.so.3: OK -> UNSAFE
+LIBRARY  /proc/boot/libcrypto.so.3: 3.5.9 -> 3.0.22
+result: worse
+exit code: 1
+
+$ cd ~/qnx-cbom && bin/qnx-cbom scan --ifs ~/missing.bin --build-dir ~/qnx-image/output/build; echo "exit code: $?"
+qnx-cbom: error: --ifs is not a file: ~/missing.bin
+exit code: 2
+

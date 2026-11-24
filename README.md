@@ -1,5 +1,7 @@
 # qnx-cbom
 
+Codelab: https://satyarthshukla500.github.io/qnx-cbom/codelab/
+
 **What it does.** It lists every cryptographic component of a QNX 8.0 image (the programs and libraries that use OpenSSL or qcrypto, the keys, certificates and SSH settings), asks the *running* system which of those libraries are really loaded, and tells you for each finding what is wrong and how to fix it. One command; the exit code makes it usable in CI.
 
 ## Claims and proof

@@ -1,0 +1,105 @@
+# Browser check of docs/codelab/index.html (headless Chromium through Playwright 1.49.1; the test script is kept outside the repository)
+# widths 1280 and 360, light and dark colour scheme; every step, Next/Previous, every copy button (clipboard content compared), keyboard, console, requests, contrast, page width
+PASS  [1280px light] page title
+PASS  [1280px light] step 1: visible step-1, focus h-1, hash #step-1, current 1, page width 1280/1280
+PASS  [1280px light] step 1 has a "Check your work" box
+PASS  [1280px light] step 2: visible step-2, focus h-2, hash #step-2, current 2, page width 1280/1280
+PASS  [1280px light] step 2 has a "Check your work" box
+PASS  [1280px light] step 3: visible step-3, focus h-3, hash #step-3, current 3, page width 1280/1280
+PASS  [1280px light] step 3 has a "Check your work" box
+PASS  [1280px light] step 4: visible step-4, focus h-4, hash #step-4, current 4, page width 1280/1280
+PASS  [1280px light] step 4 has a "Check your work" box
+PASS  [1280px light] step 5: visible step-5, focus h-5, hash #step-5, current 5, page width 1280/1280
+PASS  [1280px light] step 5 has a "Check your work" box
+PASS  [1280px light] step 6: visible step-6, focus h-6, hash #step-6, current 6, page width 1280/1280
+PASS  [1280px light] step 6 has a "Check your work" box
+PASS  [1280px light] step 7: visible step-7, focus h-7, hash #step-7, current 7, page width 1280/1280
+PASS  [1280px light] step 7 has a "Check your work" box
+PASS  [1280px light] Next walks 1,2,3,4,5,6,7
+PASS  [1280px light] Previous walks back to step 1
+PASS  [1280px light] copy buttons: 14 of 14 put exactly their commands on the clipboard
+PASS  [1280px light] keyboard: Enter on the step list opens step 2
+PASS  [1280px light] keyboard: Alt+Right opens step 3
+PASS  [1280px light] visible focus ring after Tab (solid 3px)
+PASS  [1280px light] step 5: 7 output blocks scroll inside themselves, the page does not scroll sideways
+PASS  [1280px light] contrast at least 4.5:1 for text, dim, out, link, btn, ok, code
+PASS  [1280px light] console errors and warnings: 0 
+PASS  [1280px light] requests outside the file: 0
+PASS  [360px light] page title
+PASS  [360px light] step 1: visible step-1, focus h-1, hash #step-1, current 1, page width 360/360
+PASS  [360px light] step 1 has a "Check your work" box
+PASS  [360px light] step 2: visible step-2, focus h-2, hash #step-2, current 2, page width 360/360
+PASS  [360px light] step 2 has a "Check your work" box
+PASS  [360px light] step 3: visible step-3, focus h-3, hash #step-3, current 3, page width 360/360
+PASS  [360px light] step 3 has a "Check your work" box
+PASS  [360px light] step 4: visible step-4, focus h-4, hash #step-4, current 4, page width 360/360
+PASS  [360px light] step 4 has a "Check your work" box
+PASS  [360px light] step 5: visible step-5, focus h-5, hash #step-5, current 5, page width 360/360
+PASS  [360px light] step 5 has a "Check your work" box
+PASS  [360px light] step 6: visible step-6, focus h-6, hash #step-6, current 6, page width 360/360
+PASS  [360px light] step 6 has a "Check your work" box
+PASS  [360px light] step 7: visible step-7, focus h-7, hash #step-7, current 7, page width 360/360
+PASS  [360px light] step 7 has a "Check your work" box
+PASS  [360px light] Next walks 1,2,3,4,5,6,7
+PASS  [360px light] Previous walks back to step 1
+PASS  [360px light] copy buttons: 14 of 14 put exactly their commands on the clipboard
+PASS  [360px light] keyboard: Enter on the step list opens step 2
+PASS  [360px light] keyboard: Alt+Right opens step 3
+PASS  [360px light] visible focus ring after Tab (solid 3px)
+PASS  [360px light] step 5: 8 output blocks scroll inside themselves, the page does not scroll sideways
+PASS  [360px light] contrast at least 4.5:1 for text, dim, out, link, btn, ok, code
+PASS  [360px light] console errors and warnings: 0 
+PASS  [360px light] requests outside the file: 0
+PASS  [1280px dark] page title
+PASS  [1280px dark] step 1: visible step-1, focus h-1, hash #step-1, current 1, page width 1280/1280
+PASS  [1280px dark] step 1 has a "Check your work" box
+PASS  [1280px dark] step 2: visible step-2, focus h-2, hash #step-2, current 2, page width 1280/1280
+PASS  [1280px dark] step 2 has a "Check your work" box
+PASS  [1280px dark] step 3: visible step-3, focus h-3, hash #step-3, current 3, page width 1280/1280
+PASS  [1280px dark] step 3 has a "Check your work" box
+PASS  [1280px dark] step 4: visible step-4, focus h-4, hash #step-4, current 4, page width 1280/1280
+PASS  [1280px dark] step 4 has a "Check your work" box
+PASS  [1280px dark] step 5: visible step-5, focus h-5, hash #step-5, current 5, page width 1280/1280
+PASS  [1280px dark] step 5 has a "Check your work" box
+PASS  [1280px dark] step 6: visible step-6, focus h-6, hash #step-6, current 6, page width 1280/1280
+PASS  [1280px dark] step 6 has a "Check your work" box
+PASS  [1280px dark] step 7: visible step-7, focus h-7, hash #step-7, current 7, page width 1280/1280
+PASS  [1280px dark] step 7 has a "Check your work" box
+PASS  [1280px dark] Next walks 1,2,3,4,5,6,7
+PASS  [1280px dark] Previous walks back to step 1
+PASS  [1280px dark] copy buttons: 14 of 14 put exactly their commands on the clipboard
+PASS  [1280px dark] keyboard: Enter on the step list opens step 2
+PASS  [1280px dark] keyboard: Alt+Right opens step 3
+PASS  [1280px dark] visible focus ring after Tab (solid 3px)
+PASS  [1280px dark] step 5: 7 output blocks scroll inside themselves, the page does not scroll sideways
+PASS  [1280px dark] contrast at least 4.5:1 for text, dim, out, link, btn, ok, code
+PASS  [1280px dark] console errors and warnings: 0 
+PASS  [1280px dark] requests outside the file: 0
+PASS  [360px dark] page title
+PASS  [360px dark] step 1: visible step-1, focus h-1, hash #step-1, current 1, page width 360/360
+PASS  [360px dark] step 1 has a "Check your work" box
+PASS  [360px dark] step 2: visible step-2, focus h-2, hash #step-2, current 2, page width 360/360
+PASS  [360px dark] step 2 has a "Check your work" box
+PASS  [360px dark] step 3: visible step-3, focus h-3, hash #step-3, current 3, page width 360/360
+PASS  [360px dark] step 3 has a "Check your work" box
+PASS  [360px dark] step 4: visible step-4, focus h-4, hash #step-4, current 4, page width 360/360
+PASS  [360px dark] step 4 has a "Check your work" box
+PASS  [360px dark] step 5: visible step-5, focus h-5, hash #step-5, current 5, page width 360/360
+PASS  [360px dark] step 5 has a "Check your work" box
+PASS  [360px dark] step 6: visible step-6, focus h-6, hash #step-6, current 6, page width 360/360
+PASS  [360px dark] step 6 has a "Check your work" box
+PASS  [360px dark] step 7: visible step-7, focus h-7, hash #step-7, current 7, page width 360/360
+PASS  [360px dark] step 7 has a "Check your work" box
+PASS  [360px dark] Next walks 1,2,3,4,5,6,7
+PASS  [360px dark] Previous walks back to step 1
+PASS  [360px dark] copy buttons: 14 of 14 put exactly their commands on the clipboard
+PASS  [360px dark] keyboard: Enter on the step list opens step 2
+PASS  [360px dark] keyboard: Alt+Right opens step 3
+PASS  [360px dark] visible focus ring after Tab (solid 3px)
+PASS  [360px dark] step 5: 8 output blocks scroll inside themselves, the page does not scroll sideways
+PASS  [360px dark] contrast at least 4.5:1 for text, dim, out, link, btn, ok, code
+PASS  [360px dark] console errors and warnings: 0 
+PASS  [360px dark] requests outside the file: 0
+PASS  [fallback] copy without the clipboard API shows "Copied"
+PASS  [no JavaScript] 7 of 7 steps visible
+TOTAL checks 102, failed 0

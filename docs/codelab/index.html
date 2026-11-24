@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Check the cryptography of a QNX 8.0 image</title>
+<meta name="description" content="A step-by-step tutorial: list the cryptography inside a QNX SDP 8.0 image, check it, and compare two builds.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<script>document.documentElement.className = "js";</script>
+<style>
+:root {
+  --bg: #f6f7fb; --panel: #ffffff; --text: #14192b; --dim: #4a5470; --line: #d3d9ea;
+  --accent: #1f5fd1; --accent-text: #ffffff; --code-bg: #eef1f8; --out-bg: #0f1526; --out-text: #e8edff;
+  --ok: #17663a; --ok-bg: #e4f5ea; --warn-bg: #fff3d6; --focus: #b35c00;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b101f; --panel: #131a2e; --text: #eaeefc; --dim: #a9b4d4; --line: #2b3760;
+    --accent: #7db4ff; --accent-text: #08101f; --code-bg: #1a2340; --out-bg: #070b16; --out-text: #e8edff;
+    --ok: #6fe3a0; --ok-bg: #12301f; --warn-bg: #3a2f10; --focus: #ffc266;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-padding-top: 1rem; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "DejaVu Sans", sans-serif; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+.skip { position: absolute; left: 8px; top: -60px; background: var(--panel); color: var(--text); padding: 8px 12px; border: 2px solid var(--accent); z-index: 10; }
+.skip:focus { top: 8px; }
+header.top { padding: 20px 16px 8px; max-width: 1180px; margin: 0 auto; }
+header.top h1 { margin: 0 0 4px; font-size: clamp(1.45rem, 4.5vw, 2rem); line-height: 1.25; overflow-wrap: anywhere; }
+header.top p { margin: 0; color: var(--dim); }
+.layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 24px; max-width: 1180px; margin: 0 auto; padding: 8px 16px 40px; align-items: start; }
+nav.steps { position: sticky; top: 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+nav.steps h2 { margin: 0 0 8px; font-size: .85rem; text-transform: uppercase; letter-spacing: .06em; color: var(--dim); }
+nav.steps ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+nav.steps a { display: flex; gap: 10px; align-items: baseline; padding: 8px 10px; border-radius: 8px; text-decoration: none; color: var(--text); }
+nav.steps a .n { font-weight: 700; min-width: 1.4em; color: var(--accent); }
+nav.steps a:hover { background: var(--code-bg); }
+nav.steps a[aria-current="step"] { background: var(--accent); color: var(--accent-text); }
+nav.steps a[aria-current="step"] .n { color: inherit; }
+main { min-width: 0; }
+.step { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px 24px; margin-bottom: 24px; min-width: 0; }
+.js .step[hidden] { display: none; }
+.step h2 { margin: 0 0 4px; font-size: 1.5rem; line-height: 1.3; overflow-wrap: anywhere; }
+.step h2:focus { outline: none; }
+.step .kicker { color: var(--dim); margin: 0 0 14px; font-size: .95rem; }
+.step h3 { margin: 22px 0 6px; font-size: 1.1rem; }
+.step p, .step li { overflow-wrap: anywhere; }
+.step ul, .step ol.plain { padding-left: 1.3em; }
+code { font-family: "DejaVu Sans Mono", "Liberation Mono", ui-monospace, Menlo, Consolas, monospace; font-size: .9em; background: var(--code-bg); padding: .08em .35em; border-radius: 4px; overflow-wrap: anywhere; }
+.code { position: relative; margin: 10px 0 14px; }
+.code pre, .out pre, .check pre { margin: 0; overflow-x: auto; max-width: 100%; font-family: "DejaVu Sans Mono", "Liberation Mono", ui-monospace, Menlo, Consolas, monospace; font-size: .86rem; line-height: 1.5; tab-size: 4; }
+.code pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px 74px 12px 14px; }
+.code pre code { background: none; padding: 0; font-size: inherit; white-space: pre; overflow-wrap: normal; }
+.copy { position: absolute; top: 8px; right: 8px; font: inherit; font-size: .8rem; background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; cursor: pointer; }
+.copy:hover { border-color: var(--accent); }
+.out { margin: 10px 0 14px; }
+.out .lab { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--dim); margin-bottom: 4px; }
+.out pre, .check pre { background: var(--out-bg); color: var(--out-text); border-radius: 10px; padding: 12px 14px; white-space: pre; }
+.check { border: 2px solid var(--ok); background: var(--ok-bg); border-radius: 12px; padding: 4px 14px 14px; margin: 22px 0 8px; min-width: 0; }
+.check h3 { margin: 10px 0 6px; color: var(--ok); }
+.check p { margin: 0 0 8px; }
+.note { background: var(--warn-bg); border-left: 5px solid var(--focus); border-radius: 8px; padding: 8px 14px; margin: 14px 0; }
+.note p { margin: 6px 0; }
+.pager { display: flex; justify-content: space-between; gap: 12px; margin-top: 26px; }
+.pager button { font: inherit; font-weight: 600; padding: 10px 18px; border-radius: 10px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-text); cursor: pointer; }
+.pager button.prev { background: transparent; color: var(--accent); }
+.pager button[disabled] { opacity: .4; cursor: default; }
+table { border-collapse: collapse; width: 100%; display: block; overflow-x: auto; max-width: 100%; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .85rem; color: var(--dim); }
+footer { max-width: 1180px; margin: 0 auto; padding: 8px 16px 40px; color: var(--dim); font-size: .92rem; }
+footer p { margin: 4px 0; overflow-wrap: anywhere; }
+#live { position: absolute; left: -9999px; }
+@media (max-width: 860px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  nav.steps { position: static; padding: 8px 10px; }
+  nav.steps h2 { display: none; }
+  nav.steps ol { grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  nav.steps a { justify-content: center; padding: 10px 0; }
+  nav.steps a .t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .step { padding: 16px 14px 20px; }
+  .code pre { padding-right: 70px; }
+}
+@media print { nav.steps, .pager, .copy { display: none; } .js .step[hidden] { display: block; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#content">Skip to the tutorial</a>
+<header class="top">
+  <h1>Check the cryptography of a QNX 8.0 image</h1>
+  <p>A step-by-step tutorial with seven short steps. You build a QNX SDP 8.0 image, list every cryptographic component in it, check it, and compare two builds.</p>
+</header>
+<div class="layout">
+<nav class="steps" aria-label="Steps">
+  <h2>Steps</h2>
+  <ol>
+    <li><a href="#step-1" data-go="1"><span class="n">1</span><span class="t">Before you start</span></a></li>
+    <li><a href="#step-2" data-go="2"><span class="n">2</span><span class="t">Build the image</span></a></li>
+    <li><a href="#step-3" data-go="3"><span class="n">3</span><span class="t">Scan it</span></a></li>
+    <li><a href="#step-4" data-go="4"><span class="n">4</span><span class="t">Report and CBOM</span></a></li>
+    <li><a href="#step-5" data-go="5"><span class="n">5</span><span class="t">Look inside the running target</span></a></li>
+    <li><a href="#step-6" data-go="6"><span class="n">6</span><span class="t">Change it and compare</span></a></li>
+    <li><a href="#step-7" data-go="7"><span class="n">7</span><span class="t">CI and limits</span></a></li>
+  </ol>
+</nav>
+<main id="content">
+
+<section class="step" id="step-1" aria-labelledby="h-1">
+  <h2 id="h-1" tabindex="-1">1. Before you start</h2>
+  <p class="kicker">Step 1 of 7</p>
+  <h3>What you will learn</h3>
+  <ul>
+    <li>how to find out which programs, libraries, keys and settings in a QNX SDP 8.0 image use cryptography;</li>
+    <li>how to read the result: <code>UNSAFE</code>, <code>WARN</code>, <code>OK</code> and the exit code;</li>
+    <li>how to ask the <em>running</em> target which libraries each process really loaded;</li>
+    <li>how to compare two builds and see a verdict change.</li>
+  </ul>
+  <p>The tool is <code>qnx-cbom</code>. It lists the cryptography of an image (a CBOM, "cryptographic bill of materials") and checks it against a small set of rules. Everything it prints in this tutorial is real output from a real run.</p>
+  <h3>What you need</h3>
+  <ul>
+    <li>QNX SDP 8.0.6, installed with the <a href="https://www.qnx.com/products/everywhere/">non-commercial licence</a>, and its environment loaded with <code>source ~/qnx800/qnxsdp-env.sh</code>. Here <code>~/qnx800</code> is where it was installed.</li>
+    <li>Linux, or Windows with WSL2 (built and tested on Ubuntu 24.04 under WSL2).</li>
+    <li>Python 3.12 (standard library only; nothing to install).</li>
+    <li>QEMU 8.2.2 with <code>qemu-system-x86_64</code>, and <code>git</code>.</li>
+  </ul>
+  <h3>What you will not need</h3>
+  <ul>
+    <li>a QNX board or any hardware;</li>
+    <li>a network connection on the QNX target (the target runs in QEMU without a network);</li>
+    <li>root rights on the host, or mounting any disk image;</li>
+    <li>any extra Python package.</li>
+  </ul>
+  <h3>Get the tool and check your tools</h3>
+  <div class="code"><button class="copy" type="button" aria-label="Copy these commands">Copy</button><pre><code>git clone https://github.com/satyarthshukla500/qnx-cbom ~/qnx-cbom
+source ~/qnx800/qnxsdp-env.sh
+python3 --version
+qemu-system-x86_64 --version | head -1
+qcc -V 2&gt;&amp;1 | head -2
+echo $QNX_TARGET</code></pre></div>
+  <aside class="check" aria-label="Check your work"><h3>Check your work</h3>
+    <p>Your versions should look like these (<code>~</code> is your home folder; the QEMU line may differ in its distribution suffix):</p>
+<pre tabindex="0">Python 3.12.3
+QEMU emulator version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)
+cc: targets available in ~/qnx800/host/linux/x86_64/etc/qcc:
+	12.2.0,gcc_ntoaarch64le
+~/qnx800/target/qnx</pre></aside>
+  <div class="pager"><button type="button" class="prev" disabled>Previous</button><button type="button" class="next">Next: build the image</button></div>
+</section>
+
+<section class="step" id="step-2" aria-labelledby="h-2">
+  <h2 id="h-2" tabindex="-1">2. Build the image and find its parts</h2>
+  <p class="kicker">Step 2 of 7</p>
+  <p><code>mkqnximage</code> is the SDK tool that builds a ready-to-run QNX image for QEMU. Make an empty folder for it and build with the default settings. The <code>&lt; /dev/null</code> keeps the tool from asking questions, and <code>| tail -6</code> only shows the end of its long output:</p>
+  <div class="code"><button class="copy" type="button" aria-label="Copy these commands">Copy</button><pre><code>mkdir ~/qnx-image &amp;&amp; cd ~/qnx-image
+mkqnximage --type=qemu --build &lt; /dev/null 2&gt;&amp;1 | tail -6
+ls output
+ls output/build | head -12
+ls output/build/*.build</code></pre></div>
+  <p>Three things in <code>output/</code> matter for this tutorial:</p>
+  <ul>
+    <li><code>ifs.bin</code> is the boot image (the IFS). The files that start the system live in it, for example <code>/proc/boot/libcrypto.so.3</code>.</li>
+    <li><code>disk-qemu</code> is the disk image. It holds a boot partition and two qnx6 file-system partitions, <em>system</em> and <em>data</em>.</li>
+    <li><code>output/build/</code> holds the <em>build lists</em>: <code>ifs.build</code> (what is in the boot image), <code>system.build</code> and <code>data.build</code> (what is in the two partitions). They also hold small files such as <code>sshd_config</code> as inline text.</li>
+  </ul>
+  <p>To see where the OpenSSL library comes from, search the build lists:</p>
+  <div class="code"><button class="copy" type="button" aria-label="Copy these commands">Copy</button><pre><code>grep -n "libcrypto" output/build/ifs.build output/build/system.build</code></pre></div>
+  <p>The line says that <code>libcrypto.so.3</code> goes into the boot image. At run time it is the file <code>/proc/boot/libcrypto.so.3</code>.</p>
+  <aside class="check" aria-label="Check your work"><h3>Check your work</h3>
+    <p>The end of the build output (the exact repository paths are those of your SDK):</p>
+<pre tabindex="0">    ~/qnx800/target/qnx
+
+Options with non-default values:
+
+
+For full list of options, run &quot;mkqnximage --options&quot;</pre>
+    <p><code>ls output</code>:</p>
+<pre tabindex="0">build
+di.params
+disk-qemu
+disk-qemu.vmdk
+diskimage.out
+ifs.bin
+inc
+option_files
+options
+procnto-smp-instr.sym</pre>
+    <p><code>ls output/build | head -12</code>:</p>
+<pre tabindex="0">20-resolv.conf
+boot_part.build
+build.date
+data.build
+dhcpcd-run-hooks
+disk.layout
+expandfs.sh
+generate_files
+group
+ifs.build
+mount_fs.sh
+passwd</pre>
+    <p><code>ls output/build/*.build</code>:</p>
+<pre tabindex="0">output/build/boot_part.build
+output/build/data.build
+output/build/ifs.build
+output/build/system.build</pre>
+    <p>The <code>grep</code>:</p>
+<pre tabindex="0">output/build/ifs.build:164:usr/lib/libcrypto.so.3</pre></aside>
+  <div class="pager"><button type="button" class="prev">Previous</button><button type="button" class="next">Next: scan it</button></div>
+</section>
+
+<section class="step" id="step-3" aria-labelledby="h-3">
+  <h2 id="h-3" tabindex="-1">3. Scan the image and read the result</h2>
+  <p class="kicker">Step 3 of 7</p>
+  <p>Go to the tool folder and scan. <code>--date</code> fixes the "today" that end-of-life checks use, so you get the same answer on any day. Leave it out to use the real date.</p>
+  <div class="code"><button class="copy" type="button" aria-label="Copy these commands">Copy</button><pre><code>cd ~/qnx-cbom
+bin/qnx-cbom scan --ifs ~/qnx-image/output/ifs.bin --build-dir ~/qnx-image/output/build --date 2026-11-23 --text -; echo &quot;exit code: $?&quot;</code></pre></div>
+  <h3>Read it line by line</h3>
+  <ul>
+    <li><code>verdict: UNSAFE   UNSAFE 2  WARN 4  OK 1</code>: the overall verdict is the worst finding. Here there are 2 <code>UNSAFE</code>, 4 <code>WARN</code> and 1 <code>OK</code> finding.</li>
+    <li><code>files 217, ELF 168, crypto-linked ELF 19 (15 programs)</code>: 217 files were looked at, 168 of them are ELF programs or libraries, and 19 of those are linked to a crypto library (<code>libcrypto</code>, <code>libssl</code> or <code>libqcrypto</code>); 15 of the 19 are programs, the rest are libraries.</li>
+    <li><code>not analysed: skipped_outside_roots 2</code>: two files named in the build lists point outside the folders the tool is allowed to read, so they were not opened. The tool says so instead of hiding it.</li>
+    <li>Each finding line is <code>SEVERITY RULE subject - title</code>. <code>UNSAFE QCB-001 /proc/boot/libcrypto.so.3</code> means: the OpenSSL library in the boot image belongs to a series that upstream no longer supports (OpenSSL 3.0 ended on 2026-09-07). <code>UNSAFE QCB-002 /system/bin/sshd</code> means: the <code>sshd</code> program supports the post-quantum key exchange <code>mlkem768x25519-sha256</code>, but its <code>sshd_config</code> does not allow it.</li>
+    <li><code>WARN QCB-004</code> lines are keys with quantum-vulnerable algorithms (RSA, Ed25519, Ed448); <code>WARN QCB-005</code> says qcrypto sends every algorithm to a plug-in that has no post-quantum algorithm.</li>
+    <li><code>exit code: 1</code>: see the table.</li>
+  </ul>
+  <table>
+    <thead><tr><th>Word or code</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>UNSAFE</code></td><td>The item fails the stated baseline (a supported OpenSSL series; post-quantum key exchange where the build has it). A finding to act on, not proof of an attack.</td></tr>
+      <tr><td><code>WARN</code></td><td>Weaker than ideal, or it could not be confirmed.</td></tr>
+      <tr><td><code>OK</code></td><td>Meets the baseline.</td></tr>
+      <tr><td>exit code 0</td><td>No <code>UNSAFE</code> finding.</td></tr>
+      <tr><td>exit code 1</td><td>At least one <code>UNSAFE</code> finding.</td></tr>
+      <tr><td>exit code 2</td><td>Bad input or usage (one line starting <code>qnx-cbom: error:</code>, never a traceback).</td></tr>
+    </tbody>
+  </table>
+  <h3>Optional: read the partitions from the real disk image</h3>
+  <p>By default the files of the system and data partitions are taken from the build lists. With <code>--disk</code> the tool reads the qnx6 partitions of the real disk image itself (read-only, nothing is mounted):</p>
+  <div class="code"><button class="copy" type="button" aria-label="Copy these commands">Copy</button><pre><code>bin/qnx-cbom scan --ifs ~/qnx-image/output/ifs.bin --build-dir ~/qnx-image/output/build --disk ~/qnx-image/output/disk-qemu --date 2026-11-23 --text -; echo &quot;exit code: $?&quot;</code></pre></div>
+  <p>The verdict is the same. The file counts are higher. Most of the extra files are 91 hard links to one program (the build lists mark them as links, so the list scan does not count them as files), and two more are files whose list sources are outside the folders the tool may read.</p>
+  <aside class="check" aria-label="Check your work"><h3>Check your work</h3>
+    <p>The first scan prints exactly this:</p>
+<pre tabindex="0">qnx-cbom 0.1.0  image qnx-image (x86_64)  scan date 2026-11-23
+verdict: UNSAFE   UNSAFE 2  WARN 4  OK 1
+files 217, ELF 168, crypto-linked ELF 19 (15 programs)
+not analysed: skipped_outside_roots 2
+UNSAFE QCB-001 /proc/boot/libcrypto.so.3 - OpenSSL library is past upstream end of life
+UNSAFE QCB-002 /system/bin/sshd - sshd does not allow post-quantum key exchange
+WARN   QCB-004 /data/var/ssh/ssh_host_ed25519_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /data/var/ssh/ssh_host_rsa_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /proc/boot/qtd_public_key.pem - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-005 /proc/boot/qcrypto.conf - qcrypto sends all algorithms to a plug-in without post-quantum algorithms
+exit code: 1</pre>
+    <p>The scan with <code>--disk</code>:</p>
+<pre tabindex="0">qnx-cbom 0.1.0  image qnx-image (x86_64)  scan date 2026-11-23
+verdict: UNSAFE   UNSAFE 2  WARN 4  OK 1
+files 310, ELF 259, crypto-linked ELF 19 (15 programs)
+UNSAFE QCB-001 /proc/boot/libcrypto.so.3 - OpenSSL library is past upstream end of life
+UNSAFE QCB-002 /system/bin/sshd - sshd does not allow post-quantum key exchange
+WARN   QCB-004 /data/var/ssh/ssh_host_ed25519_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /data/var/ssh/ssh_host_rsa_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /proc/boot/qtd_public_key.pem - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-005 /proc/boot/qcrypto.conf - qcrypto sends all algorithms to a plug-in without post-quantum algorithms
+exit code: 1</pre></aside>
+  <div class="pager"><button type="button" class="prev">Previous</button><button type="button" class="next">Next: report and CBOM</button></div>
+</section>
+
+<section class="step" id="step-4" aria-labelledby="h-4">
+  <h2 id="h-4" tabindex="-1">4. Open the report and the CycloneDX file</h2>
+  <p class="kicker">Step 4 of 7</p>
+  <p>One scan can write several files. Write the scan file, the CycloneDX file and the HTML report together:</p>
+  <div class="code"><button class="copy" type="button" aria-label="Copy these commands">Copy</button><pre><code>bin/qnx-cbom scan --ifs ~/qnx-image/output/ifs.bin --build-dir ~/qnx-image/output/build --date 2026-11-23 --json ~/scan.json --cbom ~/bom.cdx.json --html ~/report.html --text /dev/null; echo &quot;exit code: $?&quot;</code></pre></div>
+  <p>The exit code is <code>1</code> again, because the verdict is still <code>UNSAFE</code>. Now look at what you made:</p>
+  <div class="code"><button class="copy" type="button" aria-label="Copy these commands">Copy</button><pre><code>cd ~
+python3 -c &#x27;import json; b=json.load(open(&quot;bom.cdx.json&quot;)); c=b[&quot;components&quot;]; print(b[&quot;bomFormat&quot;], b[&quot;specVersion&quot;]); print(len(c), &quot;components&quot;); print(sorted({x[&quot;type&quot;] for x in c}))&#x27;
+grep -o &quot;&lt;h2[^&gt;]*&gt;[^&lt;]*&quot; report.html | sed &quot;s/&lt;h2[^&gt;]*&gt;//&quot;</code></pre></div>
+  <ul>
+    <li><strong><code>report.html</code></strong> is for people. Open it in a browser (it is one file and loads nothing from the network). Each finding shows its evidence, a fix, the source the rule rests on and the date that source was read, and what could not be verified. You can filter and search the findings.</li>
+    <li><strong><code>bom.cdx.json</code></strong> is for other tools. It is a <a href="https://cyclonedx.org/specification/overview/">CycloneDX</a> 1.6 bill of materials: the image itself, each crypto-linked program and library, and each key, certificate and algorithm named in the configuration as a <code>cryptographic-asset</code>.</li>
+    <li><strong><code>scan.json</code></strong> is the scan file. You need it in step 7 to compare two scans.</li>
+  </ul>
+  <aside class="check" aria-label="Check your work"><h3>Check your work</h3>
+    <p>The scan command prints (the text summary went to <code>/dev/null</code>, so only the exit code shows):</p>
+<pre tabindex="0">exit code: 1</pre>
+    <p>The CycloneDX summary:</p>
+<pre tabindex="0">CycloneDX 1.6
+42 components
+[&#x27;application&#x27;, &#x27;cryptographic-asset&#x27;, &#x27;library&#x27;]</pre>
+    <p>The section headings of the report:</p>
+<pre tabindex="0">Findings
+Crypto-linked programs and libraries
+Crypto libraries
+Keys and certificates
+Configuration
+Runtime
+Method and limits</pre></aside>
+  <div class="pager"><button type="button" class="prev">Previous</button><button type="button" class="next">Next: look at the running target</button></div>
+</section>
+
+<section class="step" id="step-5" aria-labelledby="h-5">
+  <h2 id="h-5" tabindex="-1">5. Look inside the running target</h2>
+  <p class="kicker">Step 5 of 7</p>
+  <p>A file scan shows what is <em>in</em> the image. It cannot show which library a process really loaded: for example a <code>LD_LIBRARY_PATH</code> setting can put a different <code>libcrypto.so.3</code> in front of the image's one. For that there is a small program, the <em>probe</em>, that runs on the target. It only reads: for each process it opens <code>/proc/&lt;pid&gt;/as</code> and asks for the memory map (the same calls <code>pidin</code> uses).</p>
+  <p>Build it with <code>qcc</code> for both targets:</p>
+  <div class="code"><button class="copy" type="button" aria-label="Copy these commands">Copy</button><pre><code>cd ~/qnx-cbom
+make -C probe 2&gt;&amp;1 | tail -6
+ls probe/build/x86_64 probe/build/aarch64le</code></pre></div>
+  <div class="note"><p><strong>About the next outputs.</strong> Booting the image in QEMU is slow and needs extra setup, so this step shows the output of the committed run in <code>evidence/lab-stock-console.txt</code> instead of repeating it. To repeat it yourself, run <code>demo/run-demo.sh</code> from the repository folder: it builds the probe, boots two lab images in QEMU and prints the scans.</p></div>
+  <p>On the target the probe prints one line of JSON between <code>CBOM-BEGIN</code> and <code>CBOM-END</code> lines (the end line carries the length and a checksum, so a console capture can be checked). From the committed run:</p>
+  <div class="out"><div class="lab">Output on the QNX target (committed run)</div><pre tabindex="0">=== probe 1: image library in use
+CBOM-BEGIN
+{&quot;schema&quot;:&quot;qnx-cbom-probe/1&quot;,&quot;probe_version&quot;:&quot;0.1.0&quot;,&quot;target&quot;:{&quot;sysname&quot;:&quot;QNX&quot;,&quot;release&quot;:&quot;8.0.0&quot;,&quot;machine&quot;:&quot;x86pc&quot;},&quot;sca
+CBOM-END len=864 crc32=a7cfe74c</pre></div>
+  <p>The JSON line is long, so here is the capture of that run, <code>evidence/probe-stock.txt</code>, in readable form. You can run this on your copy of the repository:</p>
+  <div class="code"><button class="copy" type="button" aria-label="Copy these commands">Copy</button><pre><code>python3 -c &#x27;import json; t=open(&quot;evidence/probe-stock.txt&quot;).read(); j=json.loads(t.split(&quot;CBOM-BEGIN\n&quot;)[1].split(&quot;\nCBOM-END&quot;)[0]); print(&quot;scanned&quot;, j[&quot;scanned&quot;]); [print(p[&quot;name&quot;], [(l[&quot;soname&quot;], l[&quot;version&quot;]) for l in p[&quot;libs&quot;]]) for p in j[&quot;processes&quot;]]&#x27;</code></pre></div>
+  <div class="out"><div class="lab">Output</div><pre tabindex="0">scanned 20
+/system/bin/random [(&#x27;libqcrypto.so.1.0&#x27;, None), (&#x27;qcrypto-openssl-3.so&#x27;, None), (&#x27;libcrypto.so.3&#x27;, &#x27;3.0.22&#x27;)]
+/system/bin/openssl [(&#x27;libssl.so.3&#x27;, None), (&#x27;libcrypto.so.3&#x27;, &#x27;3.0.22&#x27;)]</pre></div>
+  <p>Read it like this: <code>scanned</code> is the number of processes looked at. Only processes that have a crypto library mapped are listed. The <code>random</code> program has mapped <code>libqcrypto.so.1.0</code>, <code>qcrypto-openssl-3.so</code> and <code>libcrypto.so.3</code>, and that <code>libcrypto.so.3</code> is OpenSSL 3.0.22. The <code>openssl</code> program has mapped <code>libssl.so.3</code> and the same <code>libcrypto.so.3</code>. In the full JSON every library also has its <code>path</code>, <code>released</code> date and <code>pq_capable</code> (whether the file contains post-quantum algorithms).</p>
+  <h3>Read it as a file: /dev/cbom</h3>
+  <p>With <code>-s</code> the probe stays running as a QNX resource manager and appears as the file <code>/dev/cbom</code>. Any program can read the report with <code>cat</code>. Only root can read it, because the report lists every process that uses crypto. From the committed run:</p>
+  <div class="out"><div class="lab">On the QNX target (committed run)</div><pre tabindex="0">=== ls -l /dev/cbom
+nr--------  1 root root 0 2026-11-23 17:38 /dev/cbom
+=== cat /dev/cbom (first 400 bytes)
+{&quot;schema&quot;:&quot;qnx-cbom-probe/1&quot;,&quot;probe_version&quot;:&quot;0.1.0&quot;,&quot;target&quot;:{&quot;sysname&quot;:&quot;QNX&quot;,&quot;release&quot;:&quot;8.0.0&quot;,&quot;machine&quot;:&quot;x86pc&quot;},&quot;scanned&quot;:21,&quot;processes&quot;:[{&quot;pid&quot;:131081,&quot;name&quot;:&quot;/system/bin/random&quot;,&quot;libs&quot;:[{&quot;path&quot;:&quot;/proc/boot/libqcrypto.so.1.0&quot;
+=== read twice: both are complete JSON
+=== read twice: both are complete JSON
+577
+577
+=== uname -a</pre></div>
+  <p>The first lines show the file (<code>nr--------</code>, owned by root) and the start of its JSON. Reading the file twice gave the same length both times (577 bytes), and both reads were complete JSON.</p>
+  <h3>Merge it into the scan</h3>
+  <p>Give the capture to the scan with <code>--runtime</code>. The repository holds the capture of that run, <code>evidence/probe-stock.txt</code>, so you can do this without booting anything:</p>
+  <div class="code"><button class="copy" type="button" aria-label="Copy these commands">Copy</button><pre><code>bin/qnx-cbom scan --ifs ~/qnx-image/output/ifs.bin --build-dir ~/qnx-image/output/build --date 2026-11-23 --name stock-image --runtime evidence/probe-stock.txt --json ~/runtime.json --text -; echo &quot;exit code: $?&quot;</code></pre></div>
+  <p>Compare with step 3: there is a new line <code>runtime: 2 processes map crypto libraries ...</code> and a new finding, <code>QCB-007</code>: a <em>running</em> process loads the OpenSSL library that is past upstream end of life. The verdict was already <code>UNSAFE</code>; now there is proof that the library is really in use.</p>
+  <aside class="check" aria-label="Check your work"><h3>Check your work</h3>
+    <p><code>make -C probe</code> (the last lines):</p>
+<pre tabindex="0">make: Entering directory &#x27;~/qnx-cbom/probe&#x27;
+mkdir -p build/x86_64
+qcc -Vgcc_ntox86_64 -O2 -Wall -Wextra -Werror -fstack-protector-strong -D_FORTIFY_SOURCE=2 -DCBOM_WITH_RESMGR -o build/x86_64/cbom_probe cbom_probe.c
+mkdir -p build/aarch64le
+qcc -Vgcc_ntoaarch64le -O2 -Wall -Wextra -Werror -fstack-protector-strong -D_FORTIFY_SOURCE=2 -DCBOM_WITH_RESMGR -o build/aarch64le/cbom_probe cbom_probe.c
+make: Leaving directory &#x27;~/qnx-cbom/probe&#x27;</pre>
+    <p>The built files:</p>
+<pre tabindex="0">probe/build/aarch64le:
+cbom_probe
+
+probe/build/x86_64:
+cbom_probe</pre>
+    <p>The scan with the runtime capture:</p>
+<pre tabindex="0">qnx-cbom 0.1.0  image stock-image (x86_64)  scan date 2026-11-23
+verdict: UNSAFE   UNSAFE 3  WARN 4  OK 1
+files 217, ELF 168, crypto-linked ELF 19 (15 programs)
+not analysed: skipped_outside_roots 2
+runtime: 2 processes map crypto libraries (5 mappings), 20 processes read
+UNSAFE QCB-001 /proc/boot/libcrypto.so.3 - OpenSSL library is past upstream end of life
+UNSAFE QCB-002 /system/bin/sshd - sshd does not allow post-quantum key exchange
+UNSAFE QCB-007 /proc/boot/libcrypto.so.3 - A running process loads an OpenSSL library past upstream end of life
+WARN   QCB-004 /data/var/ssh/ssh_host_ed25519_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /data/var/ssh/ssh_host_rsa_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /proc/boot/qtd_public_key.pem - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-005 /proc/boot/qcrypto.conf - qcrypto sends all algorithms to a plug-in without post-quantum algorithms
+exit code: 1</pre></aside>
+  <div class="pager"><button type="button" class="prev">Previous</button><button type="button" class="next">Next: change it and compare</button></div>
+</section>
+
+<section class="step" id="step-6" aria-labelledby="h-6">
+  <h2 id="h-6" tabindex="-1">6. Change something and compare</h2>
+  <p class="kicker">Step 6 of 7</p>
+  <p>The repository can build an <em>upgraded lab image</em> from a copy of the stock project (<code>demo/build_after.sh</code>): the OpenSSL libraries are replaced by an OpenSSL 3.5.9 build, and <code>sshd_config</code> lists <code>mlkem768x25519-sha256</code> first. <code>demo/run-demo.sh</code> builds it, boots both images, runs the probe and scans both. It is a lab build in QEMU, not a shipped fix.</p>
+  <p>The scan files of that committed run are in <code>evidence/</code>. Compare the two with <code>diff</code>. It needs only Python:</p>
+  <div class="code"><button class="copy" type="button" aria-label="Copy these commands">Copy</button><pre><code>cd ~/qnx-cbom
+PYTHONPATH=src python3 -m qnxcbom diff evidence/before.json evidence/after.json; echo &quot;exit code: $?&quot;</code></pre></div>
+  <h3>Read it</h3>
+  <ul>
+    <li><code>verdict: UNSAFE -&gt; WARN</code>: the overall verdict went from <code>UNSAFE</code> to <code>WARN</code>.</li>
+    <li><code>CHANGED  QCB-001 ...: UNSAFE -&gt; OK</code> (and the same for <code>QCB-002</code> and <code>QCB-007</code>): these three findings are fixed in the second scan.</li>
+    <li><code>LIBRARY ...: 3.0.22 -&gt; 3.5.9</code>: the version of <code>libcrypto.so.3</code> changed.</li>
+    <li><code>result: no new problems</code> and exit code <code>0</code>: nothing in the second scan is new or worse.</li>
+  </ul>
+  <p>The <code>WARN</code> findings that remain are the classical keys and qcrypto. They stay because this change does not touch them.</p>
+  <p>The upgraded image was also booted and an SSH login that asked only for <code>mlkem768x25519-sha256</code> succeeded. Lines from the committed run (<code>evidence/lab-upgraded-console.txt</code>):</p>
+  <div class="out"><div class="lab">On the QNX target (committed run)</div><pre tabindex="0">100:debug1: kex: algorithm: mlkem768x25519-sha256
+102:debug1: Sending command: echo LOGIN-OK
+103:LOGIN-OK</pre></div>
+  <aside class="check" aria-label="Check your work"><h3>Check your work</h3>
+    <p>The <code>diff</code> prints exactly this:</p>
+<pre tabindex="0">verdict: UNSAFE -&gt; WARN
+new 0, gone 0, changed 3, library versions changed 1
+CHANGED  QCB-001 /proc/boot/libcrypto.so.3: UNSAFE -&gt; OK
+CHANGED  QCB-002 /system/bin/sshd: UNSAFE -&gt; OK
+CHANGED  QCB-007 /proc/boot/libcrypto.so.3: UNSAFE -&gt; OK
+LIBRARY  /proc/boot/libcrypto.so.3: 3.0.22 -&gt; 3.5.9
+result: no new problems
+exit code: 0</pre></aside>
+  <div class="pager"><button type="button" class="prev">Previous</button><button type="button" class="next">Next: CI and limits</button></div>
+</section>
+
+<section class="step" id="step-7" aria-labelledby="h-7">
+  <h2 id="h-7" tabindex="-1">7. Use it in CI, and know the limits</h2>
+  <p class="kicker">Step 7 of 7</p>
+  <h3>Put it in CI</h3>
+  <p>The exit codes are made for a build job. A scan fails the job when its exit code is not 0. A <code>diff</code> against a scan file you saved earlier (the baseline) fails when something got worse. Three real runs with the files from the earlier steps:</p>
+  <p>1. The same stock image scanned again with the runtime capture, compared with the committed baseline of the stock image: nothing changed, exit code 0.</p>
+  <div class="code"><button class="copy" type="button" aria-label="Copy these commands">Copy</button><pre><code>bin/qnx-cbom diff evidence/before.json ~/runtime.json; echo &quot;exit code: $?&quot;</code></pre></div>
+  <div class="out"><div class="lab">Output</div><pre tabindex="0">verdict: UNSAFE -&gt; UNSAFE
+new 0, gone 0, changed 0, library versions changed 0
+result: no new problems
+exit code: 0</pre></div>
+  <p>2. The upgraded image as the baseline and the stock image as the new scan: that is a build that got worse, and the exit code is 1.</p>
+  <div class="code"><button class="copy" type="button" aria-label="Copy these commands">Copy</button><pre><code>bin/qnx-cbom diff evidence/after.json ~/runtime.json --text -; echo &quot;exit code: $?&quot;</code></pre></div>
+  <div class="out"><div class="lab">Output</div><pre tabindex="0">verdict: WARN -&gt; UNSAFE
+new 0, gone 0, changed 3, library versions changed 1
+CHANGED  QCB-001 /proc/boot/libcrypto.so.3: OK -&gt; UNSAFE
+CHANGED  QCB-002 /system/bin/sshd: OK -&gt; UNSAFE
+CHANGED  QCB-007 /proc/boot/libcrypto.so.3: OK -&gt; UNSAFE
+LIBRARY  /proc/boot/libcrypto.so.3: 3.5.9 -&gt; 3.0.22
+result: worse
+exit code: 1</pre></div>
+  <p>3. Bad input gives exit code 2 and one line, no traceback:</p>
+  <div class="code"><button class="copy" type="button" aria-label="Copy these commands">Copy</button><pre><code>bin/qnx-cbom scan --ifs ~/missing.bin --build-dir ~/qnx-image/output/build; echo &quot;exit code: $?&quot;</code></pre></div>
+  <div class="out"><div class="lab">Output (the path is yours)</div><pre tabindex="0">qnx-cbom: error: --ifs is not a file: ~/missing.bin
+exit code: 2</pre></div>
+  <aside class="check" aria-label="Check your work"><h3>Check your work</h3>
+    <p>The three exit codes you should see are <code>0</code>, <code>1</code> and <code>2</code>, as in the outputs above.</p></aside>
+  <h3>Known limits</h3>
+  <p>These are stated plainly, as in the repository README.</p>
+  <ul>
+    <li><strong>qnx6 reader.</strong> <code>--disk</code> was only tried on images made by <code>mkqnx6fsimg</code> / <code>mkqnximage</code> from SDP 8.0.6 (the stock image and small test images). It does not check the superblock checksums, does not use the second superblock, and ignores qnx6 features those tools do not produce (for example encrypted or snapshot volumes). If it cannot follow an image, that partition falls back to the build list, with a note in the report. The boot partition is not scanned from the disk. Without <code>--disk</code> the partitions come from the build lists only.</li>
+    <li><strong>aarch64.</strong> The aarch64le probe compiles but has not been run: the SDK has no <code>startup-qemu-virt</code>, so no aarch64 image could be built.</li>
+    <li><strong>Lab builds are not shipped fixes.</strong> The upgraded images are lab builds on QEMU: one with an OpenSSL 3.5.9 build of my own, one with the OpenSSL 3.5.4 port from <code>qnx-ports</code> (its libraries have the SONAME <code>libcrypto.so.3.5</code>; for the lab the file was installed under the name <code>libcrypto.so.3</code>). The post-quantum SSH login with the <code>qnx-ports</code> build worked only on a QEMU guest CPU without AVX2.</li>
+    <li><strong>The sshd "Memory fault".</strong> On the stock image, <code>sshd -t</code> stops with "Memory fault" in QEMU. The core file shows it in <code>sha512_block_data_order_avx2</code> (libcrypto 3.0.22), and the same command exits 0 when the guest CPU has no AVX2. It was not tried on real hardware or another QEMU version. It is not claimed to be a fault of the library or of QNX; the cause (emulated CPU or code) is unverified.</li>
+    <li><strong>No real-time claim.</strong> Nothing about timing was measured, and none is claimed.</li>
+    <li><strong>OpenSSL 3.0 after 2026-09-07.</strong> The SDP 8.0.6 package here is OpenSSL 3.0.22 (build of October 1, 2026), so QNX did ship 3.0 after the upstream end-of-life date. Whether later fixes are backported, and any support promise for 3.0, are unverified. The rules decide on 3.0 by the upstream date and list this as unverified.</li>
+    <li><strong>Also.</strong> End-of-life dates for OpenSSL 1.0 and 1.1 were not read. SDP 8.0.6 has no key-encapsulation type in qcrypto, so <code>QCB-005</code> has no in-place fix. <code>/dev/cbom</code> is read-only and was run on the QEMU target.</li>
+  </ul>
+  <div class="pager"><button type="button" class="prev">Previous</button><button type="button" class="next" disabled>Done</button></div>
+</section>
+
+</main>
+</div>
+<footer>
+  <p>Licence: Apache License 2.0. Copyright 2026 Satyarth Shukla.</p>
+  <p>Repository: <a href="https://github.com/satyarthshukla500/qnx-cbom">https://github.com/satyarthshukla500/qnx-cbom</a></p>
+  <p>An independent project; not affiliated with or endorsed by QNX or BlackBerry. The product used is QNX SDP 8.0.</p>
+</footer>
+<div id="live" role="status" aria-live="polite"></div>
+<script>
+(function () {
+  var steps = Array.prototype.slice.call(document.querySelectorAll(".step"));
+  var links = Array.prototype.slice.call(document.querySelectorAll("[data-go]"));
+  var live = document.getElementById("live");
+  var current = 0;
+  function fromHash() {
+    var m = /^#step-(\d)$/.exec(location.hash);
+    var n = m ? parseInt(m[1], 10) : 1;
+    return n >= 1 && n <= steps.length ? n - 1 : 0;
+  }
+  function show(i, moveFocus) {
+    current = i;
+    steps.forEach(function (s, k) { s.hidden = k !== i; });
+    links.forEach(function (a, k) {
+      if (k === i) { a.setAttribute("aria-current", "step"); } else { a.removeAttribute("aria-current"); }
+    });
+    document.title = (i + 1) + ". " + steps[i].querySelector("h2").textContent.replace(/^\d+\.\s*/, "") + " - Check the cryptography of a QNX 8.0 image";
+    if (moveFocus) {
+      window.scrollTo(0, 0);
+      steps[i].querySelector("h2").focus({preventScroll: true});
+    }
+  }
+  function go(i) {
+    if (i < 0 || i >= steps.length) { return; }
+    var h = "#step-" + (i + 1);
+    if (location.hash !== h) { history.pushState(null, "", h); }
+    show(i, true);
+  }
+  links.forEach(function (a, k) { a.addEventListener("click", function (ev) { ev.preventDefault(); go(k); }); });
+  steps.forEach(function (s, k) {
+    var p = s.querySelector(".prev"), n = s.querySelector(".next");
+    if (p) { p.addEventListener("click", function () { go(k - 1); }); }
+    if (n) { n.addEventListener("click", function () { go(k + 1); }); }
+  });
+  window.addEventListener("popstate", function () { show(fromHash(), true); });
+  document.addEventListener("keydown", function (ev) {
+    var t = ev.target && ev.target.tagName;
+    if (ev.altKey && !ev.ctrlKey && !ev.metaKey) {
+      if (ev.key === "ArrowRight") { ev.preventDefault(); go(current + 1); }
+      if (ev.key === "ArrowLeft") { ev.preventDefault(); go(current - 1); }
+    }
+  });
+  function copyText(text, done) {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(fallback(text)); });
+    } else { done(fallback(text)); }
+  }
+  function fallback(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".copy"), function (b) {
+    b.addEventListener("click", function () {
+      var text = b.parentNode.querySelector("code").textContent;
+      copyText(text, function (ok) {
+        b.textContent = ok ? "Copied" : "Press Ctrl+C";
+        live.textContent = ok ? "Copied to the clipboard" : "Copy did not work; select the text and press Ctrl+C";
+        setTimeout(function () { b.textContent = "Copy"; }, 1800);
+      });
+    });
+  });
+  show(fromHash(), false);
+})();
+</script>
+</body>
+</html>
