@@ -1,0 +1,86 @@
+## final regression from a clean clone of commit 10aaaee
+## 1. tests/regression.sh (unit tests, real-image scan + CycloneDX schema check, readelf cross-check, browser click-through, attack list)
+== schema files
+== unit tests
+Ran 34 tests
+
+OK
+== scan of the real image
+jsonschema 4.10.3: evidence-regression/scan-before.cdx.json: VALID against CycloneDX 1.6 schema
+T3 comparison (168 ELF, 19 crypto-linked, 15 programs): 168 19 15
+== readelf cross-check
+ELF files compared with ntox86_64-readelf -d: 168; identical needed/soname: 168; different: 0
+exit=0
+== report in the browser
+TOTAL controls/checks 71, failed 0
+== attack list
+35 attacks, 0 got through
+failed steps: 0
+regression.sh exit: 0
+## 2. demo/run-demo.sh from scratch (probe build, OpenSSL 3.5.9 build, upgraded image, two QEMU boots, scans, diff)
+== 1/6 probe (qcc, x86_64 and aarch64le)
+== 2/6 OpenSSL 3.5.9 for QNX
+openssl-3.5.9.tar.gz: OK
+-rwxr-xr-x 1 user user 1446920 Nov 23 19:27 apps/openssl
+-rwxr-xr-x 1 user user 7176768 Nov 23 19:27 libcrypto.so.3
+-rwxr-xr-x 1 user user 1769776 Nov 23 19:27 libssl.so.3
+== 3/6 upgraded lab image
+-rw-r--r-- 1 user user 159732224 Nov 23 19:27 output/disk-qemu
+-rw-r--r-- 1 user user  12479428 Nov 23 19:27 output/ifs.bin
+== 4/6 payload disk
+== 5/6 two QEMU boots (stock and upgraded), this takes several minutes
+== 6/6 scans
+---- before
+qnx-cbom 0.1.0  image stock-image (x86_64)  scan date 2026-11-23
+verdict: UNSAFE   UNSAFE 3  WARN 4  OK 1
+files 217, ELF 168, crypto-linked ELF 19 (15 programs)
+not analysed: skipped_outside_roots 2
+runtime: 2 processes map crypto libraries (5 mappings), 20 processes read
+UNSAFE QCB-001 /proc/boot/libcrypto.so.3 - OpenSSL library is past upstream end of life
+UNSAFE QCB-002 /system/bin/sshd - sshd does not allow post-quantum key exchange
+UNSAFE QCB-007 /proc/boot/libcrypto.so.3 - A running process loads an OpenSSL library past upstream end of life
+WARN   QCB-004 /data/var/ssh/ssh_host_ed25519_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /data/var/ssh/ssh_host_rsa_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /proc/boot/qtd_public_key.pem - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-005 /proc/boot/qcrypto.conf - qcrypto sends all algorithms to a plug-in without post-quantum algorithms
+---- override
+qnx-cbom 0.1.0  image stock-image-with-override (x86_64)  scan date 2026-11-23
+verdict: UNSAFE   UNSAFE 3  WARN 5  OK 2
+files 217, ELF 168, crypto-linked ELF 19 (15 programs)
+not analysed: skipped_outside_roots 2
+runtime: 3 processes map crypto libraries (7 mappings), 21 processes read
+UNSAFE QCB-001 /proc/boot/libcrypto.so.3 - OpenSSL library is past upstream end of life
+UNSAFE QCB-002 /system/bin/sshd - sshd does not allow post-quantum key exchange
+UNSAFE QCB-007 /proc/boot/libcrypto.so.3 - A running process loads an OpenSSL library past upstream end of life
+WARN   QCB-004 /data/var/ssh/ssh_host_ed25519_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /data/var/ssh/ssh_host_rsa_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /proc/boot/qtd_public_key.pem - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-005 /proc/boot/qcrypto.conf - qcrypto sends all algorithms to a plug-in without post-quantum algorithms
+WARN   QCB-006 /data/lab/o35/libcrypto.so.3 - A running process loads a different OpenSSL library than the image holds
+---- after
+qnx-cbom 0.1.0  image upgraded-image (x86_64)  scan date 2026-11-23
+verdict: WARN   UNSAFE 0  WARN 4  OK 4
+files 217, ELF 168, crypto-linked ELF 19 (15 programs)
+not analysed: skipped_outside_roots 2
+runtime: 3 processes map crypto libraries (6 mappings), 21 processes read
+WARN   QCB-004 /data/var/ssh/ssh_host_ed25519_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /data/var/ssh/ssh_host_rsa_key - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-004 /proc/boot/qtd_public_key.pem - Key or certificate uses a quantum-vulnerable algorithm
+WARN   QCB-005 /proc/boot/qcrypto.conf - qcrypto sends all algorithms to a plug-in without post-quantum algorithms
+---- diff
+verdict: UNSAFE -> WARN
+new 0, gone 0, changed 3, library versions changed 1
+CHANGED  QCB-001 /proc/boot/libcrypto.so.3: UNSAFE -> OK
+CHANGED  QCB-002 /system/bin/sshd: UNSAFE -> OK
+CHANGED  QCB-007 /proc/boot/libcrypto.so.3: UNSAFE -> OK
+LIBRARY  /proc/boot/libcrypto.so.3: 3.0.22 -> 3.5.9
+result: no new problems
+exit code of the scan of the upgraded image: 0
+run-demo.sh exit: 0
+## 3. comparison with the committed evidence
+before.txt: identical to evidence/before.txt
+override.txt: identical to evidence/override.txt
+after.txt: identical to evidence/after.txt
+diff.txt: identical to evidence/diff.txt
+## done
+FINISHED
