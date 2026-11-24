@@ -2,6 +2,29 @@
 
 **What it does.** It lists every cryptographic component of a QNX 8.0 image (the programs and libraries that use OpenSSL or qcrypto, the keys, certificates and SSH settings), asks the *running* system which of those libraries are really loaded, and tells you for each finding what is wrong and how to fix it. One command; the exit code makes it usable in CI.
 
+## Claims and proof
+
+Each row is one claim, the raw file that shows it, and the command that reproduces it. Commands marked (SDK) need QNX SDP 8.0.6 loaded and the stock `mkqnximage` project in `~/qnximg`; the others run with only Python 3.12.
+
+| claim | evidence | reproduce |
+|---|---|---|
+| The stock image scans UNSAFE, exit code 1 (UNSAFE 2, WARN 4, OK 1) | `evidence/scan-before-run.txt` | `bin/qnx-cbom scan --ifs ~/qnximg/output/ifs.bin --build-dir ~/qnximg/output/build --date 2026-11-23 --text -; echo $?` (SDK) |
+| The image has 168 ELF files, 19 of them crypto-linked (15 programs); the own ELF reader agrees with `readelf` on all 168 | `evidence/scan-before-run.txt`, `evidence/readelf-crosscheck.txt` | same scan as above; `tests/regression.sh /tmp/regression-logs` (SDK; step "readelf cross-check") |
+| The probe ran on QNX 8.0 under QEMU and listed the crypto libraries mapped by running processes | `evidence/lab-stock-console.txt`, `evidence/probe-stock.txt` | `demo/run-demo.sh` (SDK, QEMU) |
+| `/dev/cbom` serves the probe's JSON report as a file on the target (two reads, both complete JSON) | `evidence/lab-stock-console.txt` (section `ls -l /dev/cbom`) | `demo/run-demo.sh` (SDK, QEMU) |
+| The lab image with OpenSSL 3.5.9 scans WARN, exit code 0 | `evidence/after.txt`, `evidence/after-exit.txt` | `PYTHONPATH=src python3 -m qnxcbom diff evidence/before.json evidence/after.json` shows the flip (no SDK); the scan itself: `demo/run-demo.sh` |
+| An SSH login on that image negotiated `mlkem768x25519-sha256` | `evidence/lab-upgraded-console.txt` (`debug1: kex: algorithm: mlkem768x25519-sha256`) | `demo/run-demo.sh` (SDK, QEMU) |
+| The demo reproduces the committed output | `evidence/final-regression.txt` (before, override, after and diff texts identical, 34 unit tests OK) | `demo/run-demo.sh`, then compare with `evidence/` |
+
+## Known limits
+
+- The qnx6 system and data partitions are not read from the disk image; their content comes from the build lists.
+- The aarch64le probe compiles but has not been run. No aarch64 QEMU is available on the build machine.
+- The upgraded image is a lab build with my own OpenSSL 3.5.9, not a `qnx-ports` build.
+- No real-time or timing claim is made; nothing was measured.
+- The stock `sshd` gives "Memory fault" with libcrypto 3.0.22. It works with 3.5.9 in front. The faulting function was not found.
+- Whether QNX keeps patching OpenSSL 3.0 after 2026-09-07 is unverified.
+
 **Why this is useful.** A QNX image is built once and then runs in the field for years, so what is inside it has to be known and checked: the OpenSSL 3.0 series left upstream support on 2026-09-07, OpenSSH 10 made a hybrid post-quantum key exchange its default, and RSA and elliptic-curve keys are the ones a quantum computer breaks. The stock QNX 8.0 image that this was tested on ships OpenSSL 3.0.22 and an `sshd_config` that allows only classical key exchange, although its `sshd` binary supports `mlkem768x25519-sha256`. A file-level scan cannot tell you whether a process really uses the library the image holds (a `LD_LIBRARY_PATH` setting can replace it), and an inventory that is wrong about that is worse than none.
 
 **Who it is for.** Teams that build and ship QNX images for long-lived products (QNX is used in vehicles, medical devices, factory systems and robots) and have to answer customers or auditors about the cryptography inside them; and CI jobs that must stop a build when the image gets worse.
