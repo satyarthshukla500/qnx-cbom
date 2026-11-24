@@ -10,7 +10,7 @@ import threading
 import time
 
 payload, script, logfile, ifs, disk = sys.argv[1:6]
-cmd = ["qemu-system-x86_64", "-snapshot", "-smp", "2", "-cpu", "max", "-m", "1G",
+cmd = ["qemu-system-x86_64", "-snapshot", "-smp", "2", "-cpu", os.environ.get("CBOM_QEMU_CPU", "max"), "-m", "1G",
        "-display", "none", "-monitor", "none", "-serial", "stdio", "-nic", "none",
        "-drive", f"file={disk},if=ide,index=0" + ("" if disk.endswith(".vmdk") else ",format=raw"),
        "-drive", f"file={payload},if=ide,index=1,format=raw",

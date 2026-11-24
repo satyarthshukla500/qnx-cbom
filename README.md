@@ -23,7 +23,7 @@ Each row is one claim, the raw file that shows it, and the command that reproduc
 - The aarch64le probe compiles but has not been run. A retry with `qemu-system-aarch64` installed failed at `mkqnximage --arch=aarch64le`: the SDK has no `startup-qemu-virt`, so no aarch64 image could be built.
 - The upgraded image is a **lab build on QEMU** with my own OpenSSL 3.5.9, not a shipped fix and not a `qnx-ports` build. QNX's own OpenSSL 3.5 port is the upgrade path to use: github.com/qnx-ports/openssl (branches `qnx-openssl-3.5.4`, `qnx-openssl-3.6.0`; their existence was checked, `evidence/P1-source-checks.txt`; their content was not built or tested here, which is also still to do). In the upgraded image `/system/bin/openssl` is still the 3.0.22 program running on the 3.5.9 library; its banner shows both.
 - No real-time or timing claim is made; nothing was measured.
-- The stock `sshd` gives "Memory fault" with libcrypto 3.0.22 and works with 3.5.9 in front. The faulting function was not identified.
+- The stock `sshd` gives "Memory fault" in QEMU with libcrypto 3.0.22 and works with 3.5.9 in front. The core file shows the faulting function: `sha512_block_data_order_avx2` in libcrypto, called from `sshkey_shield_private` in `sshd` (`evidence/sshd-fault.txt`). The fault does not happen when the guest CPU has no AVX2 (`-cpu max,-avx2`). The fault address is the first byte after the 16384-byte buffer being hashed, which fits a 32-byte read for a 16-byte instruction operand, so it looks like an effect of QEMU's emulated CPU (no KVM here), not a QNX fault. Unverified: it was not tried on real hardware or another QEMU version, and the 3.5.9 lab build is built without assembler code, so it never takes that path.
 - Whether QNX keeps patching OpenSSL 3.0 after 2026-09-07 is unverified.
 - End-of-life dates were read from the OpenSSL policy page (live copy and an earlier copy of the same page); the date for series 1.0 and 1.1 was not read.
 - qcrypto: SDP 8.0.6 has no key-encapsulation type (reading of the SDK headers, `evidence/T2-qcrypto-plugin.txt`), so QCB-005 has no in-place fix.
@@ -180,7 +180,7 @@ Each finding carries its evidence, a fix text, the source URL and the date the s
 4. scans both images with the probe output merged, and diffs the scans.
 
 What the run showed (`evidence/`):
-- stock image: verdict UNSAFE (`before.txt`); the image's `sshd` faults ("Memory fault") even for `sshd -t`; the same command succeeds when the OpenSSL 3.5.9 library is put first in `LD_LIBRARY_PATH` (`lab-stock-console.txt`);
+- stock image: verdict UNSAFE (`before.txt`); the image's `sshd` faults ("Memory fault") even for `sshd -t`; the same command succeeds when the OpenSSL 3.5.9 library is put first in `LD_LIBRARY_PATH` (`lab-stock-console.txt`); the cause is found in `evidence/sshd-fault.txt` (see Known limits);
 - upgraded image: verdict WARN, exit code 0 (`after.txt`, `after-exit.txt`); `sshd` starts, and an SSH login on loopback negotiated `kex: algorithm: mlkem768x25519-sha256` (`lab-upgraded-console.txt`);
 - a process started with `LD_LIBRARY_PATH` pointing at OpenSSL 3.5.9 on the stock image is reported by the probe with the 3.5.9 library while the image file is 3.0.22 (finding QCB-006, `override.txt`).
 
