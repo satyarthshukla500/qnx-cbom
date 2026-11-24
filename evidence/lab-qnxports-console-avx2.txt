@@ -1,0 +1,33 @@
+=== uname -a
+QNX noname 8.0.0 2026/10/30-09:10:05EDT x86pc x86_64
+=== openssl version (image)
+OpenSSL 3.0.22 25 Aug 2026 (Library: OpenSSL 3.5.4 30 Sep 2025)
+=== sshd -t (config test)
+Memory fault (core dumped) 
+exit 139
+=== sshd -T, key exchange line
+Memory fault (core dumped) 
+=== host keys present
+total 6
+-r--------  1 root root  387 2026-11-24 05:49 ssh_host_ed25519_key
+-r--------  1 root root 2578 2026-11-24 05:49 ssh_host_rsa_key
+=== start sshd in debug mode on 127.0.0.1:2222
+=== sshd log so far
+debug1: sshd version OpenSSH_10.4, OpenSSL 3.5.4 30 Sep 2025
+=== sshd running?
+     pid tid name                         prio STATE          Blocked                     
+=== probe
+CBOM-BEGIN
+{"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target":{"sysname":"QNX","release":"8.0.0","machine":"x86pc"},"scanned":19,"processes":[{"pid":131081,"name":"/system/bin/random","libs":[{"path":"/proc/boot/libqcrypto.so.1.0","soname":"libqcrypto.so.1.0","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/qcrypto-openssl-3.so","soname":"qcrypto-openssl-3.so","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.5.4","released":"30 Sep 2025","pq_capable":true}]}],"errors":[]}
+CBOM-END len=575 crc32=aa8f47ca
+=== ssh login asking only for mlkem768x25519-sha256
+debug1: connect to address 127.0.0.1 port 2222: Connection refused
+ssh: connect to host 127.0.0.1 port 2222: Connection refused
+=== sshd log (last lines)
+debug1: sshd version OpenSSH_10.4, OpenSSL 3.5.4 30 Sep 2025
+=== the way the boot script starts sshd (config test only, no extra options)
+Memory fault (core dumped) 
+exit 139
+=== same test with the OpenSSL 3.5.9 library from the payload disk in front (LD_LIBRARY_PATH)
+exit 0
+=== LAB DONE

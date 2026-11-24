@@ -4,14 +4,17 @@
 #   - sshd_config lists mlkem768x25519-sha256 first
 # The stock project is only read. Needs the QNX SDP environment and demo/build_openssl.sh done.
 # usage: build_after.sh STOCK_PROJECT_DIR (default ~/qnximg)
+# Other OpenSSL build (used for the qnx-ports check): AFTER_DIR=after-name CRYPTO_SRC=file [SSL_SRC=file|none] build_after.sh
 set -eu
 root=$(cd "$(dirname "$0")/.." && pwd)
 stock=${1:-$HOME/qnximg}
 ossl=$root/build/openssl35/b
-after=$root/build/after/qnximg
-[ -f "$ossl/libcrypto.so.3" ] || { echo "run demo/build_openssl.sh first" >&2; exit 1; }
-mkdir -p "$root/build/after"
-case $after in "$root"/build/after/*) ;; *) echo "unexpected path $after" >&2; exit 1;; esac
+after=$root/build/${AFTER_DIR:-after}/qnximg
+crypto=${CRYPTO_SRC:-$ossl/libcrypto.so.3}
+ssl=${SSL_SRC:-$ossl/libssl.so.3}
+[ -f "$crypto" ] || { echo "run demo/build_openssl.sh first" >&2; exit 1; }
+mkdir -p "$root/build/${AFTER_DIR:-after}"
+case $after in "$root"/build/after*/qnximg) ;; *) echo "unexpected path $after" >&2; exit 1;; esac
 rm -rf "$after"   # only ever our own build/after folder (checked above)
 cp -r "$stock" "$after"
 cd "$after"
@@ -20,11 +23,12 @@ rm -f output/disk-qemu output/disk-qemu.vmdk
 disk_tool=$QNX_HOST/../../common/mkqnximage/rundiskimage
 [ -f "$disk_tool" ] || { echo "rundiskimage not found at $disk_tool" >&2; exit 1; }
 mkdir -p local/openssl35
-cp "$ossl/libcrypto.so.3" "$ossl/libssl.so.3" local/openssl35/
+cp "$crypto" local/openssl35/libcrypto.so.3
+[ "$ssl" = none ] || cp "$ssl" local/openssl35/libssl.so.3
 sed -i 's|^usr/lib/libcrypto.so.3$|libcrypto.so.3=local/openssl35/libcrypto.so.3|' output/build/ifs.build
-sed -i 's|^lib/libssl.so.3=usr/lib/libssl.so.3$|lib/libssl.so.3=local/openssl35/libssl.so.3|' output/build/system.build
+[ "$ssl" = none ] || sed -i 's|^lib/libssl.so.3=usr/lib/libssl.so.3$|lib/libssl.so.3=local/openssl35/libssl.so.3|' output/build/system.build
 sed -i 's|^KexAlgorithms curve25519-sha256@libssh.org,|KexAlgorithms mlkem768x25519-sha256,curve25519-sha256@libssh.org,|' output/build/system.build
-grep -q "local/openssl35/libcrypto" output/build/ifs.build && grep -q "local/openssl35/libssl" output/build/system.build && grep -q "^KexAlgorithms mlkem768x25519-sha256" output/build/system.build
+grep -q "local/openssl35/libcrypto" output/build/ifs.build && { [ "$ssl" = none ] || grep -q "local/openssl35/libssl" output/build/system.build; } && grep -q "^KexAlgorithms mlkem768x25519-sha256" output/build/system.build
 mkifs -o output output/build/ifs.build output/ifs.bin > /dev/null
 mkqnx6fsimg output/build/system.build output/system.part > /dev/null
 mkqnx6fsimg output/build/data.build output/data.part > /dev/null

@@ -1,0 +1,20 @@
+$ git clone --depth 1 -b qnx-openssl-3.5.4 https://github.com/qnx-ports/openssl   (commit 36ccbd3 "Change SHLIB_VERSION from 3 to 3.5")
+$ make -C qnx/build CPULIST=x86_64 JLEVEL=4        # the qnx-ports way (qnx/README.md); "make install" was NOT run: it writes into the SDK
+result: the make log ends without an error; libcrypto.so.3.5, libssl.so.3.5 and apps/openssl exist (listed below)
+$ ntox86_64-readelf -d libcrypto.so.3.5 | grep -E "SONAME|NEEDED"
+ 0x0000000000000001 (NEEDED)             Shared library: [libsocket.so.4]
+ 0x0000000000000001 (NEEDED)             Shared library: [libm.so.3]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+ 0x000000000000000e (SONAME)             Library soname: [libcrypto.so.3.5]
+$ ntox86_64-readelf -d libssl.so.3.5 | grep -E "SONAME|NEEDED"
+ 0x0000000000000001 (NEEDED)             Shared library: [libcrypto.so.3.5]
+ 0x0000000000000001 (NEEDED)             Shared library: [libsocket.so.4]
+ 0x0000000000000001 (NEEDED)             Shared library: [libm.so.3]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+ 0x000000000000000e (SONAME)             Library soname: [libssl.so.3.5]
+$ strings libcrypto.so.3.5 | grep -m1 "^OpenSSL 3"
+OpenSSL 3.5.4 30 Sep 2025
+
+Note: the SONAME is libcrypto.so.3.5, not libcrypto.so.3, so LD_LIBRARY_PATH does not replace the image library by itself (the port is meant to live next to 3.0).
+For the lab image the file was installed under the name libcrypto.so.3 in /proc/boot (demo/build_after.sh with AFTER_DIR=after-qnxports CRYPTO_SRC=libcrypto.so.3.5 SSL_SRC=none); libssl was left as in the stock image.
+The port is built with assembler code (-DAES_ASM ... in the compile lines), unlike the lab 3.5.9 build.

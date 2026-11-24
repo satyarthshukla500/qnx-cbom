@@ -1,0 +1,63 @@
+=== uname -a
+QNX noname 8.0.0 2026/10/30-09:10:05EDT x86pc x86_64
+=== openssl version (image)
+OpenSSL 3.0.22 25 Aug 2026 (Library: OpenSSL 3.5.4 30 Sep 2025)
+=== sshd -t (config test)
+exit 0
+=== sshd -T, key exchange line
+KexAlgorithms mlkem768x25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256
+=== host keys present
+total 6
+-r--------  1 root root  387 2026-11-24 05:49 ssh_host_ed25519_key
+-r--------  1 root root 2578 2026-11-24 05:49 ssh_host_rsa_key
+=== start sshd in debug mode on 127.0.0.1:2222
+=== sshd log so far
+debug1: sshd version OpenSSH_10.4, OpenSSL 3.5.4 30 Sep 2025
+debug1: private host key #0: ssh-rsa SHA256:iJvmaN8IStFAisqumUtk4iI3ljrugueQJ6R3+IjDvzs
+debug1: private host key #1: ssh-ed25519 SHA256:SpdEVb2KvWQh6nruns9LtF2g4wJFECInz4wMH3od/ow
+debug1: rexec_argv[1]='-f'
+debug1: rexec_argv[2]='/system/etc/ssh/sshd_config'
+debug1: rexec_argv[3]='-D'
+debug1: rexec_argv[4]='-e'
+debug1: rexec_argv[5]='-d'
+debug1: rexec_argv[6]='-p'
+debug1: rexec_argv[7]='2222'
+debug1: rexec_argv[8]='-o'
+debug1: rexec_argv[9]='ListenAddress=127.0.0.1'
+debug1: rexec_argv[10]='-o'
+debug1: rexec_argv[11]='StrictModes=no'
+debug1: Bind to port 2222 on 127.0.0.1.
+Server listening on 127.0.0.1 port 2222.
+=== sshd running?
+     pid tid name                         prio STATE          Blocked                     
+  241679   1 system/bin/sshd               10r SIGWAITINFO                                
+  417812   1 system/bin/sshd               10r SIGWAITINFO                                
+=== probe
+CBOM-BEGIN
+{"schema":"qnx-cbom-probe/1","probe_version":"0.1.0","target":{"sysname":"QNX","release":"8.0.0","machine":"x86pc"},"scanned":21,"processes":[{"pid":131081,"name":"/system/bin/random","libs":[{"path":"/proc/boot/libqcrypto.so.1.0","soname":"libqcrypto.so.1.0","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/qcrypto-openssl-3.so","soname":"qcrypto-openssl-3.so","version":null,"released":null,"pq_capable":false},{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.5.4","released":"30 Sep 2025","pq_capable":true}]},{"pid":241679,"name":"/system/bin/sshd","libs":[{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.5.4","released":"30 Sep 2025","pq_capable":true}]},{"pid":417812,"name":"/system/bin/sshd","libs":[{"path":"/proc/boot/libcrypto.so.3","soname":"libcrypto.so.3","version":"3.5.4","released":"30 Sep 2025","pq_capable":true}]}],"errors":[]}
+CBOM-END len=923 crc32=e0d43ee3
+=== ssh login asking only for mlkem768x25519-sha256
+debug1: kex: algorithm: mlkem768x25519-sha256
+Authenticated to 127.0.0.1 ([127.0.0.1]:2222) using "publickey".
+debug1: Sending command: echo LOGIN-OK
+LOGIN-OK
+=== sshd log (last lines)
+debug1: session_exit_message: session 0 channel 0 pid 495642 exit 0
+debug1: session_exit_message: release channel 0
+debug1: session_by_channel: session 0 channel 0
+debug1: session_close_by_channel: channel 0 child 0
+Close session: user root from 127.0.0.1 port 60058 id 0
+debug1: channel 0: free: server-session, nchannels 1
+Received disconnect from 127.0.0.1 port 60058:11: disconnected by user
+Disconnected from user root 127.0.0.1 port 60058
+debug1: do_cleanup
+debug1: mm_reap: child exited with status 255
+debug1: do_cleanup
+debug1: PAM: cleanup
+debug1: PAM: closing session
+debug1: PAM: deleting credentials
+=== the way the boot script starts sshd (config test only, no extra options)
+exit 0
+=== same test with the OpenSSL 3.5.9 library from the payload disk in front (LD_LIBRARY_PATH)
+exit 0
+=== LAB DONE
