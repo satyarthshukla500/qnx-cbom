@@ -1,0 +1,21 @@
+$ qcc -V
+cc: targets available in <SDP>/host/linux/x86_64/etc/qcc:
+	12.2.0,gcc_ntoaarch64le
+	12.2.0,gcc_ntox86_64_gpp
+	12.2.0,gcc_ntoaarch64le_cxx
+	12.2.0,gcc_ntox86_64	(default)
+	12.2.0,gcc_ntoaarch64le_gpp
+	12.2.0,gcc_ntox86_64_cxx
+
+$ qcc -Vgcc_ntox86_64 -E -dM - </dev/null | grep -E '__VERSION__|__x86_64__'
+#define __VERSION__ "12.2.0"
+#define __x86_64__ 1
+
+$ qcc -Vgcc_ntoaarch64le -E -dM - </dev/null | grep -E '__VERSION__|__aarch64__'
+#define __aarch64__ 1
+#define __VERSION__ "12.2.0"
+
+$ x86_64-pc-nto-qnx8.0.0-gcc --version | head -1
+x86_64-pc-nto-qnx8.0.0-gcc (QNX8.0.0-ra7e8d3cd2255b7b0fd7ed75b5fd7082edd813c9d-1008) 12.2.0
+$ aarch64-unknown-nto-qnx8.0.0-gcc --version | head -1
+aarch64-unknown-nto-qnx8.0.0-gcc (QNX8.0.0-ra7e8d3cd2255b7b0fd7ed75b5fd7082edd813c9d-1008) 12.2.0

@@ -82,7 +82,7 @@ Then open `evidence/before.html`, `evidence/after.html` and `evidence/diff.html`
 
 - QNX Software Development Platform 8.0.6 (non-commercial licence), environment loaded with `source qnxsdp-env.sh`. Used: `qcc`, `dumpifs`, `mkifs`, `mkqnx6fsimg`, `diskimage`.
 - Target for the probe and the demo: QEMU x86_64 (QEMU 8.2.2) running a QNX 8.0 image made with `mkqnximage`. The aarch64le probe is compiled but not run (see Known limits).
-- Toolchain: `qcc -Vgcc_ntox86_64` and `qcc -Vgcc_ntoaarch64le`.
+- Toolchain: `qcc -Vgcc_ntox86_64` (GCC 12.2.0) and `qcc -Vgcc_ntoaarch64le` (GCC 12.2.0), from QNX SDP 8.0.6 (`evidence/qcc-version.txt`).
 - Host: Linux (built and tested on Ubuntu 24.04 under WSL2), Python 3.12.
 - Only for the demo: `curl`, `perl`, `make`, `qemu-system-x86_64`.
 - Only for the tests: `openssl` and `ssh-keygen` on the host, `python3-jsonschema`, Node.js 18 with Playwright 1.49.1 (`cd tests/ui && npm install && npx playwright install chromium`).
