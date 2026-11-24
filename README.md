@@ -35,6 +35,14 @@ Each row is one claim, the raw file that shows it, and the command that reproduc
 
 Category: Developer Tooling & Host Tools. Licence: MIT.
 
+## Why this runs on QNX
+
+- `/dev/cbom` is a QNX resource manager (`cbom_probe -s`, `probe/cbom_resmgr.h`). It uses `dispatch_create`, `resmgr_attach`, `iofunc_func_init`, `iofunc_attr_init` and a read handler (`iofunc_read_verify`, `dispatch_block`, `dispatch_handler`).
+- It appears as a read-only file for root (`S_IFNAM | 0400`). A client just reads it: `cat /dev/cbom`. A read from offset 0 builds a fresh report of all processes; later reads continue in that report.
+- The report itself comes from procfs: `/proc/<pid>/as` with `devctl` (`DCMD_PROC_INFO`, `DCMD_PROC_MAPINFO`, `DCMD_PROC_MAPDEBUG`), the same calls `pidin` uses.
+- qcrypto: the scanner reads `qcrypto.conf` (plug-in and tags per line), counts `libqcrypto` as a crypto library, and raises QCB-005 when all algorithms go to a plug-in without post-quantum names.
+- Image side: `dumpifs -x` unpacks the boot image, and the `mkqnximage` build lists (`system.build`, `data.build`, with their inline `sshd_config` and `qcrypto.conf` blocks) say what is in the partitions.
+
 ## Try it in one minute (no SDK needed)
 
 The real results of the lab runs are in `evidence/`. With only Python 3.12:
