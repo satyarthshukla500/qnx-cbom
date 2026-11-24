@@ -18,12 +18,15 @@ Each row is one claim, the raw file that shows it, and the command that reproduc
 
 ## Known limits
 
-- The qnx6 system and data partitions are not read from the disk image; their content comes from the build lists.
-- The aarch64le probe compiles but has not been run. No aarch64 QEMU is available on the build machine.
-- The upgraded image is a lab build with my own OpenSSL 3.5.9, not a `qnx-ports` build.
+- The qnx6 system and data partitions are not read from the disk image (no qnx6 reader on the host); their content comes from the build lists. A file that the build lists name but that cannot be read is reported, never silently skipped. Reading them straight from a disk image is not done yet.
+- The aarch64le probe compiles but has not been run. A retry with `qemu-system-aarch64` installed failed at `mkqnximage --arch=aarch64le`: the SDK has no `startup-qemu-virt`, so no aarch64 image could be built.
+- The upgraded image is a **lab build on QEMU** with my own OpenSSL 3.5.9, not a shipped fix and not a `qnx-ports` build. QNX's own OpenSSL 3.5 port is the upgrade path to use: github.com/qnx-ports/openssl (branches `qnx-openssl-3.5.4`, `qnx-openssl-3.6.0`; their existence was checked, `evidence/P1-source-checks.txt`; their content was not built or tested here, which is also still to do). In the upgraded image `/system/bin/openssl` is still the 3.0.22 program running on the 3.5.9 library; its banner shows both.
 - No real-time or timing claim is made; nothing was measured.
-- The stock `sshd` gives "Memory fault" with libcrypto 3.0.22. It works with 3.5.9 in front. The faulting function was not found.
+- The stock `sshd` gives "Memory fault" with libcrypto 3.0.22 and works with 3.5.9 in front. The faulting function was not identified.
 - Whether QNX keeps patching OpenSSL 3.0 after 2026-09-07 is unverified.
+- End-of-life dates were read from the OpenSSL policy page (live copy and an earlier copy of the same page); the date for series 1.0 and 1.1 was not read.
+- qcrypto: SDP 8.0.6 has no key-encapsulation type (reading of the SDK headers, `evidence/T2-qcrypto-plugin.txt`), so QCB-005 has no in-place fix.
+- The resource manager is a read-only file at `/dev/cbom`; it was run on the QEMU target (`evidence/lab-stock-console.txt`).
 
 **Why this is useful.** A QNX image is built once and then runs in the field for years, so what is inside it has to be known and checked: the OpenSSL 3.0 series left upstream support on 2026-09-07, OpenSSH 10 made a hybrid post-quantum key exchange its default, and RSA and elliptic-curve keys are the ones a quantum computer breaks. The stock QNX 8.0 image that this was tested on ships OpenSSL 3.0.22 and an `sshd_config` that allows only classical key exchange, although its `sshd` binary supports `mlkem768x25519-sha256`. A file-level scan cannot tell you whether a process really uses the library the image holds (a `LD_LIBRARY_PATH` setting can replace it), and an inventory that is wrong about that is worse than none.
 
@@ -76,7 +79,7 @@ Then open `evidence/before.html`, `evidence/after.html` and `evidence/diff.html`
 ## Requirements
 
 - QNX Software Development Platform 8.0.6 (non-commercial licence), environment loaded with `source qnxsdp-env.sh`. Used: `qcc`, `dumpifs`, `mkifs`, `mkqnx6fsimg`, `diskimage`.
-- Target for the probe and the demo: QEMU x86_64 (QEMU 8.2.2) running a QNX 8.0 image made with `mkqnximage`. The aarch64le probe is compiled but not run (no aarch64 QEMU here).
+- Target for the probe and the demo: QEMU x86_64 (QEMU 8.2.2) running a QNX 8.0 image made with `mkqnximage`. The aarch64le probe is compiled but not run (see Known limits).
 - Toolchain: `qcc -Vgcc_ntox86_64` and `qcc -Vgcc_ntoaarch64le`.
 - Host: Linux (built and tested on Ubuntu 24.04 under WSL2), Python 3.12.
 - Only for the demo: `curl`, `perl`, `make`, `qemu-system-x86_64`.
@@ -179,23 +182,6 @@ What the run showed (`evidence/`):
 - stock image: verdict UNSAFE (`before.txt`); the image's `sshd` faults ("Memory fault") even for `sshd -t`; the same command succeeds when the OpenSSL 3.5.9 library is put first in `LD_LIBRARY_PATH` (`lab-stock-console.txt`);
 - upgraded image: verdict WARN, exit code 0 (`after.txt`, `after-exit.txt`); `sshd` starts, and an SSH login on loopback negotiated `kex: algorithm: mlkem768x25519-sha256` (`lab-upgraded-console.txt`);
 - a process started with `LD_LIBRARY_PATH` pointing at OpenSSL 3.5.9 on the stock image is reported by the probe with the 3.5.9 library while the image file is 3.0.22 (finding QCB-006, `override.txt`).
-
-## Limits, stated plainly
-
-- The upgraded image is a **lab build on QEMU**, not a shipped fix. QNX's own OpenSSL 3.5 port is the upgrade path to use: github.com/qnx-ports/openssl (branches `qnx-openssl-3.5.4`, `qnx-openssl-3.6.0`; their existence was checked, `evidence/P1-source-checks.txt`; their content was not built or tested here). In the upgraded image `/system/bin/openssl` is still the 3.0.22 program running on the 3.5.9 library; its banner shows both.
-- The cause of the `sshd` fault was narrowed to "faults with the image's libcrypto 3.0.22" (see above); the faulting function was not identified.
-- The partitions are not read from the disk image (no qnx6 reader on the host). A file that the build lists name but that cannot be read is reported, never silently skipped.
-- End-of-life dates were read from the OpenSSL policy page (live copy and an earlier copy of the same page); the date for series 1.0 and 1.1 was not read.
-- qcrypto: SDP 8.0.6 has no key-encapsulation type (reading of the SDK headers, `evidence/T2-qcrypto-plugin.txt`), so QCB-005 has no in-place fix.
-- The aarch64le probe compiles; it has not been run.
-- The resource manager is a read-only file at `/dev/cbom`; it was run on the QEMU target (`evidence/lab-stock-console.txt`).
-
-## What is not done yet
-
-- Reading the qnx6 system and data partitions straight from a disk image (today their content comes from the build lists).
-- Running the aarch64le probe on a target (it compiles; no aarch64 QEMU was available here).
-- Building and testing QNX's own OpenSSL 3.5 port as the upgrade, instead of the lab build.
-- Finding the faulting function in the stock `sshd`.
 
 ## Tests
 
